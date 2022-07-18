@@ -5,6 +5,43 @@
     <link>http://example.org/tags/</link>
     <description>Recent content in Tags on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android</title>
+      <link>http://example.org/tags/android/</link>
+      <pubDate>Mon, 16 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/tags/android/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Media</title>
+      <link>http://example.org/tags/media/</link>
+      <pubDate>Mon, 16 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/tags/media/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Framework</title>
+      <link>http://example.org/tags/framework/</link>
+      <pubDate>Thu, 28 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/tags/framework/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>USB</title>
+      <link>http://example.org/tags/usb/</link>
+      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/tags/usb/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

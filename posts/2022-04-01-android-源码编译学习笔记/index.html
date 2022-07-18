@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en-us" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.101.0" />
+  <meta charset="utf-8">
+  <title> · My New Hugo Site</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Android 源码编译学习笔记 一、目录结构 目录 解析 abi 应用程序二进制接口，生成libgabi&#43;&#43;.so相关库文件 vendor 各个厂商定制的相关文件，如驱动等 boinic Android的C library，即C库文件 bootable Android系统启动引导相关代码 build 存放系统编译规则及generic等基础开发包配置 cts Android兼容性测试套件标准 tool 一些工具的 developers 开发者目录（包含一些事例） development 应用程序开发相关的工具等 device 设备相关的抽象 docs 指导文档 external android使用到的一些开源的东西 frameworks android核心框架，包含了java代码以及c代码 hardware 硬件相关的HAL代码 libcore 核心库 libnativehelper JNI调用相关的库 ndk ndk开发相关 out 编译后资源输出文件夹 packges 应用程序包 sdk sdk以及模拟器存放目录 二、编译过程简介 [https://source.android.com/source/building.html]
+设置环境 使用envsetup.sh脚本初始化环境。请注意：将 source 替换成 . 可以省去一些字符，这种简写形式在文档中更为常用
+source build/envsetup.sh或. build/envsetup.sh选择目标 使用 lunch 选择要编译的目标。确切的配置可以作为参数进行传递，如
+lunch aosp_arm-eng该命令表示针对模拟器进行完整编译，并且所有调试功能均处于启用状态。
+如果没有提供仍和参数就运行命令，lunch将提示选择一个目标。
+所有编译目标都采用 BUILD-BUILDTYPE 形式，其中 BUILD 是表示特定功能组合的代号。" />
+
+
+<link rel="canonical" href="http://example.org/posts/2022-04-01-android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="http://example.org/css/den.css">
+
+
+
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="Android 源码编译学习笔记 一、目录结构 目录 解析 abi 应用程序二进制接口，生成libgabi&#43;&#43;.so相关库文件 vendor 各个厂商定制的相关文件，如驱动等 boinic Android的C library，即C库文件 bootable Android系统启动引导相关代码 build 存放系统编译规则及generic等基础开发包配置 cts Android兼容性测试套件标准 tool 一些工具的 developers 开发者目录（包含一些事例） development 应用程序开发相关的工具等 device 设备相关的抽象 docs 指导文档 external android使用到的一些开源的东西 frameworks android核心框架，包含了java代码以及c代码 hardware 硬件相关的HAL代码 libcore 核心库 libnativehelper JNI调用相关的库 ndk ndk开发相关 out 编译后资源输出文件夹 packges 应用程序包 sdk sdk以及模拟器存放目录 二、编译过程简介 [https://source.android.com/source/building.html]
+设置环境 使用envsetup.sh脚本初始化环境。请注意：将 source 替换成 . 可以省去一些字符，这种简写形式在文档中更为常用
+source build/envsetup.sh或. build/envsetup.sh选择目标 使用 lunch 选择要编译的目标。确切的配置可以作为参数进行传递，如
+lunch aosp_arm-eng该命令表示针对模拟器进行完整编译，并且所有调试功能均处于启用状态。
+如果没有提供仍和参数就运行命令，lunch将提示选择一个目标。
+所有编译目标都采用 BUILD-BUILDTYPE 形式，其中 BUILD 是表示特定功能组合的代号。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/2022-04-01-android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><meta property="article:section" content="posts" />
+
+
+
+<meta itemprop="name" content="">
+<meta itemprop="description" content="Android 源码编译学习笔记 一、目录结构 目录 解析 abi 应用程序二进制接口，生成libgabi&#43;&#43;.so相关库文件 vendor 各个厂商定制的相关文件，如驱动等 boinic Android的C library，即C库文件 bootable Android系统启动引导相关代码 build 存放系统编译规则及generic等基础开发包配置 cts Android兼容性测试套件标准 tool 一些工具的 developers 开发者目录（包含一些事例） development 应用程序开发相关的工具等 device 设备相关的抽象 docs 指导文档 external android使用到的一些开源的东西 frameworks android核心框架，包含了java代码以及c代码 hardware 硬件相关的HAL代码 libcore 核心库 libnativehelper JNI调用相关的库 ndk ndk开发相关 out 编译后资源输出文件夹 packges 应用程序包 sdk sdk以及模拟器存放目录 二、编译过程简介 [https://source.android.com/source/building.html]
+设置环境 使用envsetup.sh脚本初始化环境。请注意：将 source 替换成 . 可以省去一些字符，这种简写形式在文档中更为常用
+source build/envsetup.sh或. build/envsetup.sh选择目标 使用 lunch 选择要编译的目标。确切的配置可以作为参数进行传递，如
+lunch aosp_arm-eng该命令表示针对模拟器进行完整编译，并且所有调试功能均处于启用状态。
+如果没有提供仍和参数就运行命令，lunch将提示选择一个目标。
+所有编译目标都采用 BUILD-BUILDTYPE 形式，其中 BUILD 是表示特定功能组合的代号。">
+
+<meta itemprop="wordCount" content="893">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Android 源码编译学习笔记 一、目录结构 目录 解析 abi 应用程序二进制接口，生成libgabi&#43;&#43;.so相关库文件 vendor 各个厂商定制的相关文件，如驱动等 boinic Android的C library，即C库文件 bootable Android系统启动引导相关代码 build 存放系统编译规则及generic等基础开发包配置 cts Android兼容性测试套件标准 tool 一些工具的 developers 开发者目录（包含一些事例） development 应用程序开发相关的工具等 device 设备相关的抽象 docs 指导文档 external android使用到的一些开源的东西 frameworks android核心框架，包含了java代码以及c代码 hardware 硬件相关的HAL代码 libcore 核心库 libnativehelper JNI调用相关的库 ndk ndk开发相关 out 编译后资源输出文件夹 packges 应用程序包 sdk sdk以及模拟器存放目录 二、编译过程简介 [https://source.android.com/source/building.html]
+设置环境 使用envsetup.sh脚本初始化环境。请注意：将 source 替换成 . 可以省去一些字符，这种简写形式在文档中更为常用
+source build/envsetup.sh或. build/envsetup.sh选择目标 使用 lunch 选择要编译的目标。确切的配置可以作为参数进行传递，如
+lunch aosp_arm-eng该命令表示针对模拟器进行完整编译，并且所有调试功能均处于启用状态。
+如果没有提供仍和参数就运行命令，lunch将提示选择一个目标。
+所有编译目标都采用 BUILD-BUILDTYPE 形式，其中 BUILD 是表示特定功能组合的代号。"/>
+</head>
+<body>
+  
+  <div class="header-container gradient">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="http://example.org/">
+      
+        
+        
+          My New Hugo Site
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title"></h1>
+        <p class="header-date">
+        Mon 01 January 0001
+        <div class="header-underline"></div>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  <h1 id="android-源码编译学习笔记"><strong>Android 源码编译学习笔记</strong></h1>
+<h2 id="一目录结构">一、目录结构</h2>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>解析</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abi</td>
+<td>应用程序二进制接口，生成libgabi++.so相关库文件</td>
+</tr>
+<tr>
+<td>vendor</td>
+<td>各个厂商定制的相关文件，如驱动等</td>
+</tr>
+<tr>
+<td>boinic</td>
+<td>Android的C library，即C库文件</td>
+</tr>
+<tr>
+<td>bootable</td>
+<td>Android系统启动引导相关代码</td>
+</tr>
+<tr>
+<td>build</td>
+<td>存放系统编译规则及generic等基础开发包配置</td>
+</tr>
+<tr>
+<td>cts</td>
+<td>Android兼容性测试套件标准</td>
+</tr>
+<tr>
+<td>tool</td>
+<td>一些工具的</td>
+</tr>
+<tr>
+<td>developers</td>
+<td>开发者目录（包含一些事例）</td>
+</tr>
+<tr>
+<td>development</td>
+<td>应用程序开发相关的工具等</td>
+</tr>
+<tr>
+<td>device</td>
+<td>设备相关的抽象</td>
+</tr>
+<tr>
+<td>docs</td>
+<td>指导文档</td>
+</tr>
+<tr>
+<td>external</td>
+<td>android使用到的一些开源的东西</td>
+</tr>
+<tr>
+<td>frameworks</td>
+<td>android核心框架，包含了java代码以及c代码</td>
+</tr>
+<tr>
+<td>hardware</td>
+<td>硬件相关的HAL代码</td>
+</tr>
+<tr>
+<td>libcore</td>
+<td>核心库</td>
+</tr>
+<tr>
+<td>libnativehelper</td>
+<td>JNI调用相关的库</td>
+</tr>
+<tr>
+<td>ndk</td>
+<td>ndk开发相关</td>
+</tr>
+<tr>
+<td>out</td>
+<td>编译后资源输出文件夹</td>
+</tr>
+<tr>
+<td>packges</td>
+<td>应用程序包</td>
+</tr>
+<tr>
+<td>sdk</td>
+<td>sdk以及模拟器存放目录</td>
+</tr>
+</tbody>
+</table>
+<h2 id="二编译过程简介">二、编译过程简介</h2>
+<p>[https://source.android.com/source/building.html]</p>
+<ol>
+<li>设置环境</li>
+</ol>
+<p>使用envsetup.sh脚本初始化环境。请注意：将 source 替换成 . 可以省去一些字符，这种简写形式在文档中更为常用</p>
+<pre><code>source build/envsetup.sh
+或
+. build/envsetup.sh
+</code></pre>
+<ol start="2">
+<li>选择目标</li>
+</ol>
+<p>使用 lunch 选择要编译的目标。确切的配置可以作为参数进行传递，如</p>
+<pre><code>lunch aosp_arm-eng
+</code></pre>
+<p>该命令表示针对模拟器进行完整编译，并且所有调试功能均处于启用状态。</p>
+<p>如果没有提供仍和参数就运行命令，lunch将提示选择一个目标。</p>
+<p>所有编译目标都采用 BUILD-BUILDTYPE 形式，其中 BUILD 是表示特定功能组合的代号。</p>
+<p>BUILDTYPE 是以下类型之一：</p>
+<table>
+<thead>
+<tr>
+<th>编译类型</th>
+<th>使用情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user</td>
+<td>权限受限；适用于生产环境</td>
+</tr>
+<tr>
+<td>userdebug</td>
+<td>与 user 类似，但具有 root 权限和可调式性；是进行调试时的首选编译类型</td>
+</tr>
+<tr>
+<td>eng</td>
+<td>具有额外调试工具的开发配置</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>编译代码</li>
+</ol>
+<p>您可以使用 make 编译任何代码。 GNU Make 可以借助 -jN 参数处理并行任务，通常使用的任务数 N 介于编译时所使用的计算机上硬件线程数的 1-2 倍之间</p>
+<pre><code>make -j8
+</code></pre>
+<h2 id="三envsetupsh-都做了些什么">三、envsetup.sh 都做了些什么？</h2>
+<p>在分析envsetup.sh之前，我们先看看两个小问题：</p>
+<ol>
+<li>
+<p>执行该脚本时有些退linux不是很熟悉的朋友经常会碰到envsetup.sh文件无可执行权限问题，使用下面命令加上即可：</p>
+<p>$chmod a+x envsetup.sh</p>
+</li>
+<li>
+<p>还有一个问题是经常出现的build/envsetup.sh: 1: Syntax error: &ldquo;(&rdquo; unexpected，别慌，由于我们使用的是Ubuntu，而Ubuntu默认使用的shell环境是dash，而envsetup.sh默认是指定bash的，所以我们只需要将dash切换到bash即可:</p>
+<p>执行$sudo dpkg-reconfigure dash命令，并选择“否”，最好重新打开终端</p>
+</li>
+<li>
+<p>我们先看看，执行了source build/envsetup.sh后有什么效果：</p>
+</li>
+</ol>
+<p><img src="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="envsetup"></p>
+<p>我们很直观的看到，直接includ了很多shell脚本，光看这里看不出什么，我们不妨看看源码！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e"># Execute the contents of any vendorsetup.sh files we can find.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> f in <span style="color:#960050;background-color:#1e0010">`</span>test <span style="color:#f92672">-</span>d device <span style="color:#f92672">&amp;&amp;</span> find <span style="color:#f92672">-</span>L device <span style="color:#f92672">-</span>maxdepth <span style="color:#ae81ff">4</span> <span style="color:#f92672">-</span>name <span style="color:#960050;background-color:#1e0010">&#39;</span>vendorsetup.sh<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">/</span>dev<span style="color:#f92672">/</span>null <span style="color:#f92672">|</span> sort<span style="color:#960050;background-color:#1e0010">`</span> \
+</span></span><span style="display:flex;"><span>         <span style="color:#960050;background-color:#1e0010">`</span>test <span style="color:#f92672">-</span>d vendor <span style="color:#f92672">&amp;&amp;</span> find <span style="color:#f92672">-</span>L vendor <span style="color:#f92672">-</span>maxdepth <span style="color:#ae81ff">4</span> <span style="color:#f92672">-</span>name <span style="color:#960050;background-color:#1e0010">&#39;</span>vendorsetup.sh<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">/</span>dev<span style="color:#f92672">/</span>null <span style="color:#f92672">|</span> sort<span style="color:#960050;background-color:#1e0010">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;including $f&#34;</span>
+</span></span><span style="display:flex;"><span>    . <span style="color:#960050;background-color:#1e0010">$</span>f
+</span></span><span style="display:flex;"><span>done
+</span></span><span style="display:flex;"><span>unset f
+</span></span></code></pre></div><p>上面的脚本代码依次查找{device, vendor, product}目录下的vendorsetup.sh文件，并分别导入到当前环境中来！</p>
+<ol start="4">
+<li>我们继续翻envsetup.sh的源码你会发现，一直在定义函数而这些函数有很多我们会是我们后面直接用到的，比如说lunch、mm、mmm等等。</li>
+</ol>
+<h2 id="四lunch-命令">四、lunch 命令</h2>
+<p>1.首先看看lunch命令执行后出现了什么</p>
+<p><img src="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="lunch"></p>
+<p>出现了上述信息，就是等待我们选择编译的平台，下表为不同版本的总结</p>
+<table>
+<thead>
+<tr>
+<th>user</th>
+<th>userdebug</th>
+<th>eng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>仅安装标签为 user 的模块</td>
+<td>安装标签为 user、debug 的模块</td>
+<td>安装标签为 user、debug、eng 的模块</td>
+</tr>
+<tr>
+<td>设定属性 ro.secure=1，打开安全检查功能</td>
+<td>设定属性 ro.secure=1，打开安全检查功能</td>
+<td>设定属性 ro.secure=0，关闭安全检查功能</td>
+</tr>
+<tr>
+<td>设定属性 ro.debuggable=0，关闭应用调试功能</td>
+<td>设定属性 ro.debuggable=1，启用应用调试功能</td>
+<td>设定属性 ro.debuggable=1，启用应用调试功能</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>ro.kernel.android.checkjni=1，启用 JNI 调用检查</td>
+</tr>
+<tr>
+<td>默认关闭 adb 功能</td>
+<td>默认打开 adb 功能</td>
+<td>默认打开 adb 功能</td>
+</tr>
+<tr>
+<td>打开 Proguard 混淆器</td>
+<td>打开 Proguard 混淆器</td>
+<td>关闭 Proguard 混淆器</td>
+</tr>
+<tr>
+<td>打开 DEXPREOPT 预先编译优化</td>
+<td>打开 DEXPREOPT 预先编译优化</td>
+<td>关闭 DEXPREOPT 预先编译优化</td>
+</tr>
+</tbody>
+</table>
+<p>源码编译的第一个阶段我们知道envsetup.sh干的其中一件事就是定义了很多函数，而这些函数中就有lunch</p>
+<h2 id="五lunch源码分析平台列表如何获取">五、lunch源码分析（平台列表如何获取）</h2>
+<ol>
+<li>首先我们看看执行 lunch 命令之后平台菜单是怎么来的，下面是 lunch 函数的部分源码：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> lunch<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    local answer
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        answer<span style="color:#f92672">=</span>$1
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        print_lunch_menu
+</span></span><span style="display:flex;"><span>        echo -n <span style="color:#e6db74">&#34;Which would you like? [aosp_arm-eng] &#34;</span>
+</span></span><span style="display:flex;"><span>        read answer
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span></code></pre></div><p>从代码中我们可以看到，当我们执行命令的时候可以有两种方式，第一种就是直接指定编译平台的话可以通过 lunch xxx_xxx_eng 这样的带参数的方式执行，这样会通过 $1 将第一个参数保存到 answer 中，第二中就是不带参数的，这里我们执行的是第二种，那么代码就会走到 print_lunch_menu。</p>
+<ol start="2">
+<li>接下来我们看下 print_lunch_menu 源码：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> print_lunch_menu<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    local uname<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>uname<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>    echo
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;You&#39;re building on&#34;</span> $uname
+</span></span><span style="display:flex;"><span>    echo
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;Lunch menu... pick a combo:&#34;</span>
+</span></span><span style="display:flex;"><span>    local i<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    local choice
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> choice in <span style="color:#e6db74">${</span>LUNCH_MENU_CHOICES[@]<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;     </span>$i<span style="color:#e6db74">. </span>$choice<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        i<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#66d9ef">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>    echo
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>可以看出，这个函数做的一件事就是遍历并打印编译平台列表，而遍历的对象就是 LUNCH_MENU_CHOICES 这个数组，我们接下来看下这个数组的数据是怎么来的</p>
+<ol start="3">
+<li>LUNCH_MENU_CHOICES 数据来源：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Clear this variable.  It will be built up again when the vendorsetup.sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># files are included at the end of this file.</span>
+</span></span><span style="display:flex;"><span>unset LUNCH_MENU_CHOICES
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> add_lunch_combo<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    local new_combo<span style="color:#f92672">=</span>$1
+</span></span><span style="display:flex;"><span>    local c
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> c in <span style="color:#e6db74">${</span>LUNCH_MENU_CHOICES[@]<span style="color:#e6db74">}</span> ; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$new_combo<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span>$c<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>    LUNCH_MENU_CHOICES<span style="color:#f92672">=(</span><span style="color:#e6db74">${</span>LUNCH_MENU_CHOICES[@]<span style="color:#e6db74">}</span> $new_combo<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># add the default one here</span>
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_arm-eng
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_arm64-eng
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_mips-eng
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_mips64-eng
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_x86-eng
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_x86_64-eng
+</span></span></code></pre></div><p>在这段代码中，我们看到，程序通过不断的调用 add_lunch_combo 函数，添加默认的编译平台选项到 LUNCH_MENU_CHOICES 中，这就是我们在执行 lunch 命令后出现的平台列表的数据来源了！但是有信息的朋友可能就发现了，这里只不过给我们添加了 6 个默认值，可是我们从前面的打印出来的列表中看一看到有二十多个呢，其它的哪来的呢？</p>
+<p>原来 android 源码编译第一个阶段的时候 envsetup.sh 的做的其中一件事，就是通过下面的代码加载了很多的 vendorsetup.sh 脚本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Execute the contents of any vendorsetup.sh files we can find.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> f in <span style="color:#e6db74">`</span>test -d device <span style="color:#f92672">&amp;&amp;</span> find -L device -maxdepth <span style="color:#ae81ff">4</span> -name <span style="color:#e6db74">&#39;vendorsetup.sh&#39;</span> 2&gt; /dev/null | sort<span style="color:#e6db74">`</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>         <span style="color:#e6db74">`</span>test -d vendor <span style="color:#f92672">&amp;&amp;</span> find -L vendor -maxdepth <span style="color:#ae81ff">4</span> -name <span style="color:#e6db74">&#39;vendorsetup.sh&#39;</span> 2&gt; /dev/null | sort<span style="color:#e6db74">`</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>         <span style="color:#e6db74">`</span>test -d product <span style="color:#f92672">&amp;&amp;</span> find -L product -maxdepth <span style="color:#ae81ff">4</span> -name <span style="color:#e6db74">&#39;vendorsetup.sh&#39;</span> 2&gt; /dev/null | sort<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;including </span>$f<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    . $f
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>unset f
+</span></span></code></pre></div><p>之前我们并没有说这些脚本是用来干嘛的，那么现在我们看下这些脚本里面都有些什么内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Copyright 2013 The Android Open Source Project
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># you may not use this file except in compliance with the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># You may obtain a copy of the License at
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#      http:</span><span style="color:#75715e">//www.apache.org/licenses/LICENSE-2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Unless required by applicable law or agreed to in writing, software
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># See the License for the specific language governing permissions and
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># limitations under the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>add_lunch_combo aosp_deb<span style="color:#f92672">-</span>userdebug
+</span></span></code></pre></div><p>怎么样？很惊喜吧，从代码中我们看到，只有 add_lunch_combo aosp_deb-userdebug 这句是有效的，有没有似曾相识的感觉？完全就是在通过 add_lunch_combo 函数给 LUNCH_MENU_CHOICES 添加数据嘛，，这下知道那么多平台列表是哪来的了吧？也就是说，当我们定制了自己的系统，我们只需要在 vendor 目录下创建对应的目录，并且创建我们所需的 vendorsetup.sh 脚本调用 add_lunch_combo 函数就可以添加我们对应平台的标识了! 至于这个标识有什么用后面再给大家说明。</p>
+<h2 id="六继续lunch剩下的源码">六、继续lunch剩下的源码</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> lunch<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    local selection<span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span>$answer<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        selection<span style="color:#f92672">=</span>aosp_arm-eng
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> <span style="color:#f92672">(</span>echo -n $answer | grep -q -e <span style="color:#e6db74">&#34;^[0-9][0-9]*</span>$<span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $answer -le <span style="color:#e6db74">${#</span>LUNCH_MENU_CHOICES[@]<span style="color:#e6db74">}</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            selection<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>LUNCH_MENU_CHOICES[<span style="color:#66d9ef">$((</span>$answer<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#66d9ef">))</span>]<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> <span style="color:#f92672">(</span>echo -n $answer | grep -q -e <span style="color:#e6db74">&#34;^[^\-][^\-]*-[^\-][^\-]*</span>$<span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        selection<span style="color:#f92672">=</span>$answer
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span>$selection<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        echo
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Invalid lunch combo: </span>$answer<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    export TARGET_BUILD_APPS<span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>    local product<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n $selection | sed -e <span style="color:#e6db74">&#34;s/-.*</span>$<span style="color:#e6db74">//&#34;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>    check_product $product
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        echo
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;** Don&#39;t have a product spec for: &#39;</span>$product<span style="color:#e6db74">&#39;&#34;</span>
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;** Do you have the right repo manifest?&#34;</span>
+</span></span><span style="display:flex;"><span>        product<span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    local variant<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n $selection | sed -e <span style="color:#e6db74">&#34;s/^[^\-]*-//&#34;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>    check_variant $variant
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        echo
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;** Invalid variant: &#39;</span>$variant<span style="color:#e6db74">&#39;&#34;</span>
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;** Must be one of </span><span style="color:#e6db74">${</span>VARIANT_CHOICES[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        variant<span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span>$product<span style="color:#e6db74">&#34;</span> -o -z <span style="color:#e6db74">&#34;</span>$variant<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        echo
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    export TARGET_PRODUCT<span style="color:#f92672">=</span>$product
+</span></span><span style="display:flex;"><span>    export TARGET_BUILD_VARIANT<span style="color:#f92672">=</span>$variant
+</span></span><span style="display:flex;"><span>    export TARGET_BUILD_TYPE<span style="color:#f92672">=</span>release
+</span></span><span style="display:flex;"><span>    echo
+</span></span><span style="display:flex;"><span>    set_stuff_for_environment
+</span></span><span style="display:flex;"><span>    printconfig
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>上面的代码不算少，但是我们只需要关注这段代码做的下面三件事即可</p>
+<ol>
+<li>检查 answer 合法性，并给 selection 赋值</li>
+</ol>
+<p>我们首先看第一个判断 if [-z &ldquo;$answer&rdquo;]，表示如果用户没有输入任何东西直接回车的话，就会通过 selection=aosp_arm-eng 指定缺省的编译选项。</p>
+<p>其实这里我们只需要关注 elif (echo -n $answer | grep -q -e &ldquo;^[0-9][0-9]*$&rdquo;) 这个判断即可，走入这个判断就证明我们有手动指定了编译选项，然后通过 selection=${LUNCH_MENU_CHOICES[$(($answer-1))]} 给 selection 赋值，做完了一系列的判断赋值之后通过 if [ -z &ldquo;$selection&rdquo; ] 判断 selection 是否被赋值，如果没有则退出程序并通知。</p>
+<ol start="2">
+<li>
+<p>按照 product-variant 的格式拆分 selection 并做合法性校验</p>
+<p>这里我们先说明下，什么是 product-variant，这里的 product 指的是我们的产品型号、而 variant 就是编译类型，以 aosp_arm-eng 为列，这里的 product=aosp_arm，variant=eng;</p>
+</li>
+</ol>
+<p>那么上面的代码中，我们看到 local product=$(echo -n $selection | sed -e &ldquo;s/-.*$//&rdquo;) 提取 product，并通过 check_product 函数进行检验，同样的 local variant=$(echo -n $selection | sed -e &ldquo;s/^[^-]*-//&rdquo;) 对 variant 进行了分离，然后通过 check_variant 函数进行校验, 我们下校验的过程：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>VARIANT_CHOICES<span style="color:#f92672">=(</span>user userdebug eng<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># check to see if the supplied variant is valid</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> check_variant<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> v in <span style="color:#e6db74">${</span>VARIANT_CHOICES[@]<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$v<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>其实很简单，只不过是判断我们分离出来的 variant 是否在 VARIANT_CHOICES 中，如果在就证明是合法的，返回 0, 否则返回 1，紧接着通过 if [$? -ne 0] 判断，如果 $?(上一个指令返回的值) 不等于 0 就将 variant 置空并打印提示</p>
+<ol start="3">
+<li>设置环境变量</li>
+</ol>
+<p>接下来我们看到，程序分别对下面几个环境遍历进行了的赋值处理。</p>
+<pre><code>export TARGET_PRODUCT=$product
+export TARGET_BUILD_VARIANT=$variant
+export TARGET_BUILD_TYPE=release
+</code></pre>
+<p>其实这真个 lunch 的过程还设置了大量的环境变量，涉及到的函数有 set_stuff_for_environment、printconfig 等，这里就不细细展开，lunch 说白了就是一个设置环境变量的过程，最后你会发现他做了那么多事，只为了最后的那一段环境变量而已，如图：</p>
+<p><img src="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="设置环境变量"></p>
+
+  </article>
+
+  
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">Sitemap</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="http://example.org/tags/">Tags</a></li>
+              
+              
+                <li><a href="http://example.org/categories/">Categories</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="http://example.org/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            
+            2022
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
