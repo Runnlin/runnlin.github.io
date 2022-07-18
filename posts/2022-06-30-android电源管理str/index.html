@@ -11,11 +11,11 @@
 术语	说明 应用处理器 (AP)	系统芯片 (SoC) 的一部分。 板级支持处理器 (BSP)	产品正常运行所需的所有硬件特定代码。通常由 SoC 供应商和硬件制造商提供。它涵盖设备驱动程序、PMIC 序列代码和 SoC 启动等多项内容。 CarPowerManager (CPM)	公开一个 API 以供应用记录电源状态的更改。 CarPowerManagementService (CPMS)	实现汽车电源状态机、与 VHAL 连接，并执行对 suspend() 和 shutdown() 的最终调用。 CarPowerPolicyDaemon (CPPD)	公开原生进程的 AIDL 接口，以注册电源政策监听器。 通用输入 / 输出 (GPIO)	用于一般用途的数字信号引脚。 硬件抽象层 (HAL)	一种软件层，所有其他更高级别模块必须与之交互才能使用硬件功能。 休眠	也称为 “挂起到磁盘”(S2D/S4)。将 SoC 置于 S4 电源模式（休眠），将 RAM 内容写入非易失性介质（如闪存或磁盘），并且整个系统断电。 介质处理器 (MP)	请参阅系统芯片 (SoC)。 电源管理集成电路 (PMIC)	芯片，用于管理主机系统的电源要求。 系统芯片 (SoC)	运行 AAOS 的主处理器，通常由 Intel、MediaTek、Nvidia、Qualcomm、Renesas 和 Texas Instruments 等制造商提供。 挂起	也称为 “挂起到 RAM”（S2R 或 STR）。将 SoC 置于 S3 电源模式，CPU 断电而 RAM 仍通电。 车载 HAL (VHAL)	用于与车载网络连接的 Android API。第 1 级合作伙伴或原始设备制造商 (OEM) 负责编写此模块。车载网络可以使用任何物理层（如 CAN、LIN、MOST 和以太网）。VHAL 可以抽象化处理此车载网络，以使 AAOS 能够与车辆交互。 车载接口处理器 (VIP)	请参见 “车载 MCU”。 车载主控单元 (VMCU)	微控制器，可提供车载网络与 SoC 之间的接口。SoC 通过 USB、UART、SPI 和 GPIO 信号与 VMCU 通信。 系统设计 本节将介绍 AAOS 如何表示应用处理器的电源状态以及哪些模块会实现电源管理系统。本材料还将介绍这些模块如何协同工作以及状态转换通常如何发生。" />
 
 
-<link rel="canonical" href="http://example.org/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/" />
+<link rel="canonical" href="https://runnlin.github.io/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/" />
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-<link rel="stylesheet" href="http://example.org/css/den.css">
+<link rel="stylesheet" href="https://runnlin.github.io/css/den.css">
 
 
 
@@ -26,7 +26,7 @@
 术语 本文档中使用了以下术语：
 术语	说明 应用处理器 (AP)	系统芯片 (SoC) 的一部分。 板级支持处理器 (BSP)	产品正常运行所需的所有硬件特定代码。通常由 SoC 供应商和硬件制造商提供。它涵盖设备驱动程序、PMIC 序列代码和 SoC 启动等多项内容。 CarPowerManager (CPM)	公开一个 API 以供应用记录电源状态的更改。 CarPowerManagementService (CPMS)	实现汽车电源状态机、与 VHAL 连接，并执行对 suspend() 和 shutdown() 的最终调用。 CarPowerPolicyDaemon (CPPD)	公开原生进程的 AIDL 接口，以注册电源政策监听器。 通用输入 / 输出 (GPIO)	用于一般用途的数字信号引脚。 硬件抽象层 (HAL)	一种软件层，所有其他更高级别模块必须与之交互才能使用硬件功能。 休眠	也称为 “挂起到磁盘”(S2D/S4)。将 SoC 置于 S4 电源模式（休眠），将 RAM 内容写入非易失性介质（如闪存或磁盘），并且整个系统断电。 介质处理器 (MP)	请参阅系统芯片 (SoC)。 电源管理集成电路 (PMIC)	芯片，用于管理主机系统的电源要求。 系统芯片 (SoC)	运行 AAOS 的主处理器，通常由 Intel、MediaTek、Nvidia、Qualcomm、Renesas 和 Texas Instruments 等制造商提供。 挂起	也称为 “挂起到 RAM”（S2R 或 STR）。将 SoC 置于 S3 电源模式，CPU 断电而 RAM 仍通电。 车载 HAL (VHAL)	用于与车载网络连接的 Android API。第 1 级合作伙伴或原始设备制造商 (OEM) 负责编写此模块。车载网络可以使用任何物理层（如 CAN、LIN、MOST 和以太网）。VHAL 可以抽象化处理此车载网络，以使 AAOS 能够与车辆交互。 车载接口处理器 (VIP)	请参见 “车载 MCU”。 车载主控单元 (VMCU)	微控制器，可提供车载网络与 SoC 之间的接口。SoC 通过 USB、UART、SPI 和 GPIO 信号与 VMCU 通信。 系统设计 本节将介绍 AAOS 如何表示应用处理器的电源状态以及哪些模块会实现电源管理系统。本材料还将介绍这些模块如何协同工作以及状态转换通常如何发生。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://runnlin.github.io/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/" /><meta property="article:section" content="posts" />
 
 
 
@@ -51,7 +51,7 @@
   <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
     <div class="header-logo navbar-brand">
       
-        <a class="float-left" href="http://example.org/">
+        <a class="float-left" href="https://runnlin.github.io/">
       
         
         
@@ -467,15 +467,15 @@ powerManager.setListener(powerListener, executor);
         <ul class="list-unstyled">
             
               
-                <li><a href="http://example.org/tags/">Tags</a></li>
+                <li><a href="https://runnlin.github.io/tags/">Tags</a></li>
               
               
-                <li><a href="http://example.org/categories/">Categories</a></li>
+                <li><a href="https://runnlin.github.io/categories/">Categories</a></li>
               
             
             
             
-            <li><a rel="alternate" type="application/rss&#43;xml" href="http://example.org/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://runnlin.github.io/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
             
             
             

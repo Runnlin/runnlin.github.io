@@ -10,11 +10,11 @@
 /* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &amp;#34;code:${head[0]},${head[1]}&amp;#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;amp;&amp;amp; head[1].toInt() == -92 -&amp;gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;amp;&amp;amp; head[1].toInt() == -1 -&amp;gt; intern() // UTF8 head[0].toInt() == -17 &amp;amp;&amp;amp; head[1].toInt() == -69 &amp;amp;&amp;amp; head[2].toInt() == -65 -&amp;gt; intern() else -&amp;gt; intern() } } " />
 
 
-<link rel="canonical" href="http://example.org/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/" />
+<link rel="canonical" href="https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/" />
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-<link rel="stylesheet" href="http://example.org/css/den.css">
+<link rel="stylesheet" href="https://runnlin.github.io/css/den.css">
 
 
 
@@ -24,7 +24,7 @@
 判断方法：
 /* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &#34;code:${head[0]},${head[1]}&#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;&amp; head[1].toInt() == -92 -&gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;&amp; head[1].toInt() == -1 -&gt; intern() // UTF8 head[0].toInt() == -17 &amp;&amp; head[1].toInt() == -69 &amp;&amp; head[2].toInt() == -65 -&gt; intern() else -&gt; intern() } } " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/" /><meta property="article:section" content="posts" />
 
 
 
@@ -47,7 +47,7 @@
   <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
     <div class="header-logo navbar-brand">
       
-        <a class="float-left" href="http://example.org/">
+        <a class="float-left" href="https://runnlin.github.io/">
       
         
         
@@ -132,15 +132,15 @@
         <ul class="list-unstyled">
             
               
-                <li><a href="http://example.org/tags/">Tags</a></li>
+                <li><a href="https://runnlin.github.io/tags/">Tags</a></li>
               
               
-                <li><a href="http://example.org/categories/">Categories</a></li>
+                <li><a href="https://runnlin.github.io/categories/">Categories</a></li>
               
             
             
             
-            <li><a rel="alternate" type="application/rss&#43;xml" href="http://example.org/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://runnlin.github.io/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
             
             
             

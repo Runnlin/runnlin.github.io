@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Framework on My New Hugo Site</title>
-    <link>http://example.org/tags/framework/</link>
+    <link>https://runnlin.github.io/tags/framework/</link>
     <description>Recent content in Framework on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://example.org/tags/framework/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/framework/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>init 工作流程简述</title>
-      <link>http://example.org/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
+      <link>https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
       <pubDate>Thu, 28 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</guid>
+      <guid>https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</guid>
       <description>Init 工作流程简述 init的工作流程可以精简为以下四点：
 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作就是在其中的某个阶段完成的 调用 property_init 初始化属性相关的资源，并且通过 property_start_service 启动属性服务 init 进入死循环，并且等待一些事情的发生。重点关注 init 如何处理来自 socket 和来自属性服务器的相关事情 精简工作流程是分析代码时常用的方法
 解析配置文件 init会解析两个配置文件，一个是系统配置文件 init.rc， 另一个是与硬件平台相关的配置文件 init.[hardwordName].rc。对这两个配置文件进行解析调用的是同一个 parse_config_file 函数

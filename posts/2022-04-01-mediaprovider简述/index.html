@@ -11,11 +11,11 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
 /development/apps/Development/src/com/android/development/MediaScannerActivity.javapackage com.android.development; public class MediaScannerActivity extends Activity { private TextView mTitle; /** Called when the activity is first created or resumed. */ @Override public void onCreate(Bundle icicle) { super.onCreate(icicle); setContentView(R.layout.media_scanner_activity); IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED); intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED); intentFilter.addDataScheme(&amp;#34;file&amp;#34;); registerReceiver(mReceiver, intentFilter); mTitle = (TextView) findViewById(R.id.title); } /** Called when the activity going into the background or being destroyed." />
 
 
-<link rel="canonical" href="http://example.org/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/" />
+<link rel="canonical" href="https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/" />
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-<link rel="stylesheet" href="http://example.org/css/den.css">
+<link rel="stylesheet" href="https://runnlin.github.io/css/den.css">
 
 
 
@@ -26,7 +26,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
 1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
 /development/apps/Development/src/com/android/development/MediaScannerActivity.javapackage com.android.development; public class MediaScannerActivity extends Activity { private TextView mTitle; /** Called when the activity is first created or resumed. */ @Override public void onCreate(Bundle icicle) { super.onCreate(icicle); setContentView(R.layout.media_scanner_activity); IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED); intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED); intentFilter.addDataScheme(&#34;file&#34;); registerReceiver(mReceiver, intentFilter); mTitle = (TextView) findViewById(R.id.title); } /** Called when the activity going into the background or being destroyed." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" />
 
@@ -51,7 +51,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
   <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
     <div class="header-logo navbar-brand">
       
-        <a class="float-left" href="http://example.org/">
+        <a class="float-left" href="https://runnlin.github.io/">
       
         
         
@@ -83,8 +83,8 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
           <div class="clearfix"></div>
           <p class="float-right header-tags">
               <i class="fas fa-tags" aria-hidden="true"></i>
-              <a href="http://example.org/tags/android/">Android</a>, 
-                <a href="http://example.org/tags/media/">Media</a>
+              <a href="https://runnlin.github.io/tags/android/">Android</a>, 
+                <a href="https://runnlin.github.io/tags/media/">Media</a>
           </p>
         
         
@@ -1629,15 +1629,15 @@ The <code>MediaInserter</code> is also write data to MediaProvider, eventually i
         <ul class="list-unstyled">
             
               
-                <li><a href="http://example.org/tags/">Tags</a></li>
+                <li><a href="https://runnlin.github.io/tags/">Tags</a></li>
               
               
-                <li><a href="http://example.org/categories/">Categories</a></li>
+                <li><a href="https://runnlin.github.io/categories/">Categories</a></li>
               
             
             
             
-            <li><a rel="alternate" type="application/rss&#43;xml" href="http://example.org/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://runnlin.github.io/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
             
             
             

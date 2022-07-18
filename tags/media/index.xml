@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Media on My New Hugo Site</title>
-    <link>http://example.org/tags/media/</link>
+    <link>https://runnlin.github.io/tags/media/</link>
     <description>Recent content in Media on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://example.org/tags/media/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/media/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Android MediaMetadataRetriever 用法介绍</title>
-      <link>http://example.org/posts/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
+      <link>https://runnlin.github.io/posts/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
       <pubDate>Mon, 16 May 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</guid>
+      <guid>https://runnlin.github.io/posts/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</guid>
       <description>Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能截取视频的第一帧获取视频长宽等等，通过它能展示一个媒体文件几乎所有的信息MediaMetadataRetriever类简单介绍 属于在android api的那个包下：android.media.MediaMetadataRetriever 类简单介绍： MediaMetadataRetriever类提供了用于从输入媒体文件检索帧和元数据的统一接口。 这个是android提供的类，用来获取本地和网络media相关文件的信息 MediaMetadataRetriever常量以及属性进行简单介绍 METADATA_KEY_ALBUM ：检索数据源的专辑标题信息的元数据键。 METADATA_KEY_ALBUMARTIST： 检索与数据源相关的表演者或艺术家的信息的元数据键。 METADATA_KEY_ARTIST：检索有关数据源的艺术家的信息的元数据键。 METADATA_KEY_AUTHOR：检索有关数据源作者的信息的元数据键 。 METADATA_KEY_BITRATE：此键检索平均比特率（以比特/秒），如果可用的话。 METADATA_KEY_CD_TRACK_NUMBER：元数据关键字，用于检索描述原始数据记录中音频数据源的顺序的数字字符串 METADATA_KEY_COMPILATION：检索音乐专辑编辑状态的元数据键 METADATA_KEY_COMPOSER：检索有关数据源的作曲家的信息的元数据键 METADATA_KEY_DATE：检索或创建数据源时的日期的元数据键 METADATA_KEY_DISC_NUMBER：用于检索描述音频数据源的集合的哪一部分的数字字符串的元数据键 METADATA_KEY_DURATION：检索数据源回放持续时间的元数据键 METADATA_KEY_GENRE:检索数据源的内容类型或类型的元数据键 METADATA_KEY_HAS_AUDIO:如果存在此密钥，则媒体包含音频内容 METADATA_KEY_HAS_VIDEO:如果存在此密钥，则媒体包含视频内容 METADATA_KEY_LOCATION:此键检索位置信息，如果可用的话。该位置应根据ISO-6709标准，在MP4/3GP框“@ XYZ”下指定。例如，经度为90度和度为180度的位置将被检索为“-90＋180”。 METADATA_KEY_MIMETYPE:检索数据源MIME类型的元数据键。一些示例MIME类型包括：&amp;ldquo;video/mp4&amp;rdquo;, &amp;ldquo;audio/mp4&amp;rdquo;, &amp;ldquo;audio/amr-wb&amp;rdquo; METADATA_KEY_NUM_TRACKS:元数据键，用于检索数据源（如MP4或3GPP文件）中的音轨的数目，如音频、视频、文本。 METADATA_KEY_TITLE:检索数据源标题的元数据键 METADATA_KEY_VIDEO_HEIGHT:如果媒体包含视频，则该键检索其高度 METADATA_KEY_VIDEO_ROTATION:此键检索视频旋转角度的程度，如果可用的话。视频旋转角度可以是0, 90, 180度，也可以是270度 METADATA_KEY_VIDEO_WIDTH:如果媒体包含视频，则该密钥检索其宽度 METADATA_KEY_WRITER:检索数据源的作者（如歌词作者）信息的元数据键 METADATA_KEY_YEAR:检索创建或修改数据源的一年的元数据密钥 OPTION_CLOSEST:此选项与GETFrimeTimeTime（long，int）一起使用，以检索与最接近或给定时间的数据源相关联的帧（不一定是关键帧） OPTION_CLOSEST_SYNC:（时间）或给定时间的数据源相关联的同步（或密钥）帧。 OPTION_NEXT_SYNC:此选项与GETFrimeTimeTime（long，int）一起使用，以检索与数据源相关联的同步（或密钥）帧，该数据源位于或在给定时间之后。 OPTION_PREVIOUS_SYNC:此选项与GETFrimeTimeTime（long，int）一起使用，以检索与数据源相关联的同步（或密钥）帧，该数据源正好位于给定时间之前或给定时间 MediaMetadataRetriever 获取这个对象的方法 public MediaMetadataRetriever ()
 MediaMetadataRetriever中的使用方法进行详细介绍 public String extractMetadata (int keyCode) 方法描述：在 setDataSource()之后调用此方法。此方法检索与键值相关联的元数据值。当前支持的键代码被列为Meta DATAXXXX常量。使用任何其他值，它返回空指针
 public byte[] getEmbeddedPicture () 方法描述：在 setDataSource()之后调用此方法。此方法找到与数据源相关联的可选图形或相册/封面艺术。如果有超过一张照片，（任何）其中一个被退还
@@ -21,10 +21,10 @@ public Bitmap getFrameAtTime (long timeUs, int option) 方法介绍:在SETDATABO
     
     <item>
       <title>Android 深入浅出之 Binder 机制（转载）</title>
-      <link>http://example.org/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</link>
+      <link>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</link>
       <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</guid>
+      <guid>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</guid>
       <description>android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
 MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
 1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
@@ -33,10 +33,10 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
     
     <item>
       <title>Android 深入浅出之 Binder 机制（转载）</title>
-      <link>http://example.org/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
+      <link>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
       <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</guid>
+      <guid>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</guid>
       <description>MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
 MediaScannerService 研究
 侯 亮
