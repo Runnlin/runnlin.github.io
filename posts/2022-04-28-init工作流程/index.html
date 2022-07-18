@@ -3,7 +3,7 @@
 <head>
   <meta name="generator" content="Hugo 0.101.0" />
   <meta charset="utf-8">
-  <title>init 工作流程简述 · My New Hugo Site</title>
+  <title>init 工作流程简述 · run blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Init 工作流程简述 init的工作流程可以精简为以下四点：
 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作就是在其中的某个阶段完成的 调用 property_init 初始化属性相关的资源，并且通过 property_start_service 启动属性服务 init 进入死循环，并且等待一些事情的发生。重点关注 init 如何处理来自 socket 和来自属性服务器的相关事情 精简工作流程是分析代码时常用的方法
@@ -75,7 +75,7 @@ parser.c
       
         
         
-          My New Hugo Site
+          run blog
          
       </a>
     </div>

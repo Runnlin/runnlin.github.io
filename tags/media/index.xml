@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Media on My New Hugo Site</title>
+    <title>Media on run blog</title>
     <link>https://runnlin.github.io/tags/media/</link>
-    <description>Recent content in Media on My New Hugo Site</description>
+    <description>Recent content in Media on run blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/media/index.xml" rel="self" type="application/rss+xml" />
@@ -20,19 +20,7 @@ public Bitmap getFrameAtTime (long timeUs, int option) 方法介绍:在SETDATABO
     </item>
     
     <item>
-      <title>Android 深入浅出之 Binder 机制（转载）</title>
-      <link>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</link>
-      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</guid>
-      <description>android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
-MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
-1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
-/development/apps/Development/src/com/android/development/MediaScannerActivity.javapackage com.android.development; public class MediaScannerActivity extends Activity { private TextView mTitle; /** Called when the activity is first created or resumed. */ @Override public void onCreate(Bundle icicle) { super.onCreate(icicle); setContentView(R.layout.media_scanner_activity); IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED); intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED); intentFilter.addDataScheme(&amp;#34;file&amp;#34;); registerReceiver(mReceiver, intentFilter); mTitle = (TextView) findViewById(R.id.title); } /** Called when the activity going into the background or being destroyed.</description>
-    </item>
-    
-    <item>
-      <title>Android 深入浅出之 Binder 机制（转载）</title>
+      <title>Android MediaScannerService（转载）</title>
       <link>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
       <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
       

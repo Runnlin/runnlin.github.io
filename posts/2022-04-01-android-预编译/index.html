@@ -3,7 +3,7 @@
 <head>
   <meta name="generator" content="Hugo 0.101.0" />
   <meta charset="utf-8">
-  <title>Android 预编译简述 · My New Hugo Site</title>
+  <title>Android 预编译简述 · run blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="常用到的Android.mk编译目标，包括编译包、二进制文件、预编译。 一. 常用的编译目标： BUILD_PACKAGE（既可以编apk，也可以编资源包文件，但是需要指定LOCAL_EXPORT_PACKAGE_RESOURCES:=true) BUILD_JAVA_LIBRARY（java共享库） BUILD_STATIC_JAVA_LIBRARY（java静态库） BUILD_EXECUTABLE（执行文件） BUILD_SHARED_LIBRARY（native共享库） BUILD_STATIC_LIBRARY（native静态库） 二. 预编译模块 在实际的开发中，并不会像Android一样将所有的源码集中在一起编译，有很多apk、so、jar等都是预先编译好的，编译系统需要将这些二进制文件复制到生成的image文件中。
 常用的方法是通过 PRODUCT_COPY_FILES 变量将这些文件直接复制到生成的image文件中；但是有些apk或jar包，需要使用系统的签名系统才能正常运行，这样用复制的方式就不行了。另外一些动态库文件可能是源码中的某些模块所以来的，用复制的方式也无法建立依赖关系，这将导致这些模块编译失败。Android可以通过定义预编译模块的方法来解决上面的问题。
@@ -55,7 +55,7 @@
       
         
         
-          My New Hugo Site
+          run blog
          
       </a>
     </div>

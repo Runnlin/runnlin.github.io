@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Android on My New Hugo Site</title>
+    <title>Android on run blog</title>
     <link>https://runnlin.github.io/tags/android/</link>
-    <description>Recent content in Android on My New Hugo Site</description>
+    <description>Recent content in Android on run blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
@@ -34,6 +34,24 @@ parser.c
 第一次包含keyword.h时，它声明了一些诸如 do_class_start 的函数，另外定义了一个枚举，枚举值为 K_class、K_mkdir 等关键字 第二次包含后，得到一个 keyword_info 结构体数组，这个结构体数组以前面定义的枚举值为索引，存储对应的关键字信息，这些信息包括关键字名称、处理函数、处理函数的参数个数，以及属性 根据keyword.h的定义，其中 symbol 为 on 或 service 的时候表示 section
 解析 init.rc 解析属性指的是 persist，就是在 adb 中输入的可以即时生效的配置属性，如 persist.service.adb.enable=1
 一个section的内容从这个标识 section 的关键字开始，到下一个标识section 的地方结束 init.rc中出现了名为 boot 和 init 的sction，这里两者就是前面介绍的4个动作执行阶段的boot和init。也就是说，在boot阶段执行的动作都是由 boot 这个 section 定义的 另外还可以发现，zygote被放在了一个 service section 中。下面以zygote 这个section为例，介绍service是如何解析的</description>
+    </item>
+    
+    <item>
+      <title>Android MediaScannerService（转载）</title>
+      <link>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
+      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</guid>
+      <description>MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
+MediaScannerService 研究
+侯 亮
+（本文以 Android 5.1 为准）
+MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。它并不是系统服务。MediaScannerService 和 MediaProvider 有着非常紧密的关系，因为扫描出的结果总需要存储到某个地方来展现给用户。那么它们具体是如何结合的呢？本文将逐步加以阐述。
+我们先来初步了解一下 MediaScannerService，它在 AndroidManifest.xml 文件里的相关信息如下：
+【packages/providers/mediaprovider/AndroidManifest.xml】
+&amp;lt;service android:&amp;gt;&amp;lt;intent-filter&amp;gt;&amp;lt;action android: /&amp;gt;&amp;lt;/intent-filter&amp;gt;&amp;lt;/service&amp;gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
+【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】
+public class MediaScannerService extends Service implements Runnable{private static final String TAG = &amp;#34;MediaScannerService&amp;#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager.</description>
     </item>
     
     <item>
@@ -81,36 +99,6 @@ MediaPlayerClient，这个是与 MediaPlayerService 交互的客户端程序
 二 MediaService 的诞生 MediaService 是一个应用程序，虽然 Android 搞了七七八八的 JAVA 之类的东西，但是在本质上，它还是一个完整的 Linux 操作系统，也还没有牛到什么应用程序都是 JAVA 写。所以，MS(MediaService) 就是一个和普通的 C++ 应用程序一样的东西。
 MediaService 的源码文件在：framework\base\Media\MediaServer\Main_mediaserver.cpp 中。让我们看看到底是个什么玩意儿！
 int main(int argc, char** argv) { //FT，就这么简单？？ // 获得一个 ProcessState 实例 sp&amp;lt;ProcessState&amp;gt; proc(ProcessState::self()); // 得到一个 ServiceManager 对象 sp&amp;lt;IServiceManager&amp;gt; sm = defaultServiceManager(); MediaPlayerService::instantiate();// 初始化 MediaPlayerService 服务 ProcessState::self()-&amp;gt;startThreadPool();// 看名字，启动 Process 的线程池？ IPCThreadState::self()-&amp;gt;joinThreadPool();// 将自己加入到刚才的线程池？ }W 其中，我们只分析 MediaPlayerService。</description>
-    </item>
-    
-    <item>
-      <title>Android 深入浅出之 Binder 机制（转载）</title>
-      <link>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</link>
-      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</guid>
-      <description>android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
-MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
-1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
-/development/apps/Development/src/com/android/development/MediaScannerActivity.javapackage com.android.development; public class MediaScannerActivity extends Activity { private TextView mTitle; /** Called when the activity is first created or resumed. */ @Override public void onCreate(Bundle icicle) { super.onCreate(icicle); setContentView(R.layout.media_scanner_activity); IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED); intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED); intentFilter.addDataScheme(&amp;#34;file&amp;#34;); registerReceiver(mReceiver, intentFilter); mTitle = (TextView) findViewById(R.id.title); } /** Called when the activity going into the background or being destroyed.</description>
-    </item>
-    
-    <item>
-      <title>Android 深入浅出之 Binder 机制（转载）</title>
-      <link>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
-      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</guid>
-      <description>MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
-MediaScannerService 研究
-侯 亮
-（本文以 Android 5.1 为准）
-MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。它并不是系统服务。MediaScannerService 和 MediaProvider 有着非常紧密的关系，因为扫描出的结果总需要存储到某个地方来展现给用户。那么它们具体是如何结合的呢？本文将逐步加以阐述。
-我们先来初步了解一下 MediaScannerService，它在 AndroidManifest.xml 文件里的相关信息如下：
-【packages/providers/mediaprovider/AndroidManifest.xml】
-&amp;lt;service android:&amp;gt;&amp;lt;intent-filter&amp;gt;&amp;lt;action android: /&amp;gt;&amp;lt;/intent-filter&amp;gt;&amp;lt;/service&amp;gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
-【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】
-public class MediaScannerService extends Service implements Runnable{private static final String TAG = &amp;#34;MediaScannerService&amp;#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager.</description>
     </item>
     
     <item>

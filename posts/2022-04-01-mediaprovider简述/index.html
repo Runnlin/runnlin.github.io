@@ -3,7 +3,7 @@
 <head>
   <meta name="generator" content="Hugo 0.101.0" />
   <meta charset="utf-8">
-  <title>Android 深入浅出之 Binder 机制（转载） · My New Hugo Site</title>
+  <title>MediaProvider · run blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
 MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
@@ -20,7 +20,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
 
 
 
-<meta property="og:title" content="Android 深入浅出之 Binder 机制（转载）" />
+<meta property="og:title" content="MediaProvider" />
 <meta property="og:description" content="android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
 MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
 1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
@@ -30,7 +30,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
 <meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" />
 
-<meta itemprop="name" content="Android 深入浅出之 Binder 机制（转载）">
+<meta itemprop="name" content="MediaProvider">
 <meta itemprop="description" content="android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
 MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
 1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
@@ -38,7 +38,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
 <meta itemprop="dateModified" content="2022-04-01T00:00:00+00:00" />
 <meta itemprop="wordCount" content="6009">
 <meta itemprop="keywords" content="Android,Media," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Android 深入浅出之 Binder 机制（转载）"/>
+<meta name="twitter:title" content="MediaProvider"/>
 <meta name="twitter:description" content="android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
 MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
 1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
@@ -55,7 +55,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
       
         
         
-          My New Hugo Site
+          run blog
          
       </a>
     </div>
@@ -75,7 +75,7 @@ MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver
   <div class="row">
     <div class="col-lg-12">
       <div class="header-content">
-        <h1 class="header-title">Android 深入浅出之 Binder 机制（转载）</h1>
+        <h1 class="header-title">MediaProvider</h1>
         <p class="header-date">
         Fri 01 April 2022
         <div class="header-underline"></div>

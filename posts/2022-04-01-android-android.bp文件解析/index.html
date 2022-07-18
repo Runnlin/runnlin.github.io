@@ -3,7 +3,7 @@
 <head>
   <meta name="generator" content="Hugo 0.101.0" />
   <meta charset="utf-8">
-  <title>Android.bp 文件解析 · My New Hugo Site</title>
+  <title>Android.bp 文件解析 · run blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Android.bp 文件解析 Android.bp文件是什么？ Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！
 Android.bp文件配置规则 【模块和属性】 Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：
@@ -83,7 +83,7 @@ cc_defaults {name: &#34;gzip_defaults&#34;,shared_libs: [&#34;libz&#34;],stl:
       
         
         
-          My New Hugo Site
+          run blog
          
       </a>
     </div>
