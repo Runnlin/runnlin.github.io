@@ -43,7 +43,7 @@
 系统启动架构图"><meta itemprop="datePublished" content="2022-04-18T19:54:19+08:00" />
 <meta itemprop="dateModified" content="2022-04-18T19:54:19+08:00" />
 <meta itemprop="wordCount" content="771">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="Android," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Android 操作系统架构"/>
 <meta name="twitter:description" content="一、引言 本文作为 Android 系统架构的开篇，起到提纲挈领的作用，从系统整体架构角度概要讲解 Android 系统的核心技术点，带领大家初探 Android 系统全貌以及内部运作机制。虽然 Android 系统非常庞大且错综复杂，需要具备全面的技术栈，但整体架构设计清晰。Android 底层内核空间以 Linux Kernel 作为基石，上层用户空间由 Native 系统库、虚拟机运行环境、框架层组成，通过系统调用 (Syscall) 连通系统的内核空间与用户空间。对于用户空间主要采用 C&#43;&#43; 和 Java 代码编写，通过 JNI 技术打通用户空间的 Java 层和 Native 层(C&#43;&#43;/C)，从而连通整个系统。
 为了能让大家整体上大致了解 Android 系统涉及的知识层面，先来看一张 Google 官方提供的经典分层架构图，从下往上依次分为 Linux 内核、HAL、系统 Native 库和 Android 运行时环境、Java 框架层以及应用层这 5 层架构，其中每一层都包含大量的子模块或子系统。
@@ -87,6 +87,12 @@
         <p class="header-date">
         Mon 18 April 2022
         <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://runnlin.github.io/tags/android/">Android</a>
+          </p>
         
         
 

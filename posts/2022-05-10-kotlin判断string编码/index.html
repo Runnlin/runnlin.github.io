@@ -3,7 +3,7 @@
 <head>
   <meta name="generator" content="Hugo 0.101.0" />
   <meta charset="utf-8">
-  <title> · run blog</title>
+  <title>Kotlin判断String编码 · run blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码
 判断方法：
@@ -19,23 +19,23 @@
 
 
 
-<meta property="og:title" content="" />
+<meta property="og:title" content="Kotlin判断String编码" />
 <meta property="og:description" content="Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码
 判断方法：
 /* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &#34;code:${head[0]},${head[1]}&#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;&amp; head[1].toInt() == -92 -&gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;&amp; head[1].toInt() == -1 -&gt; intern() // UTF8 head[0].toInt() == -17 &amp;&amp; head[1].toInt() == -69 &amp;&amp; head[2].toInt() == -65 -&gt; intern() else -&gt; intern() } } " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-18T20:38:30+08:00" />
+<meta property="article:modified_time" content="2022-07-18T20:38:30+08:00" />
 
-
-
-<meta itemprop="name" content="">
+<meta itemprop="name" content="Kotlin判断String编码">
 <meta itemprop="description" content="Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码
 判断方法：
-/* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &#34;code:${head[0]},${head[1]}&#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;&amp; head[1].toInt() == -92 -&gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;&amp; head[1].toInt() == -1 -&gt; intern() // UTF8 head[0].toInt() == -17 &amp;&amp; head[1].toInt() == -69 &amp;&amp; head[2].toInt() == -65 -&gt; intern() else -&gt; intern() } } ">
-
+/* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &#34;code:${head[0]},${head[1]}&#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;&amp; head[1].toInt() == -92 -&gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;&amp; head[1].toInt() == -1 -&gt; intern() // UTF8 head[0].toInt() == -17 &amp;&amp; head[1].toInt() == -69 &amp;&amp; head[2].toInt() == -65 -&gt; intern() else -&gt; intern() } } "><meta itemprop="datePublished" content="2022-07-18T20:38:30+08:00" />
+<meta itemprop="dateModified" content="2022-07-18T20:38:30+08:00" />
 <meta itemprop="wordCount" content="74">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
+<meta itemprop="keywords" content="Android,Kotlin," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kotlin判断String编码"/>
 <meta name="twitter:description" content="Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码
 判断方法：
 /* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &#34;code:${head[0]},${head[1]}&#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;&amp; head[1].toInt() == -92 -&gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;&amp; head[1].toInt() == -1 -&gt; intern() // UTF8 head[0].toInt() == -17 &amp;&amp; head[1].toInt() == -69 &amp;&amp; head[2].toInt() == -65 -&gt; intern() else -&gt; intern() } } "/>
@@ -71,10 +71,17 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="header-content">
-        <h1 class="header-title"></h1>
+        <h1 class="header-title">Kotlin判断String编码</h1>
         <p class="header-date">
-        Mon 01 January 0001
+        Mon 18 July 2022
         <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://runnlin.github.io/tags/android/">Android</a>, 
+                <a href="https://runnlin.github.io/tags/kotlin/">Kotlin</a>
+          </p>
         
         
 

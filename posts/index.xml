@@ -6,7 +6,138 @@
     <description>Recent content in Posts on run blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Jul 2022 20:38:30 +0800</lastBuildDate><atom:link href="https://runnlin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android MediaPlayer</title>
+      <link>https://runnlin.github.io/posts/2022-04-01-androidmediaplayer/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-04-01-androidmediaplayer/</guid>
+      <description>Android 播放器相关知识 译自 MediaPlayer官方文档 https://developer.android.com/reference/android/media/MediaPlayer
+MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该在同一个线程上，如果注册回调，线程必须有一个Looper
+音视频文件和流的播放控制作为状态机进行管理，下图显示了受支持的播放控制操作驱动的 MediaPlayer 对象的生命周期和状态。蓝椭圆表示MediaPlayer 对象可能驻留的状态，线段代表驱动对象状态转换的播放控制操作，其中单箭头的线段为不同调用，双箭头的为异步调用
+从这个状态图中可以看出MediaPlayer 对象具有以下状态：
+当 MediaPlayer 对象刚使用 new 创建或调用 reset() 后，处于 Idle 状态；在调用 release() 之后，其处于 End 状态，这两种状态之间是 MediaPlayer 对象的生命周期
+新构造的对象和 reset() 后的对象有着席位但终于的区别：
+当 MediaPlayer 对象处于 Idle 状态时，
+getCurrentPosition(), getDuration(),
+getVideoHeight(), getVideoWidth(),
+setAudioAttributes(android.media.AudioAttributes),
+setLooping(boolean),
+setVolume(float, float),
+pause(), start(), stop(), seekTo(long, int), prepare() or prepareAsync()
+均不可调用，否则播放器引擎不会调用用户提供的回调方法 OnErrorListener.onError()
+建议一旦不再使用 MediaPlayer 对象就立即调用 release() 以便立即释放与 MediaPlayer 对象关联的内部播放器引擎使用的资源。资源可能包括单例资源。一旦MediaPlayer 对象处于 End 状态，就不能再使用它，也无法将其恢复到任何其他状态
+使用 new 创建的 MediaPlayer 对象会处于 Idle 状态，但使用 create 方法创建的不会处于 Idle 而是 Prepared 状态（已完成初始化）</description>
+    </item>
+    
+    <item>
+      <title>Android Surface系统</title>
+      <link>https://runnlin.github.io/posts/2022-06-30-android-surface%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-06-30-android-surface%E7%B3%BB%E7%BB%9F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android UEvent分析</title>
+      <link>https://runnlin.github.io/posts/2022-07-15-android-uevent-%E5%88%86%E6%9E%90/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-07-15-android-uevent-%E5%88%86%E6%9E%90/</guid>
+      <description>Android UEvent分析 在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0 项目中使用到的接收UEvent的流程来一步步分析其实现逻辑
+Netlink与UEvent Netlink是Linux系统中一种使用socket来与Kernel交互的机制，使得APP层可以接收来自kernel的消息，也能发送一些控制指令 Uevent实际上是一组字符串，可以告知APP层发生了什么事情，插入u盘时，内核通过Netlink发送一个消息给Vold，vold根据接收到的消息进行处理，例如挂载这个U盘，这个消息就是UEvent add@/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0 ACTION=add // add \ remove \ change // means this device&amp;#39;s path of /sys DEVPATH=/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0 SUBSYSTEM=block // what kind of this device belong, such as character... 块设备 MAJOR=179 // MAJOR和MINOR分别表示该设备的主次设备号，二者联合起来可以标识一个设备 MINOR=0 DEVNAME=设备名字 DEVTYPE=disk // 设备类型 NPARTS=3 // 该SD卡上的分区 SEQNUM=1357 序号 上面可以看到该SD卡上有3个分区，所以还会接收到分区相关的UEvent add@/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0/mmcblk0p1 DEVPATH=/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0/mmcblk0p1 DEVTYPE=partition // 表示分区 其他消息都一样，就没有赘述 那么有哪些情况Kernel会发出UEvent消息呢？ 1.设备发生变化时，如插入和拔出。如果vold在设备发生变化之前已经建立了Netlink IPC通信，那么vold可以接收到这些Uevent消息 设备一般在 /sys 对应的目录下有一个叫uevent的文件，往该文件中写入指定的数据，也会触发Kernel发送和该设备相关的Uevent消息，这是由应用层触发的。例如vold启动时，会往这些uevent文件中写入数据，来促使内核发送Uevent消息，这样vold就能得到这些设备的当前信息了 APP在此处通过一个receiver进行UEvent信息的接收
+涉案人员:
+APP/myReciever/UEventReceiver.java
+public class UEventReceiver extends UEventObserver { // 实现了UeventObserver接口 // .</description>
+    </item>
+    
+    <item>
+      <title>Android Vold分析</title>
+      <link>https://runnlin.github.io/posts/2022-04-25-android-vold%E5%88%86%E6%9E%90/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-04-25-android-vold%E5%88%86%E6%9E%90/</guid>
+      <description>Android Vold分析 当接收到UEvent消息后，除了APP层可能会进行额外的逻辑以外，其中一个很重要的组件Vold会进行重要的挂载操作，可以说没有进行挂载的设备在Android中很难进行使用
+Android中的Vold是Volume Daemon，用于管理和控制Android平台外部存储设备的守护进程，是个Native程序。
+在Java世界中，与Vold交互的模块是MountService，他一边接收vold发出的消息，一边根据信息触发发送ACTION_MEDIA_MOUNT/ACTION_MEDIA_EJECT等广播，同时，他还能向vold发送控制命令，如挂载等。 Vold架构可用图9.1表示 当Linux内核检测到外部设备插入时，会发送uevent事件到NetlinkManager（NM） NM将这些消息转发给VolumeManager（VM），VM会做一些操作，然后通过CommandListener（CL）发送相关信息给MountService，其会根据收到的消息发送相关的处理指令给VM进行进一步处理。例如，当U盘插入后，VM会将来自NM的“Disk insert“消息发给MountService，然后MountService则发送”Mount“指令给Vold，指示他挂载这个U盘 CL模块内部封装了一个Socket用于跨进程通信。来与VM、NM、MountService相互接收和发送消息。不使用Binder机制的原因是这样代码量和派生关系等都会简单不少 初识Vold 创建VolumeManager对象 创建NetlinkManager对象 创建CommandListener对象（该对象在Android6及以上版本不存在，需进一步验证） 启动VM 根据配置文件来初始化VM 启动NM 通过往/sys/block 目录下对应的uevent文件写&amp;quot;add\n&amp;quot;来触发内核发送Uevent消息 VM通过CL向感兴趣的模块（如MountService）通知UMS（USB mass storage）的状态 启动CL 下面一个个来介绍各个模块 NetlinkManager 在vold中，使用NM的流程是： 调用instance创建一个NM对象 调用setBroadcaster设置CL对象 调用start启动NM NM的start分为两个步骤： 1.创建地址簇为PF_NETLINK类型的socket并做一些设置，这样NM就能和Kernel通信了。 创建NetlinkHandler对象，并调用他的start。后续工作都是由NetlinkHandler完成。 </description>
+    </item>
+    
+    <item>
+      <title>Android 源码编译学习笔记</title>
+      <link>https://runnlin.github.io/posts/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>Android 源码编译学习笔记 一、目录结构 目录 解析 abi 应用程序二进制接口，生成libgabi++.so相关库文件 vendor 各个厂商定制的相关文件，如驱动等 boinic Android的C library，即C库文件 bootable Android系统启动引导相关代码 build 存放系统编译规则及generic等基础开发包配置 cts Android兼容性测试套件标准 tool 一些工具的 developers 开发者目录（包含一些事例） development 应用程序开发相关的工具等 device 设备相关的抽象 docs 指导文档 external android使用到的一些开源的东西 frameworks android核心框架，包含了java代码以及c代码 hardware 硬件相关的HAL代码 libcore 核心库 libnativehelper JNI调用相关的库 ndk ndk开发相关 out 编译后资源输出文件夹 packges 应用程序包 sdk sdk以及模拟器存放目录 二、编译过程简介 [https://source.android.com/source/building.html]
+设置环境 使用envsetup.sh脚本初始化环境。请注意：将 source 替换成 . 可以省去一些字符，这种简写形式在文档中更为常用
+source build/envsetup.sh 或 . build/envsetup.sh 选择目标 使用 lunch 选择要编译的目标。确切的配置可以作为参数进行传递，如
+lunch aosp_arm-eng 该命令表示针对模拟器进行完整编译，并且所有调试功能均处于启用状态。
+如果没有提供仍和参数就运行命令，lunch将提示选择一个目标。
+所有编译目标都采用 BUILD-BUILDTYPE 形式，其中 BUILD 是表示特定功能组合的代号。</description>
+    </item>
+    
+    <item>
+      <title>Android电源管理（STR）</title>
+      <link>https://runnlin.github.io/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/</guid>
+      <description>电源管理 本页内容 术语 系统设计 汽车电源状态机 电源管理模块 消息序列 CPM 提供的编程接口 创建 CarPowerManager 对象 CarPowerStateListener 与注册 CarPowerStateListener 取消注册 Android 实现上的系统集成 内核接口：/sys/power/state VHAL 的责任 唤醒源 应用 附录 源代码树中的目录 类图 对象关系 为了支持车辆专用的电源管理，Android 提供了 CarPowerManagementService 服务和 CarPowerManager 接口。
+状态转换由车载主控单元 (VMCU) 触发。为了能够与 VMCU 通信，集成器必须实现几个组件。集成器负责与车载硬件抽象层 (VHAL) 和内核实现相集成。集成器还负责停用唤醒源，并确保不会无限期地推迟关闭。
+术语 本文档中使用了以下术语：
+术语	说明 应用处理器 (AP)	系统芯片 (SoC) 的一部分。 板级支持处理器 (BSP)	产品正常运行所需的所有硬件特定代码。通常由 SoC 供应商和硬件制造商提供。它涵盖设备驱动程序、PMIC 序列代码和 SoC 启动等多项内容。 CarPowerManager (CPM)	公开一个 API 以供应用记录电源状态的更改。 CarPowerManagementService (CPMS)	实现汽车电源状态机、与 VHAL 连接，并执行对 suspend() 和 shutdown() 的最终调用。 CarPowerPolicyDaemon (CPPD)	公开原生进程的 AIDL 接口，以注册电源政策监听器。 通用输入 / 输出 (GPIO)	用于一般用途的数字信号引脚。 硬件抽象层 (HAL)	一种软件层，所有其他更高级别模块必须与之交互才能使用硬件功能。 休眠	也称为 “挂起到磁盘”(S2D/S4)。将 SoC 置于 S4 电源模式（休眠），将 RAM 内容写入非易失性介质（如闪存或磁盘），并且整个系统断电。 介质处理器 (MP)	请参阅系统芯片 (SoC)。 电源管理集成电路 (PMIC)	芯片，用于管理主机系统的电源要求。 系统芯片 (SoC)	运行 AAOS 的主处理器，通常由 Intel、MediaTek、Nvidia、Qualcomm、Renesas 和 Texas Instruments 等制造商提供。 挂起	也称为 “挂起到 RAM”（S2R 或 STR）。将 SoC 置于 S3 电源模式，CPU 断电而 RAM 仍通电。 车载 HAL (VHAL)	用于与车载网络连接的 Android API。第 1 级合作伙伴或原始设备制造商 (OEM) 负责编写此模块。车载网络可以使用任何物理层（如 CAN、LIN、MOST 和以太网）。VHAL 可以抽象化处理此车载网络，以使 AAOS 能够与车辆交互。 车载接口处理器 (VIP)	请参见 “车载 MCU”。 车载主控单元 (VMCU)	微控制器，可提供车载网络与 SoC 之间的接口。SoC 通过 USB、UART、SPI 和 GPIO 信号与 VMCU 通信。 系统设计 本节将介绍 AAOS 如何表示应用处理器的电源状态以及哪些模块会实现电源管理系统。本材料还将介绍这些模块如何协同工作以及状态转换通常如何发生。</description>
+    </item>
+    
+    <item>
+      <title>Ipod 学习笔记</title>
+      <link>https://runnlin.github.io/posts/2022-04-01-android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-04-01-android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>Ipod 学习笔记 IPod 不单指 apple 公司的 IPod 设备，还包括：IPod 家族、IPhone 家族、IPad 家族，可以理解为有着 MP3 功能的Apple设备均可成为 IPod 设备，但IPod连接车机时，对软件的支持度是不相同的，对于 Apple 官方的软件，如 Apple Music 等，可以做到获取当前列表等更多功能，而对于在 IPod 上播放的第三方软件通常只有播放控制的功能
+IPod 主要功能
+获取 ID3 信息 播放控制 获取当前列表（Apple Music） 获取本地列表 一些特性 在通过 Apple 公司的认证后，Apple 将会提供一个认证码及 IC 芯片，车机可以通过它（采用I2C连接）使 IPod 信任车机 IPod 连接后，会作为 DSP 设备从机，播放音视频时会通过 USB 将数据进行解码后再传给车机，所以 IPod 无需关注解码事项 【拓展】USB 连接的双方可以自主协商主从机，当apple设备作为 IPod 连接时，车机是主机，当作为 CarPlay 连接时，车机是从机；USB 的主机会更多地承担运算责任，而从机更多地作为展示或提供数据的设备，如IPod连接时又主机车机进行数据接收解析，CarPlay 连接时实际运行的程序仍在手机中，从机车机更多作为显示。
+IPod认证过程 认证前：
+IPod 插入车机后，车机检测到 USB 设备插入，辨别为 IPod 后请求是否进入 IPod 模式，进入IPod模式的同时开始认证
+认证中：
+车机向 IPod 请求证书，当收到证书后会向 Apple IC 芯片确认证书有效性，同时返回 Apple 提供的认证码，IPod 确认认证码后，向车机发出挑战（Challenge），当车机按时间通过后即可完成认证</description>
+    </item>
+    
+    <item>
+      <title>Kotlin判断String编码</title>
+      <link>https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</guid>
+      <description>Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码
+判断方法：
+/* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &amp;#34;code:${head[0]},${head[1]}&amp;#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;amp;&amp;amp; head[1].toInt() == -92 -&amp;gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;amp;&amp;amp; head[1].toInt() == -1 -&amp;gt; intern() // UTF8 head[0].toInt() == -17 &amp;amp;&amp;amp; head[1].toInt() == -69 &amp;amp;&amp;amp; head[2].toInt() == -65 -&amp;gt; intern() else -&amp;gt; intern() } } </description>
+    </item>
+    
+    <item>
+      <title>MediaPlayer 错误收集及指北</title>
+      <link>https://runnlin.github.io/posts/2022-05-11-mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-05-11-mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
+      <description>项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &amp;hellip; LOG：
+05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517) connect: BufferQueue has been abandoned 05-11 01:42:42.837 E 561 561 SurfaceUtils: Failed to connect to surface 0xefb94788, err -19 05-11 01:42:42.837 E 561 561 MediaPlayerService: setVideoSurfaceTexture failed: -19 05-11 01:42:42.837 D 561 561 NuPlayerDriver: reset(0xf5a81a50) at state 2 05-11 01:42:42.838 D 561 5419 NuPlayerDriver: notifyResetComplete(0xf5a81a50) 05-11 01:42:42.840 W 4398 4398 System.</description>
+    </item>
+    
+    <item>
+      <title>MediaProvider</title>
+      <link>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</guid>
+      <description>android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
+MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
+1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
+/development/apps/Development/src/com/android/development/MediaScannerActivity.javapackage com.android.development; public class MediaScannerActivity extends Activity { private TextView mTitle; /** Called when the activity is first created or resumed. */ @Override public void onCreate(Bundle icicle) { super.onCreate(icicle); setContentView(R.layout.media_scanner_activity); IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED); intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED); intentFilter.addDataScheme(&amp;#34;file&amp;#34;); registerReceiver(mReceiver, intentFilter); mTitle = (TextView) findViewById(R.id.title); } /** Called when the activity going into the background or being destroyed.</description>
+    </item>
+    
     <item>
       <title>Android MediaMetadataRetriever 用法介绍</title>
       <link>https://runnlin.github.io/posts/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
@@ -34,6 +165,20 @@ parser.c
 第一次包含keyword.h时，它声明了一些诸如 do_class_start 的函数，另外定义了一个枚举，枚举值为 K_class、K_mkdir 等关键字 第二次包含后，得到一个 keyword_info 结构体数组，这个结构体数组以前面定义的枚举值为索引，存储对应的关键字信息，这些信息包括关键字名称、处理函数、处理函数的参数个数，以及属性 根据keyword.h的定义，其中 symbol 为 on 或 service 的时候表示 section
 解析 init.rc 解析属性指的是 persist，就是在 adb 中输入的可以即时生效的配置属性，如 persist.service.adb.enable=1
 一个section的内容从这个标识 section 的关键字开始，到下一个标识section 的地方结束 init.rc中出现了名为 boot 和 init 的sction，这里两者就是前面介绍的4个动作执行阶段的boot和init。也就是说，在boot阶段执行的动作都是由 boot 这个 section 定义的 另外还可以发现，zygote被放在了一个 service section 中。下面以zygote 这个section为例，介绍service是如何解析的</description>
+    </item>
+    
+    <item>
+      <title>Android 操作系统架构</title>
+      <link>https://runnlin.github.io/posts/android-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</link>
+      <pubDate>Mon, 18 Apr 2022 19:54:19 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/android-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</guid>
+      <description>一、引言 本文作为 Android 系统架构的开篇，起到提纲挈领的作用，从系统整体架构角度概要讲解 Android 系统的核心技术点，带领大家初探 Android 系统全貌以及内部运作机制。虽然 Android 系统非常庞大且错综复杂，需要具备全面的技术栈，但整体架构设计清晰。Android 底层内核空间以 Linux Kernel 作为基石，上层用户空间由 Native 系统库、虚拟机运行环境、框架层组成，通过系统调用 (Syscall) 连通系统的内核空间与用户空间。对于用户空间主要采用 C++ 和 Java 代码编写，通过 JNI 技术打通用户空间的 Java 层和 Native 层(C++/C)，从而连通整个系统。
+为了能让大家整体上大致了解 Android 系统涉及的知识层面，先来看一张 Google 官方提供的经典分层架构图，从下往上依次分为 Linux 内核、HAL、系统 Native 库和 Android 运行时环境、Java 框架层以及应用层这 5 层架构，其中每一层都包含大量的子模块或子系统。
+上图采用静态分层方式的架构划分，众所周知，程序代码是死的，系统运转是活的，各模块代码运行在不同的进程 (线程) 中，相互之间进行着各种错终复杂的信息传递与交互流，从这个角度来说此图并没能体现 Android 整个系统的内部架构、运行机理，以及各个模块之间是如何衔接与配合工作的。
+为了更深入地掌握 Android 整个架构思想以及各个模块在 Android 系统所处的地位与价值，计划以 Android 系统启动过程为主线，以进程的视角来诠释 Android M 系统全貌，全方位的深度剖析各个模块功能，争取各个击破。这样才能犹如庖丁解牛，解决、分析问题则能游刃有余。
+二、Android 架构 Google 提供的 5 层架构图很经典，但为了更进一步透视 Android 系统架构，本文更多的是以进程的视角，以分层的架构来诠释 Android 系统的全貌，阐述 Android 内部的环环相扣的内在联系。
+系统启动架构图</description>
     </item>
     
     <item>

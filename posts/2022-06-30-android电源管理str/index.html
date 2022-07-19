@@ -3,7 +3,7 @@
 <head>
   <meta name="generator" content="Hugo 0.101.0" />
   <meta charset="utf-8">
-  <title> · run blog</title>
+  <title>Android电源管理（STR） · run blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="电源管理 本页内容 术语 系统设计 汽车电源状态机 电源管理模块 消息序列 CPM 提供的编程接口 创建 CarPowerManager 对象 CarPowerStateListener 与注册 CarPowerStateListener 取消注册 Android 实现上的系统集成 内核接口：/sys/power/state VHAL 的责任 唤醒源 应用 附录 源代码树中的目录 类图 对象关系 为了支持车辆专用的电源管理，Android 提供了 CarPowerManagementService 服务和 CarPowerManager 接口。
 状态转换由车载主控单元 (VMCU) 触发。为了能够与 VMCU 通信，集成器必须实现几个组件。集成器负责与车载硬件抽象层 (VHAL) 和内核实现相集成。集成器还负责停用唤醒源，并确保不会无限期地推迟关闭。
@@ -20,25 +20,25 @@
 
 
 
-<meta property="og:title" content="" />
+<meta property="og:title" content="Android电源管理（STR）" />
 <meta property="og:description" content="电源管理 本页内容 术语 系统设计 汽车电源状态机 电源管理模块 消息序列 CPM 提供的编程接口 创建 CarPowerManager 对象 CarPowerStateListener 与注册 CarPowerStateListener 取消注册 Android 实现上的系统集成 内核接口：/sys/power/state VHAL 的责任 唤醒源 应用 附录 源代码树中的目录 类图 对象关系 为了支持车辆专用的电源管理，Android 提供了 CarPowerManagementService 服务和 CarPowerManager 接口。
 状态转换由车载主控单元 (VMCU) 触发。为了能够与 VMCU 通信，集成器必须实现几个组件。集成器负责与车载硬件抽象层 (VHAL) 和内核实现相集成。集成器还负责停用唤醒源，并确保不会无限期地推迟关闭。
 术语 本文档中使用了以下术语：
 术语	说明 应用处理器 (AP)	系统芯片 (SoC) 的一部分。 板级支持处理器 (BSP)	产品正常运行所需的所有硬件特定代码。通常由 SoC 供应商和硬件制造商提供。它涵盖设备驱动程序、PMIC 序列代码和 SoC 启动等多项内容。 CarPowerManager (CPM)	公开一个 API 以供应用记录电源状态的更改。 CarPowerManagementService (CPMS)	实现汽车电源状态机、与 VHAL 连接，并执行对 suspend() 和 shutdown() 的最终调用。 CarPowerPolicyDaemon (CPPD)	公开原生进程的 AIDL 接口，以注册电源政策监听器。 通用输入 / 输出 (GPIO)	用于一般用途的数字信号引脚。 硬件抽象层 (HAL)	一种软件层，所有其他更高级别模块必须与之交互才能使用硬件功能。 休眠	也称为 “挂起到磁盘”(S2D/S4)。将 SoC 置于 S4 电源模式（休眠），将 RAM 内容写入非易失性介质（如闪存或磁盘），并且整个系统断电。 介质处理器 (MP)	请参阅系统芯片 (SoC)。 电源管理集成电路 (PMIC)	芯片，用于管理主机系统的电源要求。 系统芯片 (SoC)	运行 AAOS 的主处理器，通常由 Intel、MediaTek、Nvidia、Qualcomm、Renesas 和 Texas Instruments 等制造商提供。 挂起	也称为 “挂起到 RAM”（S2R 或 STR）。将 SoC 置于 S3 电源模式，CPU 断电而 RAM 仍通电。 车载 HAL (VHAL)	用于与车载网络连接的 Android API。第 1 级合作伙伴或原始设备制造商 (OEM) 负责编写此模块。车载网络可以使用任何物理层（如 CAN、LIN、MOST 和以太网）。VHAL 可以抽象化处理此车载网络，以使 AAOS 能够与车辆交互。 车载接口处理器 (VIP)	请参见 “车载 MCU”。 车载主控单元 (VMCU)	微控制器，可提供车载网络与 SoC 之间的接口。SoC 通过 USB、UART、SPI 和 GPIO 信号与 VMCU 通信。 系统设计 本节将介绍 AAOS 如何表示应用处理器的电源状态以及哪些模块会实现电源管理系统。本材料还将介绍这些模块如何协同工作以及状态转换通常如何发生。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/posts/2022-06-30-android%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86str/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-18T20:38:30+08:00" />
+<meta property="article:modified_time" content="2022-07-18T20:38:30+08:00" />
 
-
-
-<meta itemprop="name" content="">
+<meta itemprop="name" content="Android电源管理（STR）">
 <meta itemprop="description" content="电源管理 本页内容 术语 系统设计 汽车电源状态机 电源管理模块 消息序列 CPM 提供的编程接口 创建 CarPowerManager 对象 CarPowerStateListener 与注册 CarPowerStateListener 取消注册 Android 实现上的系统集成 内核接口：/sys/power/state VHAL 的责任 唤醒源 应用 附录 源代码树中的目录 类图 对象关系 为了支持车辆专用的电源管理，Android 提供了 CarPowerManagementService 服务和 CarPowerManager 接口。
 状态转换由车载主控单元 (VMCU) 触发。为了能够与 VMCU 通信，集成器必须实现几个组件。集成器负责与车载硬件抽象层 (VHAL) 和内核实现相集成。集成器还负责停用唤醒源，并确保不会无限期地推迟关闭。
 术语 本文档中使用了以下术语：
-术语	说明 应用处理器 (AP)	系统芯片 (SoC) 的一部分。 板级支持处理器 (BSP)	产品正常运行所需的所有硬件特定代码。通常由 SoC 供应商和硬件制造商提供。它涵盖设备驱动程序、PMIC 序列代码和 SoC 启动等多项内容。 CarPowerManager (CPM)	公开一个 API 以供应用记录电源状态的更改。 CarPowerManagementService (CPMS)	实现汽车电源状态机、与 VHAL 连接，并执行对 suspend() 和 shutdown() 的最终调用。 CarPowerPolicyDaemon (CPPD)	公开原生进程的 AIDL 接口，以注册电源政策监听器。 通用输入 / 输出 (GPIO)	用于一般用途的数字信号引脚。 硬件抽象层 (HAL)	一种软件层，所有其他更高级别模块必须与之交互才能使用硬件功能。 休眠	也称为 “挂起到磁盘”(S2D/S4)。将 SoC 置于 S4 电源模式（休眠），将 RAM 内容写入非易失性介质（如闪存或磁盘），并且整个系统断电。 介质处理器 (MP)	请参阅系统芯片 (SoC)。 电源管理集成电路 (PMIC)	芯片，用于管理主机系统的电源要求。 系统芯片 (SoC)	运行 AAOS 的主处理器，通常由 Intel、MediaTek、Nvidia、Qualcomm、Renesas 和 Texas Instruments 等制造商提供。 挂起	也称为 “挂起到 RAM”（S2R 或 STR）。将 SoC 置于 S3 电源模式，CPU 断电而 RAM 仍通电。 车载 HAL (VHAL)	用于与车载网络连接的 Android API。第 1 级合作伙伴或原始设备制造商 (OEM) 负责编写此模块。车载网络可以使用任何物理层（如 CAN、LIN、MOST 和以太网）。VHAL 可以抽象化处理此车载网络，以使 AAOS 能够与车辆交互。 车载接口处理器 (VIP)	请参见 “车载 MCU”。 车载主控单元 (VMCU)	微控制器，可提供车载网络与 SoC 之间的接口。SoC 通过 USB、UART、SPI 和 GPIO 信号与 VMCU 通信。 系统设计 本节将介绍 AAOS 如何表示应用处理器的电源状态以及哪些模块会实现电源管理系统。本材料还将介绍这些模块如何协同工作以及状态转换通常如何发生。">
-
+术语	说明 应用处理器 (AP)	系统芯片 (SoC) 的一部分。 板级支持处理器 (BSP)	产品正常运行所需的所有硬件特定代码。通常由 SoC 供应商和硬件制造商提供。它涵盖设备驱动程序、PMIC 序列代码和 SoC 启动等多项内容。 CarPowerManager (CPM)	公开一个 API 以供应用记录电源状态的更改。 CarPowerManagementService (CPMS)	实现汽车电源状态机、与 VHAL 连接，并执行对 suspend() 和 shutdown() 的最终调用。 CarPowerPolicyDaemon (CPPD)	公开原生进程的 AIDL 接口，以注册电源政策监听器。 通用输入 / 输出 (GPIO)	用于一般用途的数字信号引脚。 硬件抽象层 (HAL)	一种软件层，所有其他更高级别模块必须与之交互才能使用硬件功能。 休眠	也称为 “挂起到磁盘”(S2D/S4)。将 SoC 置于 S4 电源模式（休眠），将 RAM 内容写入非易失性介质（如闪存或磁盘），并且整个系统断电。 介质处理器 (MP)	请参阅系统芯片 (SoC)。 电源管理集成电路 (PMIC)	芯片，用于管理主机系统的电源要求。 系统芯片 (SoC)	运行 AAOS 的主处理器，通常由 Intel、MediaTek、Nvidia、Qualcomm、Renesas 和 Texas Instruments 等制造商提供。 挂起	也称为 “挂起到 RAM”（S2R 或 STR）。将 SoC 置于 S3 电源模式，CPU 断电而 RAM 仍通电。 车载 HAL (VHAL)	用于与车载网络连接的 Android API。第 1 级合作伙伴或原始设备制造商 (OEM) 负责编写此模块。车载网络可以使用任何物理层（如 CAN、LIN、MOST 和以太网）。VHAL 可以抽象化处理此车载网络，以使 AAOS 能够与车辆交互。 车载接口处理器 (VIP)	请参见 “车载 MCU”。 车载主控单元 (VMCU)	微控制器，可提供车载网络与 SoC 之间的接口。SoC 通过 USB、UART、SPI 和 GPIO 信号与 VMCU 通信。 系统设计 本节将介绍 AAOS 如何表示应用处理器的电源状态以及哪些模块会实现电源管理系统。本材料还将介绍这些模块如何协同工作以及状态转换通常如何发生。"><meta itemprop="datePublished" content="2022-07-18T20:38:30+08:00" />
+<meta itemprop="dateModified" content="2022-07-18T20:38:30+08:00" />
 <meta itemprop="wordCount" content="3177">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
+<meta itemprop="keywords" content="Android," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android电源管理（STR）"/>
 <meta name="twitter:description" content="电源管理 本页内容 术语 系统设计 汽车电源状态机 电源管理模块 消息序列 CPM 提供的编程接口 创建 CarPowerManager 对象 CarPowerStateListener 与注册 CarPowerStateListener 取消注册 Android 实现上的系统集成 内核接口：/sys/power/state VHAL 的责任 唤醒源 应用 附录 源代码树中的目录 类图 对象关系 为了支持车辆专用的电源管理，Android 提供了 CarPowerManagementService 服务和 CarPowerManager 接口。
 状态转换由车载主控单元 (VMCU) 触发。为了能够与 VMCU 通信，集成器必须实现几个组件。集成器负责与车载硬件抽象层 (VHAL) 和内核实现相集成。集成器还负责停用唤醒源，并确保不会无限期地推迟关闭。
 术语 本文档中使用了以下术语：
@@ -75,10 +75,16 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="header-content">
-        <h1 class="header-title"></h1>
+        <h1 class="header-title">Android电源管理（STR）</h1>
         <p class="header-date">
-        Mon 01 January 0001
+        Mon 18 July 2022
         <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://runnlin.github.io/tags/android/">Android</a>
+          </p>
         
         
 

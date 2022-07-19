@@ -6,7 +6,63 @@
     <description>Recent content in Framework on run blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/framework/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Jul 2022 20:38:30 +0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/framework/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android MediaPlayer</title>
+      <link>https://runnlin.github.io/posts/2022-04-01-androidmediaplayer/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-04-01-androidmediaplayer/</guid>
+      <description>Android 播放器相关知识 译自 MediaPlayer官方文档 https://developer.android.com/reference/android/media/MediaPlayer
+MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该在同一个线程上，如果注册回调，线程必须有一个Looper
+音视频文件和流的播放控制作为状态机进行管理，下图显示了受支持的播放控制操作驱动的 MediaPlayer 对象的生命周期和状态。蓝椭圆表示MediaPlayer 对象可能驻留的状态，线段代表驱动对象状态转换的播放控制操作，其中单箭头的线段为不同调用，双箭头的为异步调用
+从这个状态图中可以看出MediaPlayer 对象具有以下状态：
+当 MediaPlayer 对象刚使用 new 创建或调用 reset() 后，处于 Idle 状态；在调用 release() 之后，其处于 End 状态，这两种状态之间是 MediaPlayer 对象的生命周期
+新构造的对象和 reset() 后的对象有着席位但终于的区别：
+当 MediaPlayer 对象处于 Idle 状态时，
+getCurrentPosition(), getDuration(),
+getVideoHeight(), getVideoWidth(),
+setAudioAttributes(android.media.AudioAttributes),
+setLooping(boolean),
+setVolume(float, float),
+pause(), start(), stop(), seekTo(long, int), prepare() or prepareAsync()
+均不可调用，否则播放器引擎不会调用用户提供的回调方法 OnErrorListener.onError()
+建议一旦不再使用 MediaPlayer 对象就立即调用 release() 以便立即释放与 MediaPlayer 对象关联的内部播放器引擎使用的资源。资源可能包括单例资源。一旦MediaPlayer 对象处于 End 状态，就不能再使用它，也无法将其恢复到任何其他状态
+使用 new 创建的 MediaPlayer 对象会处于 Idle 状态，但使用 create 方法创建的不会处于 Idle 而是 Prepared 状态（已完成初始化）</description>
+    </item>
+    
+    <item>
+      <title>Android Surface系统</title>
+      <link>https://runnlin.github.io/posts/2022-06-30-android-surface%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-06-30-android-surface%E7%B3%BB%E7%BB%9F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android UEvent分析</title>
+      <link>https://runnlin.github.io/posts/2022-07-15-android-uevent-%E5%88%86%E6%9E%90/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-07-15-android-uevent-%E5%88%86%E6%9E%90/</guid>
+      <description>Android UEvent分析 在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0 项目中使用到的接收UEvent的流程来一步步分析其实现逻辑
+Netlink与UEvent Netlink是Linux系统中一种使用socket来与Kernel交互的机制，使得APP层可以接收来自kernel的消息，也能发送一些控制指令 Uevent实际上是一组字符串，可以告知APP层发生了什么事情，插入u盘时，内核通过Netlink发送一个消息给Vold，vold根据接收到的消息进行处理，例如挂载这个U盘，这个消息就是UEvent add@/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0 ACTION=add // add \ remove \ change // means this device&amp;#39;s path of /sys DEVPATH=/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0 SUBSYSTEM=block // what kind of this device belong, such as character... 块设备 MAJOR=179 // MAJOR和MINOR分别表示该设备的主次设备号，二者联合起来可以标识一个设备 MINOR=0 DEVNAME=设备名字 DEVTYPE=disk // 设备类型 NPARTS=3 // 该SD卡上的分区 SEQNUM=1357 序号 上面可以看到该SD卡上有3个分区，所以还会接收到分区相关的UEvent add@/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0/mmcblk0p1 DEVPATH=/devices/platform/msm_sdcc.2/mmc_host/mmc1/mmc1:c9f2/block/mmcblk0/mmcblk0p1 DEVTYPE=partition // 表示分区 其他消息都一样，就没有赘述 那么有哪些情况Kernel会发出UEvent消息呢？ 1.设备发生变化时，如插入和拔出。如果vold在设备发生变化之前已经建立了Netlink IPC通信，那么vold可以接收到这些Uevent消息 设备一般在 /sys 对应的目录下有一个叫uevent的文件，往该文件中写入指定的数据，也会触发Kernel发送和该设备相关的Uevent消息，这是由应用层触发的。例如vold启动时，会往这些uevent文件中写入数据，来促使内核发送Uevent消息，这样vold就能得到这些设备的当前信息了 APP在此处通过一个receiver进行UEvent信息的接收
+涉案人员:
+APP/myReciever/UEventReceiver.java
+public class UEventReceiver extends UEventObserver { // 实现了UeventObserver接口 // .</description>
+    </item>
+    
+    <item>
+      <title>MediaPlayer 错误收集及指北</title>
+      <link>https://runnlin.github.io/posts/2022-05-11-mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</link>
+      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      
+      <guid>https://runnlin.github.io/posts/2022-05-11-mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
+      <description>项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &amp;hellip; LOG：
+05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517) connect: BufferQueue has been abandoned 05-11 01:42:42.837 E 561 561 SurfaceUtils: Failed to connect to surface 0xefb94788, err -19 05-11 01:42:42.837 E 561 561 MediaPlayerService: setVideoSurfaceTexture failed: -19 05-11 01:42:42.837 D 561 561 NuPlayerDriver: reset(0xf5a81a50) at state 2 05-11 01:42:42.838 D 561 5419 NuPlayerDriver: notifyResetComplete(0xf5a81a50) 05-11 01:42:42.840 W 4398 4398 System.</description>
+    </item>
+    
     <item>
       <title>init 工作流程简述</title>
       <link>https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
