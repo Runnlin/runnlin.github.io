@@ -6,68 +6,7 @@
     <description>Recent content in Media on run blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jul 2022 20:38:30 +0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/media/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Android MediaPlayer</title>
-      <link>https://runnlin.github.io/posts/2022-04-01-androidmediaplayer/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-01-androidmediaplayer/</guid>
-      <description>Android 播放器相关知识 译自 MediaPlayer官方文档 https://developer.android.com/reference/android/media/MediaPlayer
-MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该在同一个线程上，如果注册回调，线程必须有一个Looper
-音视频文件和流的播放控制作为状态机进行管理，下图显示了受支持的播放控制操作驱动的 MediaPlayer 对象的生命周期和状态。蓝椭圆表示MediaPlayer 对象可能驻留的状态，线段代表驱动对象状态转换的播放控制操作，其中单箭头的线段为不同调用，双箭头的为异步调用
-从这个状态图中可以看出MediaPlayer 对象具有以下状态：
-当 MediaPlayer 对象刚使用 new 创建或调用 reset() 后，处于 Idle 状态；在调用 release() 之后，其处于 End 状态，这两种状态之间是 MediaPlayer 对象的生命周期
-新构造的对象和 reset() 后的对象有着席位但终于的区别：
-当 MediaPlayer 对象处于 Idle 状态时，
-getCurrentPosition(), getDuration(),
-getVideoHeight(), getVideoWidth(),
-setAudioAttributes(android.media.AudioAttributes),
-setLooping(boolean),
-setVolume(float, float),
-pause(), start(), stop(), seekTo(long, int), prepare() or prepareAsync()
-均不可调用，否则播放器引擎不会调用用户提供的回调方法 OnErrorListener.onError()
-建议一旦不再使用 MediaPlayer 对象就立即调用 release() 以便立即释放与 MediaPlayer 对象关联的内部播放器引擎使用的资源。资源可能包括单例资源。一旦MediaPlayer 对象处于 End 状态，就不能再使用它，也无法将其恢复到任何其他状态
-使用 new 创建的 MediaPlayer 对象会处于 Idle 状态，但使用 create 方法创建的不会处于 Idle 而是 Prepared 状态（已完成初始化）</description>
-    </item>
-    
-    <item>
-      <title>Ipod 学习笔记</title>
-      <link>https://runnlin.github.io/posts/2022-04-01-android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-01-android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
-      <description>Ipod 学习笔记 IPod 不单指 apple 公司的 IPod 设备，还包括：IPod 家族、IPhone 家族、IPad 家族，可以理解为有着 MP3 功能的Apple设备均可成为 IPod 设备，但IPod连接车机时，对软件的支持度是不相同的，对于 Apple 官方的软件，如 Apple Music 等，可以做到获取当前列表等更多功能，而对于在 IPod 上播放的第三方软件通常只有播放控制的功能
-IPod 主要功能
-获取 ID3 信息 播放控制 获取当前列表（Apple Music） 获取本地列表 一些特性 在通过 Apple 公司的认证后，Apple 将会提供一个认证码及 IC 芯片，车机可以通过它（采用I2C连接）使 IPod 信任车机 IPod 连接后，会作为 DSP 设备从机，播放音视频时会通过 USB 将数据进行解码后再传给车机，所以 IPod 无需关注解码事项 【拓展】USB 连接的双方可以自主协商主从机，当apple设备作为 IPod 连接时，车机是主机，当作为 CarPlay 连接时，车机是从机；USB 的主机会更多地承担运算责任，而从机更多地作为展示或提供数据的设备，如IPod连接时又主机车机进行数据接收解析，CarPlay 连接时实际运行的程序仍在手机中，从机车机更多作为显示。
-IPod认证过程 认证前：
-IPod 插入车机后，车机检测到 USB 设备插入，辨别为 IPod 后请求是否进入 IPod 模式，进入IPod模式的同时开始认证
-认证中：
-车机向 IPod 请求证书，当收到证书后会向 Apple IC 芯片确认证书有效性，同时返回 Apple 提供的认证码，IPod 确认认证码后，向车机发出挑战（Challenge），当车机按时间通过后即可完成认证</description>
-    </item>
-    
-    <item>
-      <title>MediaPlayer 错误收集及指北</title>
-      <link>https://runnlin.github.io/posts/2022-05-11-mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-05-11-mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
-      <description>项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &amp;hellip; LOG：
-05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517) connect: BufferQueue has been abandoned 05-11 01:42:42.837 E 561 561 SurfaceUtils: Failed to connect to surface 0xefb94788, err -19 05-11 01:42:42.837 E 561 561 MediaPlayerService: setVideoSurfaceTexture failed: -19 05-11 01:42:42.837 D 561 561 NuPlayerDriver: reset(0xf5a81a50) at state 2 05-11 01:42:42.838 D 561 5419 NuPlayerDriver: notifyResetComplete(0xf5a81a50) 05-11 01:42:42.840 W 4398 4398 System.</description>
-    </item>
-    
-    <item>
-      <title>MediaProvider</title>
-      <link>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-01-mediaprovider%E7%AE%80%E8%BF%B0/</guid>
-      <description>android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多媒体信息进行处理，这套框架主要包含三部分：
-MediaScannerReceiver：多媒体扫描广播接收者，继承 BroadcastReceiver，主要响应APP发送的广播命令，并开启 MediaScannerService 执行扫描工作 MediaScannerService：多媒体扫描服务，继承Service，主要是处理APP发送的请求，用要到Framework中的MediaScanner来共同完成具体扫描工作，并获取媒体文件的metadata，最后将数据写入或删除MediaProvider提供的数据库中。 MediaProvider：多媒体内容提供者，继承ContentProvider，主要是负责操作数据库，并提供给别的程序insert、query、delete、update等操作。 本文就从上面三个部分作为入口，分析他们是如何工作的，如何对设备上的多媒体进行扫描，如何将多媒体信息进行存储，用户如何读取、修改多媒体信息？
-1. 如何调用MediaScannerService 1.1 MediaScannerActivity 我们可以从Android自带的 Dev Tools 中的MediaScannerActivity 入手，看看它是如何扫描多媒体的
-/development/apps/Development/src/com/android/development/MediaScannerActivity.javapackage com.android.development; public class MediaScannerActivity extends Activity { private TextView mTitle; /** Called when the activity is first created or resumed. */ @Override public void onCreate(Bundle icicle) { super.onCreate(icicle); setContentView(R.layout.media_scanner_activity); IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED); intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED); intentFilter.addDataScheme(&amp;#34;file&amp;#34;); registerReceiver(mReceiver, intentFilter); mTitle = (TextView) findViewById(R.id.title); } /** Called when the activity going into the background or being destroyed.</description>
-    </item>
-    
+    <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/media/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Android MediaMetadataRetriever 用法介绍</title>
       <link>https://runnlin.github.io/posts/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>

@@ -1,32 +1,60 @@
 <!DOCTYPE html>
-<html lang="en-us" itemscope itemtype="http://schema.org/WebPage">
-<head>
-  <meta name="generator" content="Hugo 0.101.0" />
-  <meta charset="utf-8">
-  <title>Android MediaScannerService（转载） · run blog</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Android MediaScannerService（转载）",
+  
+  "datePublished": "2022-04-01T00:00:00Z",
+  "dateModified": "2022-04-01T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "Runnlin",
+    
+    "image": "https://www.gravatar.com/avatar/2cb0d39a554db856aa5a170f433963fd"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/runnlin.github.io\/posts\/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "run blog",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.gravatar.com/avatar/2cb0d39a554db856aa5a170f433963fd"
+    }
+    
+  },
+  "description": "MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。\nMediaScannerService 研究\n侯 亮\n（本文以 Android 5.1 为准）\nMediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。它并不是系统服务。MediaScannerService 和 MediaProvider 有着非常紧密的关系，因为扫描出的结果总需要存储到某个地方来展现给用户。那么它们具体是如何结合的呢？本文将逐步加以阐述。\n我们先来初步了解一下 MediaScannerService，它在 AndroidManifest.xml 文件里的相关信息如下：\n【packages/providers/mediaprovider/AndroidManifest.xml】\n\u0026lt;service android:\u0026gt;\r\u0026lt;intent-filter\u0026gt;\r\u0026lt;action android: /\u0026gt;\r\u0026lt;/intent-filter\u0026gt;\r\u0026lt;/service\u0026gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：\n【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】\npublic class MediaScannerService extends Service implements Runnable\r{\rprivate static final String TAG = \u0026#34;MediaScannerService\u0026#34;;\rprivate volatile Looper mServiceLooper;\rprivate volatile ServiceHandler mServiceHandler;\rprivate PowerManager.",
+  "keywords": [, "development, android"]
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.101.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="Runnlin">
+<meta name="keywords" content=", development, android">
+<meta name="description" content="MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
 MediaScannerService 研究
 侯 亮
 （本文以 Android 5.1 为准）
 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。它并不是系统服务。MediaScannerService 和 MediaProvider 有着非常紧密的关系，因为扫描出的结果总需要存储到某个地方来展现给用户。那么它们具体是如何结合的呢？本文将逐步加以阐述。
 我们先来初步了解一下 MediaScannerService，它在 AndroidManifest.xml 文件里的相关信息如下：
 【packages/providers/mediaprovider/AndroidManifest.xml】
-&amp;lt;service android:&amp;gt;&amp;lt;intent-filter&amp;gt;&amp;lt;action android: /&amp;gt;&amp;lt;/intent-filter&amp;gt;&amp;lt;/service&amp;gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
+&lt;service android:&gt;&lt;intent-filter&gt;&lt;action android: /&gt;&lt;/intent-filter&gt;&lt;/service&gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
 【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】
-public class MediaScannerService extends Service implements Runnable{private static final String TAG = &amp;#34;MediaScannerService&amp;#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager." />
+public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager.">
 
 
-<link rel="canonical" href="https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/" />
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-<link rel="stylesheet" href="https://runnlin.github.io/css/den.css">
-
-
-
-
-<meta property="og:title" content="Android MediaScannerService（转载）" />
 <meta property="og:description" content="MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
 MediaScannerService 研究
 侯 亮
@@ -36,14 +64,14 @@ MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒
 【packages/providers/mediaprovider/AndroidManifest.xml】
 &lt;service android:&gt;&lt;intent-filter&gt;&lt;action android: /&gt;&lt;/intent-filter&gt;&lt;/service&gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
 【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】
-public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" />
-
-<meta itemprop="name" content="Android MediaScannerService（转载）">
-<meta itemprop="description" content="MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
+public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android MediaScannerService（转载）">
+<meta name="twitter:title" content="Android MediaScannerService（转载）">
+<meta property="og:url" content="https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/">
+<meta property="twitter:url" content="https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/">
+<meta property="og:site_name" content="run blog">
+<meta property="og:description" content="MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
 MediaScannerService 研究
 侯 亮
 （本文以 Android 5.1 为准）
@@ -52,11 +80,7 @@ MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒
 【packages/providers/mediaprovider/AndroidManifest.xml】
 &lt;service android:&gt;&lt;intent-filter&gt;&lt;action android: /&gt;&lt;/intent-filter&gt;&lt;/service&gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
 【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】
-public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager."><meta itemprop="datePublished" content="2022-04-01T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2022-04-01T00:00:00+00:00" />
-<meta itemprop="wordCount" content="3661">
-<meta itemprop="keywords" content="Android,Media," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Android MediaScannerService（转载）"/>
+public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager.">
 <meta name="twitter:description" content="MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。
 MediaScannerService 研究
 侯 亮
@@ -66,63 +90,181 @@ MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒
 【packages/providers/mediaprovider/AndroidManifest.xml】
 &lt;service android:&gt;&lt;intent-filter&gt;&lt;action android: /&gt;&lt;/intent-filter&gt;&lt;/service&gt; MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：
 【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】
-public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager."/>
-</head>
-<body>
+public class MediaScannerService extends Service implements Runnable{private static final String TAG = &#34;MediaScannerService&#34;;private volatile Looper mServiceLooper;private volatile ServiceHandler mServiceHandler;private PowerManager.">
+<meta property="og:locale" content="en-us">
+
   
-  <div class="header-container gradient">
-  <div class="container">
-  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
-    <div class="header-logo navbar-brand">
-      
-        <a class="float-left" href="https://runnlin.github.io/">
-      
-        
-        
-          run blog
-         
-      </a>
-    </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        
-        
-      </ul>
-    </div>
-  </nav>
-</div>
+    <meta property="article:published_time" content="2022-04-01T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-04-01T00:00:00">
+  
+  
+  
+  
+    
+      <meta property="article:tag" content="Android">
+    
+      <meta property="article:tag" content="Media">
+    
+  
 
-<div class="container header-wrapper">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="header-content">
-        <h1 class="header-title">Android MediaScannerService（转载）</h1>
-        <p class="header-date">
-        Fri 01 April 2022
-        <div class="header-underline"></div>
-        
-          <div class="clearfix"></div>
-          <p class="float-right header-tags">
-              <i class="fas fa-tags" aria-hidden="true"></i>
-              <a href="https://runnlin.github.io/tags/android/">Android</a>, 
-                <a href="https://runnlin.github.io/tags/media/">Media</a>
-          </p>
-        
-        
 
+<meta name="twitter:card" content="summary">
+
+  <meta name="twitter:site" content="@runnlinn">
+
+
+  <meta name="twitter:creator" content="@runnlinn">
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/2cb0d39a554db856aa5a170f433963fd?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/2cb0d39a554db856aa5a170f433963fd?s=640">
+
+
+
+
+
+
+    <title>Android MediaScannerService（转载）</title>
+
+    <link rel="icon" href="https://runnlin.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://runnlin.github.io/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="3">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/" aria-label="Go to homepage">run blog</a>
+  </div>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="3">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/2cb0d39a554db856aa5a170f433963fd?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Runnlin</h4>
+        
+          <h5 class="sidebar-profile-bio">Super bio with markdown support <strong>COOL</strong></h5>
+        
       </div>
-    </div>
-  </div>
-</div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
 
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Runnlin" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
   </div>
-  <main>
-<div class="container content">
-  <article>
-  <blockquote>
+</nav>
+
+      
+
+      <div id="main" data-behavior="3"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      Android MediaScannerService（转载）
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-04-01T00:00:00Z">
+        
+  April 1, 2022
+
+      </time>
+    
+    
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <blockquote>
 <p>MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。</p>
 </blockquote>
 <p><strong>MediaScannerService 研究</strong></p>
@@ -1085,61 +1227,269 @@ public void scanFile(String path, long lastModified, long fileSize,
     }
 </code></pre><p>写了这么多，终于看到 MediaScannerService 是如何更新 MediaProvider 的了。当然，里面还有大量的细节，本文就不展开来讲了，要不然相信大家头壳都得炸掉。那么就先写这么多了。</p>
 
-  </article>
-
-  
-  
-  
+              
 
 
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/android/">Android</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/media/">Media</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/" data-tooltip="init 工作流程简述" aria-label="NEXT: init 工作流程简述">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="/posts/2022-04-01-android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/" data-tooltip="Android 四大组件综述" aria-label="PREVIOUS: Android 四大组件综述">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
 </div>
 
-  </main><div class="footer gradient-2">
-  <div class="container footer-container ">
-    <div class="row">
-      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
-        <div class="footer-title">Sitemap</div>
-        <ul class="list-unstyled">
+
             
-              
-                <li><a href="https://runnlin.github.io/tags/">Tags</a></li>
-              
-              
-                <li><a href="https://runnlin.github.io/categories/">Categories</a></li>
-              
-            
-            
-            
-            <li><a rel="alternate" type="application/rss&#43;xml" href="https://runnlin.github.io/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
-            
-            
-            
-        </ul>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 <a href="https://github.com/Runnlin">Runnlin</a>. All Rights Reserved
+  </span>
+</footer>
+
       </div>
-      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="3">
         
-      </div>
-      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
-        
-      </div> 
-      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-        <p class="pull-right text-right">
-          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
-          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
-          <small>
-            &copy; 
-            
-            2022
-          </small>
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
           
-        </p>
+            <a class="post-action-btn btn btn--default tooltip--top" href="/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/" data-tooltip="init 工作流程简述" aria-label="NEXT: init 工作流程简述">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="/posts/2022-04-01-android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/" data-tooltip="Android 四大组件综述" aria-label="PREVIOUS: Android 四大组件综述">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://runnlin.github.io/posts/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/" title="Share on Twitter" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
       </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="3">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frunnlin.github.io%2Fposts%2F2022-04-01-mediascannerservice-%25E7%25A0%2594%25E7%25A9%25B6%25E8%25BD%25AC%25E8%25BD%25BD%2F" aria-label="Share on Twitter">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
     </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/2cb0d39a554db856aa5a170f433963fd?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Runnlin</h4>
+    
+      <div id="about-card-bio">Super bio with markdown support <strong>COOL</strong></div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Android developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        China
+      </div>
+    
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-</body>
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://runnlin.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://runnlin.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
 </html>
+

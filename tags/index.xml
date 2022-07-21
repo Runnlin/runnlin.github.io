@@ -6,40 +6,31 @@
     <description>Recent content in Tags on run blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jul 2022 20:38:30 +0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 16 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Android</title>
       <link>https://runnlin.github.io/tags/android/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      <pubDate>Mon, 16 May 2022 00:00:00 +0000</pubDate>
       
       <guid>https://runnlin.github.io/tags/android/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Framework</title>
-      <link>https://runnlin.github.io/tags/framework/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/tags/framework/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kotlin</title>
-      <link>https://runnlin.github.io/tags/kotlin/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/tags/kotlin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Media</title>
       <link>https://runnlin.github.io/tags/media/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
+      <pubDate>Mon, 16 May 2022 00:00:00 +0000</pubDate>
       
       <guid>https://runnlin.github.io/tags/media/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Framework</title>
+      <link>https://runnlin.github.io/tags/framework/</link>
+      <pubDate>Thu, 28 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://runnlin.github.io/tags/framework/</guid>
       <description></description>
     </item>
     
