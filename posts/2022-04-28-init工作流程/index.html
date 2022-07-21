@@ -24,7 +24,7 @@
   },
   "publisher": {
     "@type": "Organization",
-    "name": "run blog",
+    "name": "runnlin's blog",
     
     "logo": {
       "@type": "ImageObject",
@@ -68,7 +68,7 @@ parser.c
 <meta name="twitter:title" content="init 工作流程简述">
 <meta property="og:url" content="https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/">
 <meta property="twitter:url" content="https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/">
-<meta property="og:site_name" content="run blog">
+<meta property="og:site_name" content="runnlin&#39;s blog">
 <meta property="og:description" content="Init 工作流程简述 init的工作流程可以精简为以下四点：
 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作就是在其中的某个阶段完成的 调用 property_init 初始化属性相关的资源，并且通过 property_start_service 启动属性服务 init 进入死循环，并且等待一些事情的发生。重点关注 init 如何处理来自 socket 和来自属性服务器的相关事情 精简工作流程是分析代码时常用的方法
 解析配置文件 init会解析两个配置文件，一个是系统配置文件 init.rc， 另一个是与硬件平台相关的配置文件 init.[hardwordName].rc。对这两个配置文件进行解析调用的是同一个 parse_config_file 函数
@@ -156,7 +156,7 @@ parser.c
       <header id="header" data-behavior="3">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
-    <a class="header-title-link" href="/" aria-label="Go to homepage">run blog</a>
+    <a class="header-title-link" href="/" aria-label="Go to homepage">runnlin&#39;s blog</a>
   </div>
   
 </header>

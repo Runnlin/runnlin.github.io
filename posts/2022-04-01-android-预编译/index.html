@@ -24,7 +24,7 @@
   },
   "publisher": {
     "@type": "Organization",
-    "name": "run blog",
+    "name": "runnlin's blog",
     
     "logo": {
       "@type": "ImageObject",
@@ -58,7 +58,7 @@
 <meta name="twitter:title" content="Android 预编译简述">
 <meta property="og:url" content="https://runnlin.github.io/posts/2022-04-01-android-%E9%A2%84%E7%BC%96%E8%AF%91/">
 <meta property="twitter:url" content="https://runnlin.github.io/posts/2022-04-01-android-%E9%A2%84%E7%BC%96%E8%AF%91/">
-<meta property="og:site_name" content="run blog">
+<meta property="og:site_name" content="runnlin&#39;s blog">
 <meta property="og:description" content="常用到的Android.mk编译目标，包括编译包、二进制文件、预编译。 一. 常用的编译目标： BUILD_PACKAGE（既可以编apk，也可以编资源包文件，但是需要指定LOCAL_EXPORT_PACKAGE_RESOURCES:=true) BUILD_JAVA_LIBRARY（java共享库） BUILD_STATIC_JAVA_LIBRARY（java静态库） BUILD_EXECUTABLE（执行文件） BUILD_SHARED_LIBRARY（native共享库） BUILD_STATIC_LIBRARY（native静态库） 二. 预编译模块 在实际的开发中，并不会像Android一样将所有的源码集中在一起编译，有很多apk、so、jar等都是预先编译好的，编译系统需要将这些二进制文件复制到生成的image文件中。
 常用的方法是通过 PRODUCT_COPY_FILES 变量将这些文件直接复制到生成的image文件中；但是有些apk或jar包，需要使用系统的签名系统才能正常运行，这样用复制的方式就不行了。另外一些动态库文件可能是源码中的某些模块所以来的，用复制的方式也无法建立依赖关系，这将导致这些模块编译失败。Android可以通过定义预编译模块的方法来解决上面的问题。
 定义一个预编译模块和定义一个普通的编译模块格式相似，不同的是LOCAL_SRC_FILESS变成不是源文件了，而是二进制文件。同时可以通过 LOCAL_MODULE_CLASS 来指定模块的类型，最后include的是 BUILD_PREBUILT 变量定义编译文件。
@@ -134,7 +134,7 @@
       <header id="header" data-behavior="3">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
-    <a class="header-title-link" href="/" aria-label="Go to homepage">run blog</a>
+    <a class="header-title-link" href="/" aria-label="Go to homepage">runnlin&#39;s blog</a>
   </div>
   
 </header>

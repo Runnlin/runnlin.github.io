@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Android-AIDL学习笔记(持续更新) - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="Android-AIDL学习笔记(持续更新)" />
+<meta property="og:description" content="Android-AIDL学习笔记(持续更新) 通过对Android中的Proxy设计模式的学习，可以发现AIDL就是Proxy模式的很好的实现
+用户通过AIDL定义一系列接口，编译时AIDL会自动生成相应的源码，随后我们可以分别在Service和Client中调用
+当Service与Client在同一个进程中时，使用本地Proxy模式自动调用； 当Service与Client不在同个进程中时，使用Binder进行进程间通信，本质上是aidl实现了远程的Proxy接口，当Client进行调用时，通过Binder进行转发到Service中，这里的Binder就实现了Proxy的功能
+计算机系统中，设备驱动分为内核态和用户态
+保护厂商利益（出发点） 内核空间主要负责硬件访问逻辑（GPL） 用户空间主要负责参数和访问流程控制（Apache License） 处于内核态中的程序可以访问并操作所有的硬件设备，Binder的思想就是通过一个一直运行在内核态的Binder驱动转发相关信息，来对想要跨进程的程序进行联通。其次，通过Binder驱动也可以对用户发出的指令进行过滤和识别，以防止对设备造成破坏
+MediaPlayerService 以下以 Android 2.3.5 的 MediaPlayerService 为例
+mian：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 int main(int argc, char** argv) { sp&lt;ProcessState&gt; proc(ProcessState::self()); sp&lt;IServiceManager&gt; sm = defaultServiceManager(); MediaPlayerService::instantiate(); ---》该函数内部调用 addService，把 MediaPlayerService 信息 add 到 ServiceManager 中 ProcessState::self()-&gt;startThreadPool(); IPCThreadState::self()-&gt;joinThreadPool(); } 在 MediaPlayerService::instantiate() 中，使用了 ServiceManager 的 addService 方法来加入服务。在Android系统中Service信息都应该先add到ServiceManager[SM]中，由ServiceManager来集中管理，这样可以查询当前系统有哪些服务。而且，Android 系统中某个服务例如 MediaPlayerService 的客户端想要与其通讯的话，必须先向 ServiceManager 查询 MediaPlayerService 的信息，然后通过SerivceManager 返回的东西再来和 MediaPlayerService 交互。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Android-AIDL学习笔记(持续更新)"/>
+<meta name="twitter:description" content="Android-AIDL学习笔记(持续更新) 通过对Android中的Proxy设计模式的学习，可以发现AIDL就是Proxy模式的很好的实现
+用户通过AIDL定义一系列接口，编译时AIDL会自动生成相应的源码，随后我们可以分别在Service和Client中调用
+当Service与Client在同一个进程中时，使用本地Proxy模式自动调用； 当Service与Client不在同个进程中时，使用Binder进行进程间通信，本质上是aidl实现了远程的Proxy接口，当Client进行调用时，通过Binder进行转发到Service中，这里的Binder就实现了Proxy的功能
+计算机系统中，设备驱动分为内核态和用户态
+保护厂商利益（出发点） 内核空间主要负责硬件访问逻辑（GPL） 用户空间主要负责参数和访问流程控制（Apache License） 处于内核态中的程序可以访问并操作所有的硬件设备，Binder的思想就是通过一个一直运行在内核态的Binder驱动转发相关信息，来对想要跨进程的程序进行联通。其次，通过Binder驱动也可以对用户发出的指令进行过滤和识别，以防止对设备造成破坏
+MediaPlayerService 以下以 Android 2.3.5 的 MediaPlayerService 为例
+mian：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 int main(int argc, char** argv) { sp&lt;ProcessState&gt; proc(ProcessState::self()); sp&lt;IServiceManager&gt; sm = defaultServiceManager(); MediaPlayerService::instantiate(); ---》该函数内部调用 addService，把 MediaPlayerService 信息 add 到 ServiceManager 中 ProcessState::self()-&gt;startThreadPool(); IPCThreadState::self()-&gt;joinThreadPool(); } 在 MediaPlayerService::instantiate() 中，使用了 ServiceManager 的 addService 方法来加入服务。在Android系统中Service信息都应该先add到ServiceManager[SM]中，由ServiceManager来集中管理，这样可以查询当前系统有哪些服务。而且，Android 系统中某个服务例如 MediaPlayerService 的客户端想要与其通讯的话，必须先向 ServiceManager 查询 MediaPlayerService 的信息，然后通过SerivceManager 返回的东西再来和 MediaPlayerService 交互。"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" /><link rel="prev" href="https://runnlin.github.io/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><link rel="next" href="https://runnlin.github.io/2022-04-01-android-%E9%A2%84%E7%BC%96%E8%AF%91/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Android-AIDL学习笔记(持续更新)",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android","wordcount":  252 ,
+        "url": "https:\/\/runnlin.github.io\/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Runnlin&#39;s Blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>Runnlin&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/categories/documentation/"> Docs </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="Select Language">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" selected>English</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Runnlin&#39;s Blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>Runnlin&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/categories/documentation/" title="">Docs</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="Select Language">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" selected>English</option></select>
+                </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android-AIDL学习笔记(持续更新)</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;252 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;2 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mediaplayerservice">MediaPlayerService</a>
+      <ul>
+        <li><a href="#mediaservice-的运行">MediaService 的运行</a></li>
+        <li><a href="#mediaplayerclietn">MediaPlayerClietn</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="android-aidl学习笔记持续更新"><strong>Android-AIDL学习笔记(持续更新)</strong></h1>
+<p>通过对Android中的Proxy设计模式的学习，可以发现AIDL就是Proxy模式的很好的实现</p>
+<p>用户通过AIDL定义一系列接口，编译时AIDL会自动生成相应的源码，随后我们可以分别在Service和Client中调用</p>
+<p>当Service与Client在同一个进程中时，使用本地Proxy模式自动调用；
+当Service与Client不在同个进程中时，使用Binder进行进程间通信，本质上是aidl实现了远程的Proxy接口，当Client进行调用时，通过Binder进行转发到Service中，这里的Binder就实现了Proxy的功能</p>
+<p>计算机系统中，设备驱动分为内核态和用户态</p>
+<ol>
+<li>保护厂商利益（出发点）</li>
+<li>内核空间主要负责硬件访问逻辑（GPL）</li>
+<li>用户空间主要负责参数和访问流程控制（Apache License）</li>
+</ol>
+<p>处于内核态中的程序可以访问并操作所有的硬件设备，Binder的思想就是通过一个一直运行在内核态的Binder驱动转发相关信息，来对想要跨进程的程序进行联通。其次，通过Binder驱动也可以对用户发出的指令进行过滤和识别，以防止对设备造成破坏</p>
+<h2 id="mediaplayerservice">MediaPlayerService</h2>
+<p>以下以 Android 2.3.5 的 MediaPlayerService 为例</p>
+<p>mian：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="o">(</span><span class="kt">int</span> <span class="n">argc</span><span class="o">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">ProcessState</span><span class="o">&gt;</span> <span class="nf">proc</span><span class="o">(</span><span class="n">ProcessState</span><span class="o">::</span><span class="n">self</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IServiceManager</span><span class="o">&gt;</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">defaultServiceManager</span><span class="o">();</span>   
+</span></span><span class="line"><span class="cl"><span class="nl">
+</span></span></span><span class="line"><span class="cl"><span class="nl">MediaPlayerService:</span><span class="o">:</span><span class="n">instantiate</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">---</span><span class="err">》</span><span class="n">该函数内部调用</span> <span class="n">addService</span><span class="err">，</span><span class="n">把</span> <span class="n">MediaPlayerService</span> <span class="n">信息</span> <span class="n">add</span> <span class="n">到</span> <span class="n">ServiceManager</span> <span class="n">中</span>
+</span></span><span class="line"><span class="cl"><span class="nl">
+</span></span></span><span class="line"><span class="cl"><span class="nl">    ProcessState:</span><span class="o">:</span><span class="n">self</span><span class="o">()-&gt;</span><span class="n">startThreadPool</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="nl">
+</span></span></span><span class="line"><span class="cl"><span class="nl">    IPCThreadState:</span><span class="o">:</span><span class="n">self</span><span class="o">()-&gt;</span><span class="n">joinThreadPool</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 MediaPlayerService::instantiate() 中，使用了 ServiceManager 的 addService 方法来加入服务。在Android系统中Service信息都应该先add到ServiceManager[SM]中，由ServiceManager来集中管理，这样可以查询当前系统有哪些服务。而且，Android 系统中某个服务例如 MediaPlayerService 的客户端想要与其通讯的话，必须先向 ServiceManager 查询 MediaPlayerService 的信息，然后通过SerivceManager 返回的东西再来和 MediaPlayerService 交互。</p>
+<ol>
+<li>MediaPlayerService 向 SM 注册</li>
+<li>MediaPlayerClient 查询当前注册在 SM 中的MediaPlayerService 的信息</li>
+<li>根据这个信息，MediaPlaerClient 和 MediaPlayerService 交互</li>
+</ol>
+<p>另外，ServiceManager 的handle 标识是0， 所以只要往 handle 是 0 的服务发送信息了，最终都会传递到 ServiceManger 中去</p>
+<h3 id="mediaservice-的运行">MediaService 的运行</h3>
+<ol>
+<li>
+<p>defaultServiceManager 得到了 PbServiceManager，然后 MediaPlayerServcie 实例化后，调用 BpServiceManger 的 addService 函数；</p>
+</li>
+<li>
+<p>在这个过程中，是 service_manager 收到 addService 的请求，然后把对应信息放到自己保存的一个服务 list 中</p>
+</li>
+<li>
+<p>service_manager有一个binder_looper 函数，专门等着从binder中接受请求。虽然 service_manager 没有中 BnServiceManager 中派生，但是他肯定完成了 BnServiceManager 的功能。</p>
+</li>
+</ol>
+<p>同理，和 socket 的工作方式类似的，一个BnMediaPlayerService应该会：</p>
+<ol>
+<li>打开binder 设备</li>
+<li>整一个looper循环，坐等请求</li>
+</ol>
+<p>BnMediaPlayerService 从 BBinder 中派生，所以会调用到它的 onTransact 函数，在其中所有 IMediaPlayerService 提供的函数都会通过命令类型来区分。
+也就是说，BnXXX类的onTransact函数收取命令，然后派发到派生类的函数，由他们完成实际的工作。</p>
+<p>在 startThreadPool 和 joinThreadPool 结束后会有两个线程，分别是主线程和工作线程，而且都在做消息循环。</p>
+<h3 id="mediaplayerclietn">MediaPlayerClietn</h3>
+<p>关于 MediaPlayerClient[Client] 和 MediaPlayerService[Service]的交互</p>
+<p>使用 Service 的时候，要先创建它的 BpMediaPlayerSerive，例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nl">IMediaDeathNotifier:</span><span class="o">:</span><span class="n">getMediaPlayerService</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IServiceManager</span><span class="o">&gt;</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">defaultServiceManager</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IBinder</span><span class="o">&gt;</span> <span class="n">binder</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">do</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 向 SM 查询对应服务的信息，返回 binder
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">binder</span> <span class="o">=</span> <span class="n">sm</span><span class="o">-&gt;</span><span class="n">getService</span><span class="o">(</span><span class="n">String16</span><span class="o">(</span><span class="s">&#34;media.player&#34;</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">binder</span> <span class="o">!=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">usleep</span><span class="o">(</span><span class="n">500000</span><span class="o">);</span> <span class="c1">// 0.5 s
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 通过 interface_cast，将这个 binder 转化成 BpMediaPlayerService
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 注意，这个 binder 只是用来和 binder 设备通讯用的，
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 实际上和 IMediaPlayerService 的功能一点关系都没有。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// BpMediaPlayerService 用这个 binder 和  BnMediaPlayerService 通讯。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">sMediaPlayerService</span> <span class="o">=</span> <span class="n">interface_cast</span><span class="o">&lt;</span><span class="n">IMediaPlayerService</span><span class="o">&gt;(</span><span class="n">binder</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="n">sMediaPlayerService</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Binder 其实就是一个和 binder 设备打交道的接口，而上层 IMediaPlayerService 只不过把它当作一个类似 socket 来使用罢了。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-04-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" class="prev" rel="prev" title="Android.bp 文件解析"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android.bp 文件解析</a>
+            <a href="/2022-04-01-android-%E9%A2%84%E7%BC%96%E8%AF%91/" class="next" rel="next" title="Android 预编译简述">Android 预编译简述<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="runnlin.github.io" target="_blank">Runnlin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.en","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

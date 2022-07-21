@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Android.bp 文件解析 - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="Android.bp 文件解析" />
+<meta property="og:description" content="Android.bp 文件解析 Android.bp文件是什么？ Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！
+Android.bp文件配置规则 【模块和属性】 Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：
+1 2 3 4 5 6 7 8 9 10 cc_binary { name: ”avbctl”, defaults: [“avb_defaults”], static_libs: [ “libavb_user”, “libfs_mgr”, ], shared_libs: [“libbase”], srcs: [“tools/avbctl/avbctl.cc”], } 上面例子中的cc_binary就是模块类型，表示该模块目标为二进制可执行文件。 如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在android/build/soong/androidmk/cmd/androidmk/android.go 中可以查到，有以下：
+● 模块类型后面用大括号“{}”将模块的所有属性包裹起来。
+● 每个属性的名字和值用中间用冒号连接起来,属性值要用双引号””包裹起来(如果属性值是变量，变量不需要加双引号)：
+name: ”avbctl”表示模块name属性的值为avbctl，就是类比Android.mk中的LOCAL_MODULE := avbctl。
+模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。
+● 查看全部支持的模块和各个模块支持的属性定义，请查看这个网址：https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html。
+● cc_defaults模块比较特殊，它表示该模块的属性可以被其他模块重复引用，类似于我们的头文件被其他cpp文件引用，举例：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 cc_defaults { name: &#34;gzip_defaults&#34;, shared_libs: [&#34;libz&#34;], stl: &#34;none&#34;, } cc_binary { name: &#34;gzip&#34;, defaults: [&#34;gzip_defaults&#34;], /*这里等价于 shared_libs: [&#34;libz&#34;], stl: &#34;none&#34;,*/ srcs: [&#34;src/test/minigzip." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Android.bp 文件解析"/>
+<meta name="twitter:description" content="Android.bp 文件解析 Android.bp文件是什么？ Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！
+Android.bp文件配置规则 【模块和属性】 Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：
+1 2 3 4 5 6 7 8 9 10 cc_binary { name: ”avbctl”, defaults: [“avb_defaults”], static_libs: [ “libavb_user”, “libfs_mgr”, ], shared_libs: [“libbase”], srcs: [“tools/avbctl/avbctl.cc”], } 上面例子中的cc_binary就是模块类型，表示该模块目标为二进制可执行文件。 如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在android/build/soong/androidmk/cmd/androidmk/android.go 中可以查到，有以下：
+● 模块类型后面用大括号“{}”将模块的所有属性包裹起来。
+● 每个属性的名字和值用中间用冒号连接起来,属性值要用双引号””包裹起来(如果属性值是变量，变量不需要加双引号)：
+name: ”avbctl”表示模块name属性的值为avbctl，就是类比Android.mk中的LOCAL_MODULE := avbctl。
+模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。
+● 查看全部支持的模块和各个模块支持的属性定义，请查看这个网址：https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html。
+● cc_defaults模块比较特殊，它表示该模块的属性可以被其他模块重复引用，类似于我们的头文件被其他cpp文件引用，举例：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 cc_defaults { name: &#34;gzip_defaults&#34;, shared_libs: [&#34;libz&#34;], stl: &#34;none&#34;, } cc_binary { name: &#34;gzip&#34;, defaults: [&#34;gzip_defaults&#34;], /*这里等价于 shared_libs: [&#34;libz&#34;], stl: &#34;none&#34;,*/ srcs: [&#34;src/test/minigzip."/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><link rel="prev" href="https://runnlin.github.io/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><link rel="next" href="https://runnlin.github.io/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Android.bp 文件解析",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android","wordcount":  535 ,
+        "url": "https:\/\/runnlin.github.io\/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Runnlin&#39;s Blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>Runnlin&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/categories/documentation/"> Docs </a><a class="menu-item" href="/about/"> About </a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="Select Language">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" selected>English</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Runnlin&#39;s Blog"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>Runnlin&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/categories/documentation/" title="">Docs</a><a class="menu-item" href="/about/" title="">About</a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="Select Language">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" selected>English</option></select>
+                </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android.bp 文件解析</h1><h2 class="single-subtitle">bp 文件解析</h2><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;535 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#androidbp文件是什么">Android.bp文件是什么？</a></li>
+    <li><a href="#androidbp文件配置规则">Android.bp文件配置规则</a>
+      <ul>
+        <li><a href="#模块和属性">【模块和属性】</a></li>
+        <li><a href="#变量">【变量】</a></li>
+        <li><a href="#条件编译">【条件编译】</a></li>
+        <li><a href="#操作符">【操作符】</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="androidbp-文件解析"><strong>Android.bp 文件解析</strong></h1>
+<h2 id="androidbp文件是什么">Android.bp文件是什么？</h2>
+<p>Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！</p>
+<h2 id="androidbp文件配置规则">Android.bp文件配置规则</h2>
+<h3 id="模块和属性">【模块和属性】</h3>
+<p>Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cc_binary {
+</span></span><span class="line"><span class="cl">        name: ”avbctl”,
+</span></span><span class="line"><span class="cl">        defaults: [“avb_defaults”],
+</span></span><span class="line"><span class="cl">        static_libs: [
+</span></span><span class="line"><span class="cl">                  “libavb_user”,
+</span></span><span class="line"><span class="cl">                  “libfs_mgr”,
+</span></span><span class="line"><span class="cl">        ],
+</span></span><span class="line"><span class="cl">        shared_libs: [“libbase”],
+</span></span><span class="line"><span class="cl">        srcs: [“tools/avbctl/avbctl.cc”],
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面例子中的cc_binary就是模块类型，表示该模块目标为二进制可执行文件。
+如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在android/build/soong/androidmk/cmd/androidmk/android.go 中可以查到，有以下：</p>
+<p>● 模块类型后面用大括号“{}”将模块的所有属性包裹起来。</p>
+<p>● 每个属性的名字和值用中间用冒号连接起来,属性值要用双引号””包裹起来(如果属性值是变量，变量不需要加双引号)：</p>
+<p>name: ”avbctl”表示模块name属性的值为avbctl，就是类比Android.mk中的LOCAL_MODULE := avbctl。</p>
+<p>模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。</p>
+<p>● 查看全部支持的模块和各个模块支持的属性定义，请查看这个网址：<a href="https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html" target="_blank" rel="noopener noreffer ">https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html</a>。</p>
+<p>● cc_defaults模块比较特殊，它表示该模块的属性可以被其他模块重复引用，类似于我们的头文件被其他cpp文件引用，举例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cc_defaults {
+</span></span><span class="line"><span class="cl">   name: &#34;gzip_defaults&#34;,
+</span></span><span class="line"><span class="cl">   shared_libs: [&#34;libz&#34;],
+</span></span><span class="line"><span class="cl">   stl: &#34;none&#34;,
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cc_binary {
+</span></span><span class="line"><span class="cl">   name: &#34;gzip&#34;,
+</span></span><span class="line"><span class="cl">   defaults: [&#34;gzip_defaults&#34;],
+</span></span><span class="line"><span class="cl">   /*这里等价于
+</span></span><span class="line"><span class="cl">   shared_libs: [&#34;libz&#34;],
+</span></span><span class="line"><span class="cl">    stl: &#34;none&#34;,*/
+</span></span><span class="line"><span class="cl">   srcs: [&#34;src/test/minigzip.c&#34;],
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>● 属性可以使用列表数组的形式，也可以使用unix通配符，例如：”*.java”</p>
+<p>● 每一条完整的属性定义语句加上逗号“，”表示结束</p>
+<p>● 注释包括单行注释//和多行注释/**/</p>
+<p>● 最重要的一点：目前android编译系统同时支持mk和bp两种，但是这两种是彼此单独运行的，所以bp中依赖的目标，例如动态库静态库目标，如果库是源代码的形式存在的，那么库的编译脚本必须也是通过bp文件编译才能被找到，否则用mk文件编译库，bp会提示找不到依赖的库目标。（paxdroid代码中因为要将framework相关内容编译到android的framework中，而android已经全部转还成bp，所以这一部分paxdroid也是使用的bp来编写的，不然会提示找不到）</p>
+<p>更多的说明可以在android/build/soong/README.md文件中查找。
+如果找不到想要的，可以在官网找：<a href="https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html" target="_blank" rel="noopener noreffer ">https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html</a></p>
+<h3 id="变量">【变量】</h3>
+<p>变量可以直接定义，使用“=”号赋值，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">avbctl_srcs = [“tools/avbctl/avbctl.cc”],
+</span></span><span class="line"><span class="cl">cc_binary {
+</span></span><span class="line"><span class="cl">        name: ”avbctl”,
+</span></span><span class="line"><span class="cl">        defaults: [“avb_defaults”],
+</span></span><span class="line"><span class="cl">        static_libs: [
+</span></span><span class="line"><span class="cl">                  “libavb_user”,
+</span></span><span class="line"><span class="cl">                  “libfs_mgr”,
+</span></span><span class="line"><span class="cl">        ],
+</span></span><span class="line"><span class="cl">        shared_libs: [“libbase”],
+</span></span><span class="line"><span class="cl">        srcs: avbctl_srcs,
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="条件编译">【条件编译】</h3>
+<p>例如我们的mk文件中包括条件判断：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">LOCAL_PATH := $(call my-dir)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">include $(CLEAR_VARS)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LOCAL_MODULE := fs_mgr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ifeq ($(ENABLE_USER2ENG),true)
+</span></span><span class="line"><span class="cl">LOCAL_CFLAGS += -DALLOW_ADBD_DISABLE_VERITY=1
+</span></span><span class="line"><span class="cl">LOCAL_CFLAGS += -DENABLE_USER2ENG=1
+</span></span><span class="line"><span class="cl">endif
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LOCAL_CFLAGS += -Wno-error=implicit-function-declaration
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ifeq ($(shell if [ -d $(TOPDIR)paxdroid/external/libethtool ]; then echo &#34;exist&#34;; else echo &#34;notexist&#34;; fi;), exist)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LOCAL_SHARED_LIBRARIES +=libethtool
+</span></span><span class="line"><span class="cl">endif
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">include $(BUILD_EXECUTABLE)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们先分析下上面两个条件的意思，如果变量ENABLE_USER2ENG的值为true，那么追加这两个编译参数，否则不追加。第二个条件是说如果存在paxdroid/external/libethtool这个目录，那么就添加libethtool这个动态库，否则不添加。</p>
+<p>要转换为bp写法，就需要我们通过go语言写一个新文件，新建一个自定义类型的模块，来判断这些条件，比如我的修改是在system/core/fs_mgr/Android.bp,那么要在添加 system/core/fs_mgr/fs_mgr.go，</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//这是申明当前的包名，就是你在哪个文件夹下，就写啥
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">fs_mgr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//导入android的soong工具目录
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;android/soong/android&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;android/soong/cc&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//一般情况下不需要引用os包，这里要判断文件夹是否存在需要引用
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="s">&#34;os&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//初始化入口函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// for DEBUG
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;init start&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//注册模块名：fs_mgr_condition，模块名的方法入口是：fs_mgrDefaultsFactory方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">android</span><span class="p">.</span><span class="nf">RegisterModuleType</span><span class="p">(</span><span class="s">&#34;fs_mgr_condition&#34;</span><span class="p">,</span> <span class="nx">fs_mgrDefaultsFactory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现fs_mgrDefaultsFactory方法：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">fs_mgrDefaultsFactory</span><span class="p">()</span> <span class="p">(</span><span class="nx">android</span><span class="p">.</span><span class="nx">Module</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//如果我们编译的目标是bin文件，这里就是调用cc.DefaultsFactory()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//如果编译目标是so库，那么调用的是cc.LibrarySharedFactory()。这里我们举例目标是bin文件：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">module</span> <span class="o">:=</span> <span class="nx">cc</span><span class="p">.</span><span class="nf">DefaultsFactory</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//添加装载时的钩子函数fs_mgrDefaults
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">android</span><span class="p">.</span><span class="nf">AddLoadHook</span><span class="p">(</span><span class="nx">module</span><span class="p">,</span> <span class="nx">fs_mgrDefaults</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">module</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现钩子函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">fs_mgrDefaults</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">android</span><span class="p">.</span><span class="nx">LoadHookContext</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//这里定义我们所有需要受到条件控制的变量，比如我们这里需要根据条件来控制Cflags和依赖
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//的动态库两个变量，所以我们只需要定义这两个即可，按照实际需求定义：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="kd">type</span> <span class="nx">props</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="nx">Cflags</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Shared_libs</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">props</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">p</span><span class="p">.</span><span class="nx">Cflags</span> <span class="p">=</span> <span class="nf">getCflags</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">p</span><span class="p">.</span><span class="nx">Shared_libs</span> <span class="p">=</span> <span class="nf">getShared_libs</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">ctx</span><span class="p">.</span><span class="nf">AppendProperties</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现getCflags(ctx)方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">getCflags</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">android</span><span class="p">.</span><span class="nx">BaseContext</span><span class="p">)</span> <span class="p">([]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">cppflags</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ENABLE_USER2ENG:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ctx</span><span class="p">.</span><span class="nf">AConfig</span><span class="p">().</span><span class="nf">IsEnvTrue</span><span class="p">(</span><span class="s">&#34;ENABLE_USER2ENG&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">ctx</span><span class="p">.</span><span class="nf">AConfig</span><span class="p">().</span><span class="nf">IsEnvTrue</span><span class="p">(</span><span class="s">&#34;ENABLE_USER2ENG&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nx">cppflags</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">cppflags</span><span class="p">,</span> <span class="s">&#34;-DALLOW_ADBD_DISABLE_VERITY=1&#34;</span><span class="p">,</span> <span class="s">&#34;-DENABLE_USER2ENG=1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">cppflags</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现getShared_libs(ctx)方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">getShared_libs</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">android</span><span class="p">.</span><span class="nx">BaseContext</span><span class="p">)</span> <span class="p">([]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">shared_libs</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//判断文件是否存在，该方法返回两个参数，一个isExists，一个error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">isExists</span><span class="p">,</span><span class="kt">error</span> <span class="o">:=</span> <span class="nf">PathExists</span> <span class="p">(</span><span class="s">&#34;paxdroid/external/libethtool&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">isExists</span> <span class="o">&amp;&amp;</span> <span class="kt">error</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//路径存在
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">shared_libs</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">shared_libs</span><span class="p">,</span> <span class="err">“</span><span class="nx">libethtool</span><span class="err">”</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">shared_libs</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现判断文件夹是否存在的工具方法：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">PathExists</span><span class="p">(</span><span class="nx">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Stat</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">os</span><span class="p">.</span><span class="nf">IsNotExist</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>go脚本写完了，相应的再Android.bp文件引用，如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// 这些个必须添加，编译刚刚写的那个go脚本需要的一些依赖
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">bootstrap_go_package</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// 名字和包路径和刚刚写的go文件一致
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;soong-fs_mgr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">pkgPath</span><span class="p">:</span> <span class="s">&#34;android/soong/fs_mgr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">deps</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;blueprint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;blueprint-pathtools&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;soong&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;soong-android&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;soong-cc&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;soong-genrule&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="p">],</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//这里的srcs就写我们刚刚写的go脚本
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">srcs</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">          <span class="s">&#34;fs_mgr.go&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="p">],</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">pluginFor</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;soong_build&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// fs_mgr_condition 是我们在go语言中自定义的模块类型，模块的类型是fs_mgr_condition，
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 这个模块名字叫做：fs_mgr_defaults
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fs_mgr_condition</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;fs_mgr_defaults&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//-----------------------------------------------------------------------
+</span></span></span><span class="line"><span class="cl"><span class="c1">//以上所有代码是标准的添加自定义模块来实现条件控制的代码，我们可以记下来作为参考，
+</span></span></span><span class="line"><span class="cl"><span class="c1">//下面的代码才是我们编译具体模块的：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">cc_binary</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;fs_mgr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//这里引用上面定义的模块
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">defaults</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;fs_mgr_defaults&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">cppflags</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;-Wno-error=implicit-function-declaration &#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="操作符">【操作符】</h3>
+<p>String类型、字符串列表类型和Map类型支持操作符“+”，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">binder_src_files</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#34;lib/libsystool_client/binder.c&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="n">cc_library_static</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nl">srcs</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;lib/libsystool_client/systool_client_static.c&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;ipc/pipe_client.c&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="p">]</span> <span class="o">+</span> <span class="n">binder_src_files</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-04-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" class="prev" rel="prev" title="USB 讲解笔记"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>USB 讲解笔记</a>
+            <a href="/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="next" rel="next" title="Android-AIDL学习笔记(持续更新)">Android-AIDL学习笔记(持续更新)<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="runnlin.github.io" target="_blank">Runnlin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.en","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

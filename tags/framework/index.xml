@@ -1,19 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Framework on run blog</title>
-    <link>https://runnlin.github.io/tags/framework/</link>
-    <description>Recent content in Framework on run blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 28 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/framework/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>init 工作流程简述</title>
-      <link>https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
-      <pubDate>Thu, 28 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</guid>
-      <description>Init 工作流程简述 init的工作流程可以精简为以下四点：
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Framework - Tag - Runnlin&#39;s Blog</title>
+        <link>https://runnlin.github.io/tags/framework/</link>
+        <description>Framework - Tag - Runnlin&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
+            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 28 Apr 2022 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/framework/" rel="self" type="application/rss+xml" /><item>
+    <title>init 工作流程简述</title>
+    <link>https://runnlin.github.io/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
+    <pubDate>Thu, 28 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/2022-04-28-init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</guid>
+    <description><![CDATA[Init 工作流程简述 init的工作流程可以精简为以下四点：
 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作就是在其中的某个阶段完成的 调用 property_init 初始化属性相关的资源，并且通过 property_start_service 启动属性服务 init 进入死循环，并且等待一些事情的发生。重点关注 init 如何处理来自 socket 和来自属性服务器的相关事情 精简工作流程是分析代码时常用的方法
 解析配置文件 init会解析两个配置文件，一个是系统配置文件 init.rc， 另一个是与硬件平台相关的配置文件 init.[hardwordName].rc。对这两个配置文件进行解析调用的是同一个 parse_config_file 函数
 parser.c
@@ -21,8 +18,17 @@ parser.c
 关键字定义 keyword.h
 第一次包含keyword.h时，它声明了一些诸如 do_class_start 的函数，另外定义了一个枚举，枚举值为 K_class、K_mkdir 等关键字 第二次包含后，得到一个 keyword_info 结构体数组，这个结构体数组以前面定义的枚举值为索引，存储对应的关键字信息，这些信息包括关键字名称、处理函数、处理函数的参数个数，以及属性 根据keyword.h的定义，其中 symbol 为 on 或 service 的时候表示 section
 解析 init.rc 解析属性指的是 persist，就是在 adb 中输入的可以即时生效的配置属性，如 persist.service.adb.enable=1
-一个section的内容从这个标识 section 的关键字开始，到下一个标识section 的地方结束 init.rc中出现了名为 boot 和 init 的sction，这里两者就是前面介绍的4个动作执行阶段的boot和init。也就是说，在boot阶段执行的动作都是由 boot 这个 section 定义的 另外还可以发现，zygote被放在了一个 service section 中。下面以zygote 这个section为例，介绍service是如何解析的</description>
-    </item>
-    
-  </channel>
+一个section的内容从这个标识 section 的关键字开始，到下一个标识section 的地方结束 init.rc中出现了名为 boot 和 init 的sction，这里两者就是前面介绍的4个动作执行阶段的boot和init。也就是说，在boot阶段执行的动作都是由 boot 这个 section 定义的 另外还可以发现，zygote被放在了一个 service section 中。下面以zygote 这个section为例，介绍service是如何解析的]]></description>
+</item>
+<item>
+    <title>Android Vold分析</title>
+    <link>https://runnlin.github.io/2022-04-25-android-vold%E5%88%86%E6%9E%90/</link>
+    <pubDate>Mon, 25 Apr 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/2022-04-25-android-vold%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[Android Vold分析 当接收到UEvent消息后，除了APP层可能会进行额外的逻辑以外，其中一个很重要的组件Vold会进行重要的挂载操作，可以说没有进行挂载的设备在Android中很难进行使用
+Android中的Vold是Volume Daemon，用于管理和控制Android平台外部存储设备的守护进程，是个Native程序。
+在Java世界中，与Vold交互的模块是MountService，他一边接收vold发出的消息，一边根据信息触发发送ACTION_MEDIA_MOUNT/ACTION_MEDIA_EJECT等广播，同时，他还能向vold发送控制命令，如挂载等。 Vold架构可用图9.1表示 当Linux内核检测到外部设备插入时，会发送uevent事件到NetlinkManager（NM） NM将这些消息转发给VolumeManager（VM），VM会做一些操作，然后通过CommandListener（CL）发送相关信息给MountService，其会根据收到的消息发送相关的处理指令给VM进行进一步处理。例如，当U盘插入后，VM会将来自NM的“Disk insert“消息发给MountService，然后MountService则发送”Mount“指令给Vold，指示他挂载这个U盘 CL模块内部封装了一个Socket用于跨进程通信。来与VM、NM、MountService相互接收和发送消息。不使用Binder机制的原因是这样代码量和派生关系等都会简单不少 初识Vold 创建VolumeManager对象 创建NetlinkManager对象 创建CommandListener对象（该对象在Android6及以上版本不存在，需进一步验证） 启动VM 根据配置文件来初始化VM 启动NM 通过往/sys/block 目录下对应的uevent文件写&quot;add\n&quot;来触发内核发送Uevent消息 VM通过CL向感兴趣的模块（如MountService）通知UMS（USB mass storage）的状态 启动CL 下面一个个来介绍各个模块 NetlinkManager 在vold中，使用NM的流程是： 调用instance创建一个NM对象 调用setBroadcaster设置CL对象 调用start启动NM NM的start分为两个步骤： 1.创建地址簇为PF_NETLINK类型的socket并做一些设置，这样NM就能和Kernel通信了。 创建NetlinkHandler对象，并调用他的start。后续工作都是由NetlinkHandler完成。 ]]></description>
+</item>
+</channel>
 </rss>
