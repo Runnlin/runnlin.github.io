@@ -64,7 +64,6 @@ MediaPlayerService::instantiate();
 1. 打开binder 设备
 2. 整一个looper循环，坐等请求
 
-
 BnMediaPlayerService 从 BBinder 中派生，所以会调用到它的 onTransact 函数，在其中所有 IMediaPlayerService 提供的函数都会通过命令类型来区分。
 也就是说，BnXXX类的onTransact函数收取命令，然后派发到派生类的函数，由他们完成实际的工作。
 
@@ -109,3 +108,4 @@ return sMediaPlayerService;
 ```
 
 Binder 其实就是一个和 binder 设备打交道的接口，而上层 IMediaPlayerService 只不过把它当作一个类似 socket 来使用罢了。
+

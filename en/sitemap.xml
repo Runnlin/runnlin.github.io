@@ -4,6 +4,16 @@
     ><url>
             <loc>https://runnlin.github.io/tags/android/</loc><lastmod>2022-07-18T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</loc><lastmod>2022-05-16T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://runnlin.github.io/categories/</loc><lastmod>2022-07-18T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
+                        rel="alternate"
+                        hreflang="zh-cn"
+                        href="https://runnlin.github.io/zh-cn/categories/"
+                        /><xhtml:link
+                    rel="alternate"
+                    hreflang="en"
+                    href="https://runnlin.github.io/categories/"
+                    /></url><url>
+            <loc>https://runnlin.github.io/categories/development/</loc><lastmod>2022-07-18T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/tags/media/</loc><lastmod>2022-05-16T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://runnlin.github.io/posts/</loc><lastmod>2022-07-18T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/</loc><lastmod>2022-07-18T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
@@ -36,12 +46,21 @@
             <loc>https://runnlin.github.io/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/</loc><lastmod>2022-04-01T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://runnlin.github.io/tags/usb/</loc><lastmod>2022-04-01T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://runnlin.github.io/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/</loc><lastmod>2022-04-01T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://runnlin.github.io/categories/</loc><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
+            <loc>https://runnlin.github.io/about/</loc><lastmod>1995-10-18T11:04:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
                         rel="alternate"
                         hreflang="zh-cn"
-                        href="https://runnlin.github.io/zh-cn/categories/"
+                        href="https://runnlin.github.io/zh-cn/about/"
                         /><xhtml:link
                     rel="alternate"
                     hreflang="en"
-                    href="https://runnlin.github.io/categories/"
+                    href="https://runnlin.github.io/about/"
+                    /></url><url>
+            <loc>https://runnlin.github.io/categories/documentation/</loc><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
+                        rel="alternate"
+                        hreflang="zh-cn"
+                        href="https://runnlin.github.io/zh-cn/categories/documentation/"
+                        /><xhtml:link
+                    rel="alternate"
+                    hreflang="en"
+                    href="https://runnlin.github.io/categories/documentation/"
                     /></url></urlset>

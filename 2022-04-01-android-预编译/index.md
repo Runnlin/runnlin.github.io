@@ -1,11 +1,11 @@
 # Android 预编译简述
 
 
-## 常用到的Android.mk编译目标，包括编译包、二进制文件、预编译。
+## 常用到的Android.mk编译目标，包括编译包、二进制文件、预编译
 
+### 一. 常用的编译目标
 
-### 一. 常用的编译目标：
-1.  BUILD_PACKAGE（既可以编apk，也可以编资源包文件，但是需要指定LOCAL_EXPORT_PACKAGE_RESOURCES:=true)
+1. BUILD_PACKAGE（既可以编apk，也可以编资源包文件，但是需要指定LOCAL_EXPORT_PACKAGE_RESOURCES:=true)
 2. BUILD_JAVA_LIBRARY（java共享库）
 3. BUILD_STATIC_JAVA_LIBRARY（java静态库）
 4. BUILD_EXECUTABLE（执行文件）
@@ -62,3 +62,4 @@
 8. include $ (BUILD_PREBUILT)
 
 ### 注：BUILD_PREBUILT 作为预编译的主要字段
+

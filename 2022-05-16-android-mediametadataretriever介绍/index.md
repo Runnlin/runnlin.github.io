@@ -3,7 +3,7 @@
 
 # Android MedataRetriever介绍
 
-    MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能截取视频的第一帧获取视频长宽等等，通过它能展示一个媒体文件几乎所有的信息
+> MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能截取视频的第一帧获取视频长宽等等，通过它能展示一个媒体文件几乎所有的信息
 
 ## MediaMetadataRetriever类简单介绍
 
