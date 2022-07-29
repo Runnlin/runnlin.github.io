@@ -106,6 +106,23 @@
         alt="/images/avatar.png"
         title="/images/avatar.png" /></a></div><div class="home-subtitle"><div id="id-1" class="typeit"></div></div></div>
 <article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">Android性能优化总结</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-07-28">2022-07-28</time></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div><div class="content">性能的优化是一个老生常谈的点，也是一个比较重要的点。做过一点性能优化的工作，现在对工作中的优化点做一个总结。如有错误，还请指正。有哪些方面需</div><div class="post-footer">
+        <a href="/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">Read More</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/android%E5%B9%BF%E6%92%AD%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">Android广播原理分析</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-07-27">2022-07-27</time></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div><div class="content">一、 Boradcast 前题概要 1、广播分为前台广播和后台广播 发送前台广播 (Intent.FLAG_RECEIVER_FOREGROUND 标志) 1 2 3 val intent = Intent(Intent.ACTION_SHUTDOWN) intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND) sendBroadcast(intent) 默认发送的是后台广播 1 2 val intent = Intent(Intent.ACTION_SHUTDOWN) sendBroadcast(intent) 在 ActivityManagerService 中，前台广播和后台广</div><div class="post-footer">
+        <a href="/android%E5%B9%BF%E6%92%AD%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">Read More</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/h264_is_magic/">H264 is magic</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-07-27">2022-07-27</time></span>&nbsp;<span class="post-category">included in <a href="/categories/av/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>AV</a></span></div><div class="content">A high level walkthrough of the basics of video compression techniques used in MPEG, AVC/H.264, codec&hellip;&hellip;
+H.264 is a video compression codec standard. It is ubiquitous - internet video, Blu-ray, phones, security cameras, drones, everything. Everything uses H.264 now.
+H.264 is a remarkable piece of technology. It is the result of 30+ years of work with one single goal: To reduce the bandwidth required for transmission of full-motion video.</div><div class="post-footer">
+        <a href="/h264_is_magic/">Read More</a><div class="post-tags">
+                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/video/">Video</a></div></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/">Android MediaMetadataRetriever 用法介绍</a>
     </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-05-16">2022-05-16</time></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div><div class="content">Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能</div><div class="post-footer">
         <a href="/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/">Read More</a><div class="post-tags">
@@ -150,17 +167,15 @@
     </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-04-01">2022-04-01</time></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div><div class="content">Android-AIDL学习笔记(持续更新) 通过对Android中的Proxy设计模式的学习，可以发现AIDL就是Proxy模式的很好的实现</div><div class="post-footer">
         <a href="/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/">Read More</a><div class="post-tags">
                 <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/">Android.bp 文件解析</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-04-01">2022-04-01</time></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div><div class="content">Android.bp 文件解析 Android.bp文件是什么？ Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android</div><div class="post-footer">
-        <a href="/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/">Read More</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></div></div>
-</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
-        <a href="/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/">USB 讲解笔记</a>
-    </h1><div class="post-meta"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-publish">published on <time datetime="2022-04-01">2022-04-01</time></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div><div class="content">USB 讲解笔记 U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端 Service USB-IF Indexing / Parsing Database 将解</div><div class="post-footer">
-        <a href="/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/">Read More</a><div class="post-tags">
-                <i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/usb/">USB</a></div></div>
-</article></div></div>
+</article><ul class="pagination"><li class="page-item active">
+                    <span class="page-link">
+                        <a href="/">1</a>
+                    </span>
+                </li><li class="page-item ">
+                    <span class="page-link">
+                        <a href="/page/2/">2</a>
+                    </span>
+                </li></ul></div></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
         </div>
