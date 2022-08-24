@@ -48,10 +48,10 @@ H.264 is a remarkable piece of technology. It is the result of 30+ years of work
 </item>
 <item>
     <title>Android Vold分析</title>
-    <link>https://runnlin.github.io/2022-04-25-android-vold%E5%88%86%E6%9E%90/</link>
+    <link>https://runnlin.github.io/2022-08-25-android-vold%E5%88%86%E6%9E%90/</link>
     <pubDate>Mon, 25 Apr 2022 20:38:30 &#43;0800</pubDate>
     <author>Runnlin</author>
-    <guid>https://runnlin.github.io/2022-04-25-android-vold%E5%88%86%E6%9E%90/</guid>
+    <guid>https://runnlin.github.io/2022-08-25-android-vold%E5%88%86%E6%9E%90/</guid>
     <description><![CDATA[Android Vold分析 当接收到UEvent消息后，除了APP层可能会进行额外的逻辑以外，其中一个很重要的组件Vold会进行重要的挂载操作，可以说没有]]></description>
 </item>
 <item>
