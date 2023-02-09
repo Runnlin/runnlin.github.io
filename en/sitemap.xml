@@ -4,6 +4,7 @@
     ><url>
             <loc>https://runnlin.github.io/en/categories/android/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://runnlin.github.io/en/tags/binder/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/categories/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
                         rel="alternate"
                         hreflang="zh-cn"
@@ -15,8 +16,6 @@
                     /></url><url>
             <loc>https://runnlin.github.io/en/tags/codec/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/codecservice-%E5%90%AF%E5%8A%A8/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://runnlin.github.io/en/tags/hugo/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://runnlin.github.io/en/categories/hugo/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/mediacodec-configure/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
@@ -41,6 +40,7 @@
                     hreflang="en"
                     href="https://runnlin.github.io/en/tags/"
                     /></url><url>
+            <loc>https://runnlin.github.io/en/%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/</loc><lastmod>2023-02-09T00:00:00&#43;00:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://runnlin.github.io/en/tags/android/</loc><lastmod>2022-08-25T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://runnlin.github.io/en/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/</loc><lastmod>2022-08-25T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://runnlin.github.io/en/categories/development/</loc><lastmod>2022-08-25T20:38:30&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
@@ -71,7 +71,6 @@
                     hreflang="en"
                     href="https://runnlin.github.io/en/about/"
                     /></url><url>
-            <loc>https://runnlin.github.io/en/%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://runnlin.github.io/en/categories/documentation/</loc><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
                         rel="alternate"
                         hreflang="zh-cn"

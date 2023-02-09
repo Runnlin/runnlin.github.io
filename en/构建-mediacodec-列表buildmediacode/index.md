@@ -1,4 +1,7 @@
-# 
+# 构建 MediaCodec 列表：buildMediaCode
+
+
+
 
 构建 MediaCodec 列表——buildMediaCodecList(…) ，确切地说是构建了 std::[vector](https://so.csdn.net/so/search?q=vector&spm=1001.2101.3001.7020) 容器，容器内部是指向 MediaCodecInfo 对象的指针。
 
