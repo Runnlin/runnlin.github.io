@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title> - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="" />
+<meta property="og:description" content="Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编解码接口。它的入口是 main_codecservice.cpp。 首先我们来看下启动它的配置 rc 脚本。可以看" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/en/codecservice-%E5%90%AF%E5%8A%A8/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
+
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编解码接口。它的入口是 main_codecservice.cpp。 首先我们来看下启动它的配置 rc 脚本。可以看"/>
+<meta name="application-name" content="Runnlin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/en/codecservice-%E5%90%AF%E5%8A%A8/" /><link rel="prev" href="https://runnlin.github.io/en/mediacodec-configure/" /><link rel="next" href="https://runnlin.github.io/en/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/en\/codecservice-%E5%90%AF%E5%8A%A8\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  3495 ,
+        "url": "https:\/\/runnlin.github.io\/en\/codecservice-%E5%90%AF%E5%8A%A8\/","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="auto" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/en/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/en/posts/"> Posts </a><a class="menu-item" href="/en/tags/"> Tags </a><a class="menu-item" href="/en/categories/"> Categories </a><a class="menu-item" href="/en/about/" title="about is about"> About </a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="Select Language">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/en/codecservice-%E5%90%AF%E5%8A%A8/" selected>English</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/en/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/en/posts/" title="">Posts</a><a class="menu-item" href="/en/tags/" title="">Tags</a><a class="menu-item" href="/en/categories/" title="">Categories</a><a class="menu-item" href="/en/about/" title="about is about">About</a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="Select Language">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/en/codecservice-%E5%90%AF%E5%8A%A8/" selected>English</option></select>
+                </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX"></h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3495 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;7 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>接口。它的入口是 main_codecservice.cpp。</p>
+<p>首先我们来看下启动它的配置 rc 脚本。可以看到它放在 vendor 目录下，说明和供应商有关。</p>
+<p><a href="mailto:frameworks/av/services/mediacodec/android.hardware.media.omx@1.0-service.rc" rel="">frameworks/av/services/mediacodec/android.hardware.media.omx@1.0-service.rc</a></p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>service vendor.media.omx /vendor/bin/hw/android.hardware.media.omx@1.0-service
+</span></span><span style="display:flex;"><span>    class main
+</span></span><span style="display:flex;"><span>    user mediacodec
+</span></span><span style="display:flex;"><span>    group camera drmrpc mediadrm
+</span></span><span style="display:flex;"><span>    ioprio rt 4
+</span></span><span style="display:flex;"><span>    writepid /dev/cpuset/foreground/tasks
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>
+<p>新建 implementation::Omx 对象并启动 Omx 服务；</p>
+</li>
+<li>
+<p>新建 implementation::OmxStore 对象并启动 OmxStore 服务。  frameworks/av/services/mediacodec/main_codecservice.cpp</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png"
+        data-srcset="%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png, %e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png 1.5x, %e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png 2x"
+        data-sizes="auto"
+        alt="启动流程.png"
+        title="启动流程.png" /></p>
+</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc __unused, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> argv)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    strcpy(argv[<span style="color:#ae81ff">0</span>], <span style="color:#e6db74">&#34;media.codec&#34;</span>);
+</span></span><span style="display:flex;"><span>    LOG(INFO) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;mediacodecservice starting&#34;</span>;
+</span></span><span style="display:flex;"><span>    signal(SIGPIPE, SIG_IGN);
+</span></span><span style="display:flex;"><span>    SetUpMinijail(kSystemSeccompPolicyPath, kVendorSeccompPolicyPath);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    android<span style="color:#f92672">::</span>ProcessState<span style="color:#f92672">::</span>initWithDriver(<span style="color:#e6db74">&#34;/dev/vndbinder&#34;</span>);
+</span></span><span style="display:flex;"><span>    android<span style="color:#f92672">::</span>ProcessState<span style="color:#f92672">::</span>self()<span style="color:#f92672">-&gt;</span>startThreadPool();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>hardware<span style="color:#f92672">::</span>configureRpcThreadpool(<span style="color:#ae81ff">64</span>, false);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Default codec services
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>hardware<span style="color:#f92672">::</span>media<span style="color:#f92672">::</span>omx<span style="color:#f92672">::</span>V1_0;
+</span></span><span style="display:flex;"><span>    sp<span style="color:#f92672">&lt;</span>IOmx<span style="color:#f92672">&gt;</span> omx <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> implementation<span style="color:#f92672">::</span>Omx();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (omx <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Cannot create IOmx HAL service.&#34;</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (omx<span style="color:#f92672">-&gt;</span>registerAsService() <span style="color:#f92672">!=</span> OK) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Cannot register IOmx HAL service.&#34;</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        LOG(INFO) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;IOmx HAL service created.&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    sp<span style="color:#f92672">&lt;</span>IOmxStore<span style="color:#f92672">&gt;</span> omxStore <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> implementation<span style="color:#f92672">::</span>OmxStore(omx);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (omxStore <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Cannot create IOmxStore HAL service.&#34;</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (omxStore<span style="color:#f92672">-&gt;</span>registerAsService() <span style="color:#f92672">!=</span> OK) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Cannot register IOmxStore HAL service.&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>hardware<span style="color:#f92672">::</span>joinRpcThreadpool();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>新建 implementation::Omx 对象详细情况可参考《<a href="https://blog.csdn.net/tyyj90/article/details/120912668?spm=1001.2014.3001.5501" target="_blank" rel="noopener noreffer ">Android 10 源码 Omx 初始化</a>》。</p>
+<p>接下来重点看新建 implementation::OmxStore 对象，从 OmxStore 头文件不难看出其构造函数里面很多参数存在默认值，这也就是为什么上一步只传入一个指向 IOmx 指针。</p>
+<ol>
+<li>检索 omx 节点列表，最终通过调用 Omx listNodes(…) 完成，获取 node 名称 Set，listNodes(…) 函数形参是一个匿名函数；</li>
+<li>解析 xml，这一步和 Omx 构造函数中的部分流程一样，具体可以查看 Omx 初始化一节，个人认为这一步并非必须的，因为 Omx 构造发生在 OmxStore 构造之前，不过这就需要 Omx 中开放这些接口给 OmxStore，目前代码逻辑却并非如此，所以这个步骤没办法直接省略，除非修改代码接口和流程加以适配；</li>
+<li>从 MediaCodecsXmlParser 中获取 ServiceAttributeMap 填充 ServiceAttribute List（mServiceAttributeList）；</li>
+<li>从 MediaCodecsXmlParser 中获取 RoleMap 填充 Role List（mRoleList），其中构造 RoleInfo，获取 NodeInfo List，这里第二次 resize NodeInfo List 是因为可能存在不匹配第一步中 node 名称 Set 中的情况，这样 List 就需要缩小；</li>
+<li>调用 MediaCodecsXmlParser getCommonPrefix() 获取 Codec Map key 中都存在的前缀。</li>
+</ol>
+<p>frameworks/av/media/libstagefright/omx/1.0/OmxStore.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>OmxStore::OmxStore(
+</span></span><span style="display:flex;"><span>        const sp&lt;IOmx&gt; &amp;omx,
+</span></span><span style="display:flex;"><span>        const char* owner,
+</span></span><span style="display:flex;"><span>        const std::vector&lt;std::string&gt; &amp;searchDirs,
+</span></span><span style="display:flex;"><span>        const std::vector&lt;std::string&gt; &amp;xmlNames,
+</span></span><span style="display:flex;"><span>        const char* profilingResultsXmlPath) {
+</span></span><span style="display:flex;"><span>    // retrieve list of omx nodes
+</span></span><span style="display:flex;"><span>    std::set&lt;std::string&gt; nodes;
+</span></span><span style="display:flex;"><span>    if (omx != nullptr) {
+</span></span><span style="display:flex;"><span>        omx-&gt;listNodes([&amp;nodes](const Status &amp;status,
+</span></span><span style="display:flex;"><span>                                const hidl_vec&lt;IOmx::ComponentInfo&gt; &amp;nodeList) {
+</span></span><span style="display:flex;"><span>            if (status == Status::OK) {
+</span></span><span style="display:flex;"><span>                for (const IOmx::ComponentInfo&amp; info : nodeList) {
+</span></span><span style="display:flex;"><span>                    nodes.emplace(info.mName.c_str());
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    MediaCodecsXmlParser parser;
+</span></span><span style="display:flex;"><span>    parser.parseXmlFilesInSearchDirs(xmlNames, searchDirs);
+</span></span><span style="display:flex;"><span>    if (profilingResultsXmlPath != nullptr) {
+</span></span><span style="display:flex;"><span>        parser.parseXmlPath(profilingResultsXmlPath);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    mParsingStatus = toStatus(parser.getParsingStatus());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    const auto&amp; serviceAttributeMap = parser.getServiceAttributeMap();
+</span></span><span style="display:flex;"><span>    mServiceAttributeList.resize(serviceAttributeMap.size());
+</span></span><span style="display:flex;"><span>    size_t i = 0;
+</span></span><span style="display:flex;"><span>    for (const auto&amp; attributePair : serviceAttributeMap) {
+</span></span><span style="display:flex;"><span>        ServiceAttribute attribute;
+</span></span><span style="display:flex;"><span>        attribute.key = attributePair.first;
+</span></span><span style="display:flex;"><span>        attribute.value = attributePair.second;
+</span></span><span style="display:flex;"><span>        mServiceAttributeList[i] = std::move(attribute);
+</span></span><span style="display:flex;"><span>        ++i;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    const auto&amp; roleMap = parser.getRoleMap();
+</span></span><span style="display:flex;"><span>    mRoleList.resize(roleMap.size());
+</span></span><span style="display:flex;"><span>    i = 0;
+</span></span><span style="display:flex;"><span>    for (const auto&amp; rolePair : roleMap) {
+</span></span><span style="display:flex;"><span>        RoleInfo role;
+</span></span><span style="display:flex;"><span>        role.role = rolePair.first;
+</span></span><span style="display:flex;"><span>        role.type = rolePair.second.type;
+</span></span><span style="display:flex;"><span>        role.isEncoder = rolePair.second.isEncoder;
+</span></span><span style="display:flex;"><span>        role.preferPlatformNodes = false; // deprecated and ignored, using rank instead
+</span></span><span style="display:flex;"><span>        hidl_vec&lt;NodeInfo&gt;&amp; nodeList = role.nodes;
+</span></span><span style="display:flex;"><span>        nodeList.resize(rolePair.second.nodeList.size());
+</span></span><span style="display:flex;"><span>        size_t j = 0;
+</span></span><span style="display:flex;"><span>        for (const auto&amp; nodePair : rolePair.second.nodeList) {
+</span></span><span style="display:flex;"><span>            if (!nodes.count(nodePair.second.name)) {
+</span></span><span style="display:flex;"><span>                // not supported by this OMX instance
+</span></span><span style="display:flex;"><span>                if (!strncasecmp(nodePair.second.name.c_str(), &#34;omx.&#34;, 4)) {
+</span></span><span style="display:flex;"><span>                    LOG(INFO) &lt;&lt; &#34;node [&#34; &lt;&lt; nodePair.second.name.c_str() &lt;&lt; &#34;] not found in IOmx&#34;;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            NodeInfo node;
+</span></span><span style="display:flex;"><span>            node.name = nodePair.second.name;
+</span></span><span style="display:flex;"><span>            node.owner = owner;
+</span></span><span style="display:flex;"><span>            hidl_vec&lt;NodeAttribute&gt;&amp; attributeList = node.attributes;
+</span></span><span style="display:flex;"><span>            attributeList.resize(nodePair.second.attributeList.size());
+</span></span><span style="display:flex;"><span>            size_t k = 0;
+</span></span><span style="display:flex;"><span>            for (const auto&amp; attributePair : nodePair.second.attributeList) {
+</span></span><span style="display:flex;"><span>                NodeAttribute attribute;
+</span></span><span style="display:flex;"><span>                attribute.key = attributePair.first;
+</span></span><span style="display:flex;"><span>                attribute.value = attributePair.second;
+</span></span><span style="display:flex;"><span>                attributeList[k] = std::move(attribute);
+</span></span><span style="display:flex;"><span>                ++k;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            nodeList[j] = std::move(node);
+</span></span><span style="display:flex;"><span>            ++j;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        nodeList.resize(j);
+</span></span><span style="display:flex;"><span>        mRoleList[i] = std::move(role);
+</span></span><span style="display:flex;"><span>        ++i;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mPrefix = parser.getCommonPrefix();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>为了进一步确认解析 xml 使用的参数，我们需要查看 OmxStore.h 文件来确认。从 OmxStore 构造函数声明中不难发现，其所有参数都存在默认值，也就是在只传入指向 IOmx 的指针时，其他参数都已确定。</p>
+<p>owner = “default”</p>
+<p>searchDirs = MediaCodecsXmlParser::getDefaultSearchDirs()</p>
+<p>xmlFiles = MediaCodecsXmlParser::getDefaultXmlNames()</p>
+<p>xmlProfilingResultsPath = MediaCodecsXmlParser::defaultProfilingResultsXmlPath)</p>
+<p>以上的三个 xml 解析的相关参数和 Omx 构造函数中解析 xml 流程入参是一样的。</p>
+<p>frameworks/av/media/libstagefright/omx/include/media/stagefright/omx/1.0/OmxStore.h</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>namespace implementation {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>using ::android::hardware::media::omx::V1_0::IOmxStore;
+</span></span><span style="display:flex;"><span>using ::android::hardware::media::omx::V1_0::IOmx;
+</span></span><span style="display:flex;"><span>using ::android::hardware::media::omx::V1_0::Status;
+</span></span><span style="display:flex;"><span>using ::android::hidl::base::V1_0::IBase;
+</span></span><span style="display:flex;"><span>using ::android::hardware::hidl_string;
+</span></span><span style="display:flex;"><span>using ::android::hardware::hidl_vec;
+</span></span><span style="display:flex;"><span>using ::android::hardware::Return;
+</span></span><span style="display:flex;"><span>using ::android::hardware::Void;
+</span></span><span style="display:flex;"><span>using ::android::sp;
+</span></span><span style="display:flex;"><span>using ::android::wp;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>struct OmxStore : public IOmxStore {
+</span></span><span style="display:flex;"><span>    OmxStore(
+</span></span><span style="display:flex;"><span>            const sp&lt;IOmx&gt; &amp;omx = nullptr,
+</span></span><span style="display:flex;"><span>            const char* owner = &#34;default&#34;,
+</span></span><span style="display:flex;"><span>            const std::vector&lt;std::string&gt; &amp;searchDirs =
+</span></span><span style="display:flex;"><span>                MediaCodecsXmlParser::getDefaultSearchDirs(),
+</span></span><span style="display:flex;"><span>            const std::vector&lt;std::string&gt; &amp;xmlFiles =
+</span></span><span style="display:flex;"><span>                MediaCodecsXmlParser::getDefaultXmlNames(),
+</span></span><span style="display:flex;"><span>            const char *xmlProfilingResultsPath =
+</span></span><span style="display:flex;"><span>                MediaCodecsXmlParser::defaultProfilingResultsXmlPath);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    virtual ~OmxStore();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // Methods from IOmxStore
+</span></span><span style="display:flex;"><span>    Return&lt;void&gt; listServiceAttributes(listServiceAttributes_cb) override;
+</span></span><span style="display:flex;"><span>    Return&lt;void&gt; getNodePrefix(getNodePrefix_cb) override;
+</span></span><span style="display:flex;"><span>    Return&lt;void&gt; listRoles(listRoles_cb) override;
+</span></span><span style="display:flex;"><span>    Return&lt;sp&lt;IOmx&gt;&gt; getOmx(hidl_string const&amp;) override;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>protected:
+</span></span><span style="display:flex;"><span>    Status mParsingStatus;
+</span></span><span style="display:flex;"><span>    hidl_string mPrefix;
+</span></span><span style="display:flex;"><span>    hidl_vec&lt;ServiceAttribute&gt; mServiceAttributeList;
+</span></span><span style="display:flex;"><span>    hidl_vec&lt;RoleInfo&gt; mRoleList;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}  // namespace implementation
+</span></span><span style="display:flex;"><span>}  // namespace V1_0
+</span></span><span style="display:flex;"><span>}  // namespace omx
+</span></span><span style="display:flex;"><span>}  // namespace media
+</span></span><span style="display:flex;"><span>}  // namespace hardware
+</span></span><span style="display:flex;"><span>}  // namespace android
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>listNodes(…) 内部主要调用 OMXMaster enumerateComponents(…) 函数进行枚举组件，具体可以查看 Omx 初始化一节关于 OMXMaster 构造函数的过程。枚举组件名称后，构建 ::android::IOMX::ComponentInfo 并将其推入 list 中，然后给其进行必要的字段初始化，这里会调到 OMXMaster getRolesOfComponent(…) 函数获取角色。最后将 std::list&lt;::android::IOMX::ComponentInfo&gt; 转化为 hidl_vec，接着调用 _hidl_cb(…) 回调前面提到的匿名函数。</p>
+<p>frameworks/av/media/libstagefright/omx/1.0/Omx.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Return&lt;void&gt; Omx::listNodes(listNodes_cb _hidl_cb) {
+</span></span><span style="display:flex;"><span>    std::list&lt;::android::IOMX::ComponentInfo&gt; list;
+</span></span><span style="display:flex;"><span>    char componentName[256];
+</span></span><span style="display:flex;"><span>    for (OMX_U32 index = 0;
+</span></span><span style="display:flex;"><span>            mMaster-&gt;enumerateComponents(
+</span></span><span style="display:flex;"><span>            componentName, sizeof(componentName), index) == OMX_ErrorNone;
+</span></span><span style="display:flex;"><span>            ++index) {
+</span></span><span style="display:flex;"><span>        list.push_back(::android::IOMX::ComponentInfo());
+</span></span><span style="display:flex;"><span>        ::android::IOMX::ComponentInfo&amp; info = list.back();
+</span></span><span style="display:flex;"><span>        info.mName = componentName;
+</span></span><span style="display:flex;"><span>        ::android::Vector&lt;::android::String8&gt; roles;
+</span></span><span style="display:flex;"><span>        OMX_ERRORTYPE err =
+</span></span><span style="display:flex;"><span>                mMaster-&gt;getRolesOfComponent(componentName, &amp;roles);
+</span></span><span style="display:flex;"><span>        if (err == OMX_ErrorNone) {
+</span></span><span style="display:flex;"><span>            for (OMX_U32 i = 0; i &lt; roles.size(); ++i) {
+</span></span><span style="display:flex;"><span>                info.mRoles.push_back(roles[i]);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    hidl_vec&lt;ComponentInfo&gt; tList;
+</span></span><span style="display:flex;"><span>    tList.resize(list.size());
+</span></span><span style="display:flex;"><span>    size_t i = 0;
+</span></span><span style="display:flex;"><span>    for (auto const&amp; info : list) {
+</span></span><span style="display:flex;"><span>        convertTo(&amp;(tList[i++]), info);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    _hidl_cb(toStatus(OK), tList);
+</span></span><span style="display:flex;"><span>    return Void();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>先根据 name 在 PluginByComponentName 容器中找到 index；</li>
+<li>根据 index 查到对应项，然后获取 plugin；</li>
+<li>根据 name 调用 plugin OMXPluginBase 具体实现 getRolesOfComponent(…) 获取所有角色。</li>
+</ol>
+<p>frameworks/av/media/libstagefright/omx/OMXMaster.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>OMX_ERRORTYPE OMXMaster::getRolesOfComponent(
+</span></span><span style="display:flex;"><span>        const char *name,
+</span></span><span style="display:flex;"><span>        Vector&lt;String8&gt; *roles) {
+</span></span><span style="display:flex;"><span>    Mutex::Autolock autoLock(mLock);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    roles-&gt;clear();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ssize_t index = mPluginByComponentName.indexOfKey(String8(name));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    if (index &lt; 0) {
+</span></span><span style="display:flex;"><span>        return OMX_ErrorInvalidComponentName;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    OMXPluginBase *plugin = mPluginByComponentName.valueAt(index);
+</span></span><span style="display:flex;"><span>    return plugin-&gt;getRolesOfComponent(name, roles);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>假设我们查找的角色是 rk3399 android 10 实现的，比如角色是 video_decoder.avc 时。这就会调用到 libstagefrighthw so 内的 getRolesOfComponent(…) 具体实现。</p>
+<ol>
+<li>调用 RKOMX_GetComponentsOfRole(…) 获取角色数量；</li>
+<li>调用 RKOMX_GetComponentsOfRole(…) 获取具体角色数组；</li>
+<li>转换角色数组到容器 Vector。</li>
+</ol>
+<p>hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>OMX_ERRORTYPE RKOMXPlugin::getRolesOfComponent(
+</span></span><span style="display:flex;"><span>        const char *name,
+</span></span><span style="display:flex;"><span>        Vector&lt;String8&gt; *roles) {
+</span></span><span style="display:flex;"><span>    roles-&gt;clear();
+</span></span><span style="display:flex;"><span>    for (OMX_U32 j = 0; j &lt; mCores.size(); j++) {
+</span></span><span style="display:flex;"><span>        if (mCores[j]-&gt;mLibHandle == NULL) {
+</span></span><span style="display:flex;"><span>           continue;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        OMX_U32 numRoles;
+</span></span><span style="display:flex;"><span>        OMX_ERRORTYPE err = (*(mCores[j]-&gt;mGetRolesOfComponentHandle))(
+</span></span><span style="display:flex;"><span>                const_cast&lt;OMX_STRING&gt;(name), &amp;numRoles, NULL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        if (err != OMX_ErrorNone) {
+</span></span><span style="display:flex;"><span>            continue;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        if (numRoles &gt; 0) {
+</span></span><span style="display:flex;"><span>            OMX_U8 **array = new OMX_U8 *[numRoles];
+</span></span><span style="display:flex;"><span>            for (OMX_U32 i = 0; i &lt; numRoles; ++i) {
+</span></span><span style="display:flex;"><span>                array[i] = new OMX_U8[OMX_MAX_STRINGNAME_SIZE];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            OMX_U32 numRoles2 = numRoles;
+</span></span><span style="display:flex;"><span>            err = (*(mCores[j]-&gt;mGetRolesOfComponentHandle))(
+</span></span><span style="display:flex;"><span>                    const_cast&lt;OMX_STRING&gt;(name), &amp;numRoles2, array);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            CHECK_EQ(err, OMX_ErrorNone);
+</span></span><span style="display:flex;"><span>            CHECK_EQ(numRoles, numRoles2);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            for (OMX_U32 i = 0; i &lt; numRoles; ++i) {
+</span></span><span style="display:flex;"><span>                String8 s((const char *)array[i]);
+</span></span><span style="display:flex;"><span>                roles-&gt;push(s);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                delete[] array[i];
+</span></span><span style="display:flex;"><span>                array[i] = NULL;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            delete[] array;
+</span></span><span style="display:flex;"><span>            array = NULL;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        return OMX_ErrorNone;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    return OMX_ErrorInvalidComponent;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>RKOMX_GetComponentsOfRole(…) 主要遍历所有组件，然后从全局组件列表 gComponentList 中查找角色（role）匹配项，如果入参 compNames 不为 NULL 则将查找到的组件名称写回，否则只返回匹配的组件个数。</p>
+<p>hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>OMX_API OMX_ERRORTYPE RKOMX_GetComponentsOfRole (
+</span></span><span style="display:flex;"><span>    OMX_IN    OMX_STRING role,
+</span></span><span style="display:flex;"><span>    OMX_INOUT OMX_U32 *pNumComps,
+</span></span><span style="display:flex;"><span>    OMX_INOUT OMX_U8  **compNames)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    OMX_ERRORTYPE ret = OMX_ErrorNone;
+</span></span><span style="display:flex;"><span>    int           max_role_num = 0;
+</span></span><span style="display:flex;"><span>    int i = 0, j = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    FunctionIn();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    if (gInitialized != 1) {
+</span></span><span style="display:flex;"><span>        ret = OMX_ErrorNotReady;
+</span></span><span style="display:flex;"><span>        goto EXIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    *pNumComps = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    for (i = 0; i &lt; MAX_OMX_COMPONENT_NUM; i++) {
+</span></span><span style="display:flex;"><span>        max_role_num = gComponentList[i].component.totalRoleNum;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        for (j = 0; j &lt; max_role_num; j++) {
+</span></span><span style="display:flex;"><span>            if (Rockchip_OSAL_Strcmp(gComponentList[i].component.roles[j], role) == 0) {
+</span></span><span style="display:flex;"><span>                if (compNames != NULL) {
+</span></span><span style="display:flex;"><span>                    Rockchip_OSAL_Strcpy((OMX_STRING)compNames[*pNumComps], gComponentList[i].component.componentName);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                *pNumComps = (*pNumComps + 1);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>EXIT:
+</span></span><span style="display:flex;"><span>    FunctionOut();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    return ret;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再来看 MediaCodecsXmlParser 的 getServiceAttributeMap() 具体实现，其内部调用实现 Impl 同名函数，此函数内部只是简单返回 Data 结构体 mServiceAttributeMap 字段，此字段的填充发生在解析 xml 期间。</p>
+<p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>struct MediaCodecsXmlParser::Impl {
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    // Parsed data
+</span></span><span style="display:flex;"><span>    struct Data {
+</span></span><span style="display:flex;"><span>        // Service attributes
+</span></span><span style="display:flex;"><span>        AttributeMap mServiceAttributeMap;
+</span></span><span style="display:flex;"><span>        CodecMap mCodecMap;
+</span></span><span style="display:flex;"><span>        Result addGlobal(std::string key, std::string value, bool updating);
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    const AttributeMap&amp; getServiceAttributeMap() const {
+</span></span><span style="display:flex;"><span>        std::lock_guard&lt;std::mutex&gt; guard(mLock);
+</span></span><span style="display:flex;"><span>        return mData.mServiceAttributeMap;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>......
+</span></span><span style="display:flex;"><span>const MediaCodecsXmlParser::AttributeMap&amp;
+</span></span><span style="display:flex;"><span>MediaCodecsXmlParser::getServiceAttributeMap() const {
+</span></span><span style="display:flex;"><span>    return mImpl-&gt;getServiceAttributeMap();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>MediaCodecsXmlParser 的 getRoleMap() 具体实现中委托给 Impl getRoleMap() 方法的 ，如果 mRoleMap 为空，就调用 generateRoleMap() 先生成，不为空直接返回。</p>
+<p>generateRoleMap() 实现并不复杂，主要遍历 mData.mCodecMap，然后在每轮迭代中构建 std::string — RoleProperties 对，如果 mRoleMap 中不存在对应项就插入。中间调用了 GetComponentRole(…) 根据 isEncoder 和 mime 类型字符串作为入参去查找角色名。</p>
+<p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">86
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>const MediaCodecsXmlParser::RoleMap&amp;
+</span></span><span style="display:flex;"><span>MediaCodecsXmlParser::getRoleMap() const {
+</span></span><span style="display:flex;"><span>    return mImpl-&gt;getRoleMap();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>const MediaCodecsXmlParser::RoleMap&amp;
+</span></span><span style="display:flex;"><span>MediaCodecsXmlParser::Impl::getRoleMap() const {
+</span></span><span style="display:flex;"><span>    std::lock_guard&lt;std::mutex&gt; guard(mLock);
+</span></span><span style="display:flex;"><span>    if (mRoleMap.empty()) {
+</span></span><span style="display:flex;"><span>        generateRoleMap();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    return mRoleMap;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>......
+</span></span><span style="display:flex;"><span>void MediaCodecsXmlParser::Impl::generateRoleMap() const {
+</span></span><span style="display:flex;"><span>    for (const auto&amp; codec : mData.mCodecMap) {
+</span></span><span style="display:flex;"><span>        const auto &amp;codecName = codec.first;
+</span></span><span style="display:flex;"><span>        if (codecName == &#34;&lt;dummy&gt;&#34;) {
+</span></span><span style="display:flex;"><span>            continue;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        bool isEncoder = codec.second.isEncoder;
+</span></span><span style="display:flex;"><span>        size_t order = codec.second.order;
+</span></span><span style="display:flex;"><span>        std::string rank = codec.second.rank;
+</span></span><span style="display:flex;"><span>        const auto&amp; typeMap = codec.second.typeMap;
+</span></span><span style="display:flex;"><span>        for (const auto&amp; type : typeMap) {
+</span></span><span style="display:flex;"><span>            const auto&amp; typeName = type.first;
+</span></span><span style="display:flex;"><span>            const char* roleName = GetComponentRole(isEncoder, typeName.data());
+</span></span><span style="display:flex;"><span>            if (roleName == nullptr) {
+</span></span><span style="display:flex;"><span>                ALOGE(&#34;Cannot find the role for %s of type %s&#34;,
+</span></span><span style="display:flex;"><span>                        isEncoder ? &#34;an encoder&#34; : &#34;a decoder&#34;,
+</span></span><span style="display:flex;"><span>                        typeName.data());
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            const auto&amp; typeAttributeMap = type.second;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            auto roleIterator = mRoleMap.find(roleName);
+</span></span><span style="display:flex;"><span>            std::multimap&lt;size_t, NodeInfo&gt;* nodeList;
+</span></span><span style="display:flex;"><span>            if (roleIterator == mRoleMap.end()) {
+</span></span><span style="display:flex;"><span>                RoleProperties roleProperties;
+</span></span><span style="display:flex;"><span>                roleProperties.type = typeName;
+</span></span><span style="display:flex;"><span>                roleProperties.isEncoder = isEncoder;
+</span></span><span style="display:flex;"><span>                auto insertResult = mRoleMap.insert(
+</span></span><span style="display:flex;"><span>                        std::make_pair(roleName, roleProperties));
+</span></span><span style="display:flex;"><span>                if (!insertResult.second) {
+</span></span><span style="display:flex;"><span>                    ALOGE(&#34;Cannot add role %s&#34;, roleName);
+</span></span><span style="display:flex;"><span>                    continue;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                nodeList = &amp;insertResult.first-&gt;second.nodeList;
+</span></span><span style="display:flex;"><span>            } else {
+</span></span><span style="display:flex;"><span>                if (roleIterator-&gt;second.type != typeName) {
+</span></span><span style="display:flex;"><span>                    ALOGE(&#34;Role %s has mismatching types: %s and %s&#34;,
+</span></span><span style="display:flex;"><span>                            roleName,
+</span></span><span style="display:flex;"><span>                            roleIterator-&gt;second.type.data(),
+</span></span><span style="display:flex;"><span>                            typeName.data());
+</span></span><span style="display:flex;"><span>                    continue;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                if (roleIterator-&gt;second.isEncoder != isEncoder) {
+</span></span><span style="display:flex;"><span>                    ALOGE(&#34;Role %s cannot be both an encoder and a decoder&#34;,
+</span></span><span style="display:flex;"><span>                            roleName);
+</span></span><span style="display:flex;"><span>                    continue;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                nodeList = &amp;roleIterator-&gt;second.nodeList;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            NodeInfo nodeInfo;
+</span></span><span style="display:flex;"><span>            nodeInfo.name = codecName;
+</span></span><span style="display:flex;"><span>            // NOTE: no aliases are exposed in role info
+</span></span><span style="display:flex;"><span>            // attribute quirks are exposed as node attributes
+</span></span><span style="display:flex;"><span>            nodeInfo.attributeList.reserve(typeAttributeMap.size());
+</span></span><span style="display:flex;"><span>            for (const auto&amp; attribute : typeAttributeMap) {
+</span></span><span style="display:flex;"><span>                nodeInfo.attributeList.push_back(
+</span></span><span style="display:flex;"><span>                        Attribute{attribute.first, attribute.second});
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            for (const std::string &amp;quirk : codec.second.quirkSet) {
+</span></span><span style="display:flex;"><span>                if (strHasPrefix(quirk.c_str(), &#34;attribute::&#34;)) {
+</span></span><span style="display:flex;"><span>                    nodeInfo.attributeList.push_back(Attribute{quirk, &#34;present&#34;});
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            if (!rank.empty()) {
+</span></span><span style="display:flex;"><span>                nodeInfo.attributeList.push_back(Attribute{&#34;rank&#34;, rank});
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            nodeList-&gt;insert(std::make_pair(
+</span></span><span style="display:flex;"><span>                    std::move(order), std::move(nodeInfo)));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>GetComponentRole(…) 内部遍历定义好的静态常量 MimeToRole 数组，调用 strcasecmp(…) 忽略大小写去比较入参 mime 和 MimeToRole 项 mime 字段是否匹配，匹配后 break 出循环，再根据 isEncoder 入参返回角色名，是那个编码器或解码器就被唯一确定了，也就是角色名查到了。</p>
+<p>frameworks/av/media/libstagefright/omx/OMXUtils.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>const char *GetComponentRole(bool isEncoder, const char *mime) {
+</span></span><span style="display:flex;"><span>    struct MimeToRole {
+</span></span><span style="display:flex;"><span>        const char *mime;
+</span></span><span style="display:flex;"><span>        const char *decoderRole;
+</span></span><span style="display:flex;"><span>        const char *encoderRole;
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    static const MimeToRole kMimeToRole[] = {
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_MPEG,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.mp3&#34;, &#34;audio_encoder.mp3&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_MPEG_LAYER_I,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.mp1&#34;, &#34;audio_encoder.mp1&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_MPEG_LAYER_II,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.mp2&#34;, &#34;audio_encoder.mp2&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_AMR_NB,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.amrnb&#34;, &#34;audio_encoder.amrnb&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_AMR_WB,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.amrwb&#34;, &#34;audio_encoder.amrwb&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_AAC,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.aac&#34;, &#34;audio_encoder.aac&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_VORBIS,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.vorbis&#34;, &#34;audio_encoder.vorbis&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_OPUS,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.opus&#34;, &#34;audio_encoder.opus&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_G711_MLAW,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.g711mlaw&#34;, &#34;audio_encoder.g711mlaw&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_G711_ALAW,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.g711alaw&#34;, &#34;audio_encoder.g711alaw&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_AVC,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.avc&#34;, &#34;video_encoder.avc&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_HEVC,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.hevc&#34;, &#34;video_encoder.hevc&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_MPEG4,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.mpeg4&#34;, &#34;video_encoder.mpeg4&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_H263,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.h263&#34;, &#34;video_encoder.h263&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_VP8,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.vp8&#34;, &#34;video_encoder.vp8&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_VP9,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.vp9&#34;, &#34;video_encoder.vp9&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_AV1,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.av1&#34;, &#34;video_encoder.av1&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_RAW,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.raw&#34;, &#34;audio_encoder.raw&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_DOLBY_VISION,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.dolby-vision&#34;, &#34;video_encoder.dolby-vision&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_FLAC,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.flac&#34;, &#34;audio_encoder.flac&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_MSGSM,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.gsm&#34;, &#34;audio_encoder.gsm&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_VIDEO_MPEG2,
+</span></span><span style="display:flex;"><span>            &#34;video_decoder.mpeg2&#34;, &#34;video_encoder.mpeg2&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_AC3,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.ac3&#34;, &#34;audio_encoder.ac3&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_EAC3,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.eac3&#34;, &#34;audio_encoder.eac3&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_EAC3_JOC,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.eac3_joc&#34;, &#34;audio_encoder.eac3_joc&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_AUDIO_AC4,
+</span></span><span style="display:flex;"><span>            &#34;audio_decoder.ac4&#34;, &#34;audio_encoder.ac4&#34; },
+</span></span><span style="display:flex;"><span>        { MEDIA_MIMETYPE_IMAGE_ANDROID_HEIC,
+</span></span><span style="display:flex;"><span>            &#34;image_decoder.heic&#34;, &#34;image_encoder.heic&#34; },
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    static const size_t kNumMimeToRole =
+</span></span><span style="display:flex;"><span>        sizeof(kMimeToRole) / sizeof(kMimeToRole[0]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    size_t i;
+</span></span><span style="display:flex;"><span>    for (i = 0; i &lt; kNumMimeToRole; ++i) {
+</span></span><span style="display:flex;"><span>        if (!strcasecmp(mime, kMimeToRole[i].mime)) {
+</span></span><span style="display:flex;"><span>            break;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    if (i == kNumMimeToRole) {
+</span></span><span style="display:flex;"><span>        return NULL;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    return isEncoder ? kMimeToRole[i].encoderRole
+</span></span><span style="display:flex;"><span>                  : kMimeToRole[i].decoderRole;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再来看一个常量 MEDIA_MIMETYPE_VIDEO_AVC。回顾一下我们使用 MediaCodec 的时候是不是会传入这个 mime 类型呢？</p>
+<p>frameworks/av/media/libstagefright/foundation/MediaDefs.cpp</p>
+<p>最后再来看 MediaCodecsXmlParser::Impl::getCommonPrefix() 中调用 generateCommonPrefix() 生成前缀，然后获取指向前缀的 char* 指针后返回。</p>
+<p>这里用到了 std::mismatch(…) 标准库的函数，在这里就是找出 CodecMap 中所有元素 key 中共同的前缀部分字符串，然后更新到 mCommonPrefix 这个变量上。</p>
+<p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>const char* MediaCodecsXmlParser::Impl::getCommonPrefix() const {
+</span></span><span style="display:flex;"><span>    std::lock_guard&lt;std::mutex&gt; guard(mLock);
+</span></span><span style="display:flex;"><span>    if (mCommonPrefix.empty()) {
+</span></span><span style="display:flex;"><span>        generateCommonPrefix();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    return mCommonPrefix.data();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>......
+</span></span><span style="display:flex;"><span>void MediaCodecsXmlParser::Impl::generateCommonPrefix() const {
+</span></span><span style="display:flex;"><span>    if (mData.mCodecMap.empty()) {
+</span></span><span style="display:flex;"><span>        return;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    auto i = mData.mCodecMap.cbegin();
+</span></span><span style="display:flex;"><span>    auto first = i-&gt;first.cbegin();
+</span></span><span style="display:flex;"><span>    auto last = i-&gt;first.cend();
+</span></span><span style="display:flex;"><span>    for (++i; i != mData.mCodecMap.cend(); ++i) {
+</span></span><span style="display:flex;"><span>        last = std::mismatch(
+</span></span><span style="display:flex;"><span>                first, last, i-&gt;first.cbegin(), i-&gt;first.cend()).first;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    mCommonPrefix.insert(mCommonPrefix.begin(), first, last);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/en/codecservice-%E5%90%AF%E5%8A%A8/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/en/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/en/mediacodec-configure/" class="prev" rel="prev" title=""><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i></a>
+            <a href="/en/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" class="next" rel="next" title="USB 讲解笔记">USB 讲解笔记<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-PJ6GG2PYMB', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-PJ6GG2PYMB" async></script></body>
+</html>
