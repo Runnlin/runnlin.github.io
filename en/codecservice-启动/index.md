@@ -18,7 +18,7 @@ service vendor.media.omx /vendor/bin/hw/android.hardware.media.omx@1.0-service
 1. 新建 implementation::Omx 对象并启动 Omx 服务；
 2. 新建 implementation::OmxStore 对象并启动 OmxStore 服务。  frameworks/av/services/mediacodec/main_codecservice.cpp
 
-    ![启动流程.png](启动流程.png)
+    ![启动流程.png](content/assets/images/启动流程.png)
 
 ```cpp
 int main(int argc __unused, char** argv)

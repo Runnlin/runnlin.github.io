@@ -265,7 +265,7 @@ BaseState 的确继承自 AState。
 
 frameworks/av/media/libstagefright/ACodec.cpp
 
-![](ACodec组件分配流程.jpg)
+![](content/assets/images/ACodec组件分配流程.jpg)
 
 回到主线，kWhatAllocateComponent 这个标志的 message 必定是发给了 ACodec 去处理， ACodec 将 onMessageReceived(…) 定义为一个虚函数，其实现内部则调用了 handleMessage(…) ，如此消息处理就明确了，最终落在了 BaseState 的子类实现上，就是前面提到的九种状态之一。
 

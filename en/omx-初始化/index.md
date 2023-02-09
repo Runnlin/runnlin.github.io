@@ -2,7 +2,7 @@
 
 Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)芯片级支持。
 
-![](加载so.png)
+![](content/assets/images/加载so.png)
 
 Omx 初始化主要从其[构造函数](https://so.csdn.net/so/search?q=%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0&spm=1001.2101.3001.7020)开始分析。
 
@@ -753,7 +753,7 @@ OMX_ERRORTYPE Rockchip_OSAL_MutexCreate(OMX_HANDLETYPE *mutexHandle)
 
 OMXMaster() 构造函数中最后一行调用了 addPlatformPlugin()，也就是添加软编码插件库。软编码插件库编译 bp 定义在 frameworks/av/media/libstagefright/omx/Android.bp 中，编译源文件只使用到了 SoftOMXPlugin.cpp。OMXMaster::addPlugin(const char *libname) 方法中对 createOMXPlugin 函数指针的调用实际上会调用到 frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp 类中的 createOMXPlugin() 函数。
 
-![addPlatformPlugin.jpg](addPlatformPlugin.jpg)
+![addPlatformPlugin.jpg](content/assets/images/addPlatformPlugin.jpg)
 
 frameworks/av/media/libstagefright/omx/Android.bp
 
@@ -921,7 +921,7 @@ struct MediaCodecsXmlParser::Impl {
 
 接下来执行代码 Omx 构造函数中的 (void)mParser.parseXmlFilesInSearchDirs()。MediaCodecsXmlParser::parseXmlFilesInSearchDirs(…) 仅仅将任务委托给 Impl 具体实现去处理。我们看到这个函数有两个入参，但调用确是无参的，实际上使用了默认值，MediaCodecsXmlParser.h 文件中给出了答案。
 
-![parseXmlFilesInSearchDirsSequenceDiagram.jpg](parseXmlFilesInSearchDirsSequenceDiagram.jpg)
+![parseXmlFilesInSearchDirsSequenceDiagram.jpg](content/assets/images/parseXmlFilesInSearchDirsSequenceDiagram.jpg)
 
 MediaCodecsXmlParser::Impl::parseXmlFilesInSearchDirs(…) 具体实现中，首先遍历所有文件名，然后调用 findFileInDirs(…) 在给定的目录中开始查找，找到后调用 parseXmlPath(…) 进行解析，最后调用 combineStatus(…) 确定最终返回值（返回状态）。
 

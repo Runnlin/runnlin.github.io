@@ -2,7 +2,7 @@
 
 Android 中调用硬[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020) API 是使用 MediaCodec 一步一步调用硬件实现的，通常需要最终调用 VPU 进行解码工作，现在先来分析其初始化过程。
 
-![](初始化过程.jpg)
+![](content/assets/images/初始化过程.jpg)
 
 下面是一段典型的硬解码初始化代码，当然在[异常处理](https://so.csdn.net/so/search?q=%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86&spm=1001.2101.3001.7020)上也做了处理，是为了更好的容错。
 

@@ -4,9 +4,17 @@
         <link>https://runnlin.github.io/en/</link>
         <description>just my #$@%</description>
         <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
-            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 24 Aug 2022 20:38:30 &#43;0800</lastBuildDate>
+            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</lastBuildDate>
             <atom:link href="https://runnlin.github.io/en/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Android-Binder学习笔记</title>
+    <link>https://runnlin.github.io/en/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</link>
+    <pubDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/en/2022-04-01-android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</guid>
+    <description><![CDATA[Android-AIDL学习笔记(持续更新) 通过对Android中的Proxy设计模式的学习，可以发现AIDL就是Proxy模式的很好的实现]]></description>
+</item>
+<item>
     <title>Android 音频硬编解码知多少</title>
     <link>https://runnlin.github.io/en/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/</link>
     <pubDate>Wed, 24 Aug 2022 20:38:30 &#43;0800</pubDate>
@@ -79,14 +87,6 @@ H.264 is a remarkable piece of technology. It is the result of 30+ years of work
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/en/2022-04-01-android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/</guid>
     <description><![CDATA[四大组件综述 frameworks/base/services/core/java/com/android/server/am/ - ActivityManagerService.java - ProcessRecord - ActivityStackSupervisor.java - ActivityStack.java - ActiveServices - BroadcastQueue 1. 进程管理 描述进程的数据结构：ProcessRecord 管理进程的核心模块：AMS 四大组件在Andro]]></description>
-</item>
-<item>
-    <title>Android 大型项目media模块学习笔记(持续更新)</title>
-    <link>https://runnlin.github.io/en/2022-04-01-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AEmedia%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</link>
-    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
-    <author>Runnlin</author>
-    <guid>https://runnlin.github.io/en/2022-04-01-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AEmedia%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</guid>
-    <description><![CDATA[Android 大型项目media模块学习笔记(持续更新) 整体架构 Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模]]></description>
 </item>
 </channel>
 </rss>

@@ -22,7 +22,7 @@
 
     （4）所有 OMX 编解码器都是供应商编解码器（在供应商分区），但处理 OMX.google 编解码器是非硬件加速的和非供应商的，也就是说是软编解码；
 
-![](OmxInfoBuilderSequenceDiagram.jpg)
+![](content/assets/images/OmxInfoBuilderSequenceDiagram.jpg)
 
 frameworks/av/media/libstagefright/OmxInfoBuilder.cpp
 
@@ -271,7 +271,7 @@ Codec2InfoBuilder buildMediaCodecList(…) 主要工作流程如下：
 
     - 遍历 typeMap，如果编解码器条目的媒体类型被禁用 continue 到下一轮循环，调用 MediaCodecInfoWriter addMediaType(…) 获取 CapabilitiesWriter 添加能力，调用 addSupportedProfileLevels(…) 添加 Profile Level，调用 addSupportedColorFormats(…) 添加支持的颜色空间。
 
-![Codec2InfoBuilderSequenceDiagram.jpg](Codec2InfoBuilderSequenceDiagram.jpg)
+![Codec2InfoBuilderSequenceDiagram.jpg](content/assets/images/Codec2InfoBuilderSequenceDiagram.jpg)
 
 frameworks/av/media/codec2/sfplugin/Codec2InfoBuilder.cpp
 

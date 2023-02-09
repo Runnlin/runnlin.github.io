@@ -552,11 +552,11 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg"
-        data-srcset="ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg, ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 1.5x, ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 2x"
+        data-src="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg"
+        data-srcset="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg, content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 1.5x, content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 2x"
         data-sizes="auto"
-        alt="ACodec组件分配流程.jpg"
-        title="ACodec组件分配流程.jpg" /></p>
+        alt="content/assets/images/ACodec组件分配流程.jpg"
+        title="content/assets/images/ACodec组件分配流程.jpg" /></p>
 <p>回到主线，kWhatAllocateComponent 这个标志的 message 必定是发给了 ACodec 去处理， ACodec 将 onMessageReceived(…) 定义为一个虚函数，其实现内部则调用了 handleMessage(…) ，如此消息处理就明确了，最终落在了 BaseState 的子类实现上，就是前面提到的九种状态之一。</p>
 <p>frameworks/av/media/libstagefright/include/media/stagefright/ACodec.h</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
