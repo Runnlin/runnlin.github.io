@@ -1,6 +1,8 @@
-# 
+# MediaCodec 组件分配
 
-d组件分配的起点位于 native MediaCodec 的 init 流程。init() 函数中构建 kWhatInit 消息后等待处理结束，消息是由 MediaCodec 本身处理的。
+
+
+组件分配的起点位于 native MediaCodec 的 init 流程。init() 函数中构建 kWhatInit 消息后等待处理结束，消息是由 MediaCodec 本身处理的。
 
 frameworks/av/media/libstagefright/MediaCodec.cpp
 

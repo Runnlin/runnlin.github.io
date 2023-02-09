@@ -1,4 +1,6 @@
-# 
+# software Codec2 服务启动
+
+
 
 想要支持 Codec2 [框架](https://so.csdn.net/so/search?q=%E6%A1%86%E6%9E%B6&spm=1001.2101.3001.7020)，需要实现其要求的 hal 接口，并实现相应的支撑服务。这里以源码中实现 software Codec2 服务启动为例进行分析。
 

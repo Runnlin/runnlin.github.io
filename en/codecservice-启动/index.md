@@ -1,4 +1,6 @@
-# 
+# Codecservice 启动
+
+
 
 Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)接口。它的入口是 main_codecservice.cpp。
 

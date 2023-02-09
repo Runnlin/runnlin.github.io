@@ -1,4 +1,6 @@
-# 
+# MediaCodec configure
+
+
 
 使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。
 
