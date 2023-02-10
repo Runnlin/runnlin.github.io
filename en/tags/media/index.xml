@@ -21,11 +21,11 @@
     <description><![CDATA[Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能]]></description>
 </item>
 <item>
-    <title>Android MediaScannerService（转载）</title>
-    <link>https://runnlin.github.io/en/mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
+    <title>Android MediaScannerService</title>
+    <link>https://runnlin.github.io/en/mediascannerservice-%E7%A0%94%E7%A9%B6/</link>
     <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
     <author>Runnlin</author>
-    <guid>https://runnlin.github.io/en/mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</guid>
+    <guid>https://runnlin.github.io/en/mediascannerservice-%E7%A0%94%E7%A9%B6/</guid>
     <description><![CDATA[MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。 MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） MediaScannerService 是 Android 平台]]></description>
 </item>
 </channel>
