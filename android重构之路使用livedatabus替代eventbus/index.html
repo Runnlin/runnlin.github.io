@@ -4,34 +4,34 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title> - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="" />
-<meta property="og:description" content="#Android 背景 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Androi" />
+        <title>使用LiveDataBus代替EventBus - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="使用LiveDataBus代替EventBus" />
+<meta property="og:description" content="背景 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
-
-<meta property="og:site_name" content="Runnlin&#39;s Blog" />
+<meta property="article:published_time" content="2023-05-01T16:32:50+08:00" />
+<meta property="article:modified_time" content="2023-05-01T16:32:50+08:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
 
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="#Android 背景 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Androi"/>
+<meta name="twitter:title" content="使用LiveDataBus代替EventBus"/>
+<meta name="twitter:description" content="背景 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android"/>
 <meta name="application-name" content="Runnlin&#39;s Blog">
 <meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><link rel="next" href="https://runnlin.github.io/usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><link rel="prev" href="https://runnlin.github.io/android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "",
+        "headline": "使用LiveDataBus代替EventBus",
         "inLanguage": "en",
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/"
-        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  6819 ,
-        "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, repost","wordcount":  6818 ,
+        "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-01T16:32:50+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
                 "@type": "Person",
@@ -44,7 +44,7 @@
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+            <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
         </div>
         <div class="menu">
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/" title="about is about"> About </a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
@@ -56,7 +56,7 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+                <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
@@ -70,9 +70,9 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX"></h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6819 words&nbsp;
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">使用LiveDataBus代替EventBus</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6818 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -140,8 +140,7 @@
     </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><p>#Android</p>
-<h2 id="背景">背景</h2>
+            </div><div class="content" id="content"><h2 id="背景">背景</h2>
 <p>对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大组件之间的通信，也可用于异步线程和主线程之间的通信。对于Android开发者来说，经常使用的消息传递方式有很多种，从最早使用的Handler、BroadcastReceiver、接口回调，到前些年流行的通信总线类框架EventBus、RxBus。Android消息传递框架总在不断地演进中</p>
 <h2 id="从eventbus说起">从EventBus说起</h2>
 <p>EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。</p>
@@ -838,7 +837,7 @@
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 0001-01-01</span>
+                <span>Updated on 2023-05-01</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
@@ -851,18 +850,17 @@
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/repost/">repost</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav">
-            <a href="/usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" class="next" rel="next" title="USB 讲解笔记">USB 讲解笔记<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="prev" rel="prev" title="Android-Binder学习笔记"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android-Binder学习笔记</a></div>
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="runnlin.github.io" target="_blank">Runnlin</a></span></div>
         </div>
     </footer></div>
 
@@ -871,7 +869,7 @@
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"lightgallery":true,"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
             window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
             gtag('config', 'G-PJ6GG2PYMB', { 'anonymize_ip': true });
         </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-PJ6GG2PYMB" async></script></body>

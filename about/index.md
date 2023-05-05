@@ -1,7 +1,6 @@
 # About Runnlin
 
 
-## Features
 
 ### Me as human
 
@@ -16,7 +15,7 @@
 
 ### Learning
 
-* :(fas fa-)
+* EVERY THING
 
 ### Experience
 

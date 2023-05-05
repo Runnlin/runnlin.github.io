@@ -10,7 +10,72 @@
     <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/</guid>
-    <description><![CDATA[USB 讲解笔记 U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端 Service USB-IF Indexing / Parsing Database 将解]]></description>
+    <description><![CDATA[<h1 id="usb-讲解笔记"><strong>USB 讲解笔记</strong></h1>
+<p>U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端</p>
+<h2 id="service">Service</h2>
+<ul>
+<li>
+<p>USB-IF</p>
+</li>
+<li>
+<p>Indexing / Parsing</p>
+</li>
+<li>
+<p>Database</p>
+<p>将解析后的数据存放在数据库中备用</p>
+</li>
+</ul>
+<h2 id="client">Client</h2>
+<ul>
+<li>UI</li>
+<li>Logic</li>
+<li>Data</li>
+</ul>
+<p>Service 和 Client 通过 Android 的 IPC 来互相连通，主要是使用 AIDL 及 ContentProvider</p>
+<h2 id="详细说明">详细说明</h2>
+<h3 id="usb-if">USB-IF</h3>
+<p>Devices &ndash;[Insert]&ndash;&gt; Kernal &ndash;[UEvent]&ndash;&gt; User</p>
+<p>USB设备插入后，内核会进行分析其设备类型，可以分为</p>
+<ul>
+<li>HUB</li>
+<li>U盘</li>
+<li>Apple 设备</li>
+<li>Android 或 Unknow</li>
+</ul>
+<p>完成对设备类型的分析后，将通过 UEvent 的方式发送给 Service</p>
+<p><strong>【避坑】</strong>
+整个程序项目在系统启动后才能启动，而在启动前就已插入的USB设备会因为无法接收到插入/拔出 Event 而无法识别，必须在 Service 启动后主动检索一次系统当前已加载的 USB 设备</p>
+<h3 id="indexing--parsing">Indexing / Parsing</h3>
+<p>Index：检索所有文件，找到其中的媒体文件</p>
+<p><strong>【说明】</strong>
+项目主要采用深度遍历的方式进行文件检索，这是一个先进后出的栈：从根目录开始将所有文件以先文件夹后文件的方式入栈，当前目录所有文件入栈后依次出栈分析，若出栈的是文件则加入索引，若出栈的是文件夹则索引该文件夹后，进入该文件夹内并再次以相同逻辑将内容所有文件入栈，如此反复即可递归地完成深度遍历所有文件</p>
+<p><strong>【思考】</strong>
+若能以动态解析的方式进行索引，会大大提高用户体验</p>
+<p>Parsing：解析文件，分为 Music、Picture、Video 等，并读取其详细内容，如</p>
+<ul>
+<li>music：取得 ID3 等数据，获得音乐的专辑、流派、艺术家等信息</li>
+<li>video：取得某关键帧作为缩略图，依需求取得视频长度等</li>
+<li>picture：取得宽高大小等信息</li>
+</ul>
+<h3 id="database">Database</h3>
+<p>使用 Service 中封装好的 SQLiteOpenHelper 方法以及 ContentProvider 来对索引解析好的数据进行存储，这样在 Client 中即可通过 ContentResolver 来读取，具体是使用 HandleThread 的方式</p>
+<h3 id="ui">UI</h3>
+<p>响应控制及刷新UI：在 ui 获取到用户控制后，依业务情况通过 Proxy 发送到 Service，在其中逻辑完成后进行回调并刷新 UI，UI 层与 Service 层的联系方式是通过 StartService 或 BindService 方法</p>
+<h3 id="logicservice">Logic(Service)</h3>
+<p>获取并处理逻辑，提供 Binder 来数据交互，提供一系列 Interface 供使用</p>
+<h3 id="data">Data</h3>
+<p>封装 SQLite</p>
+<h3 id="u盘记忆">U盘记忆</h3>
+<p>USB记忆有不同的方案，目前采用的方案是：存储当前U盘的容量信息，若容量与新设备相同则认作相同U盘，该方案有以下特点：</p>
+<ol>
+<li>
+<p>不能辨别文件更改的情况，此时文件大小不变，但文件名变动不能辨认，该情况出现概率较小</p>
+</li>
+<li>
+<p>当U盘插入Android设备或其他设备时，可能会自动生成LOST.DIR或Android文件夹，其内容可能导致辨认错误，解决方案是在统计U盘内容大小时排除相关文件夹</p>
+</li>
+</ol>
+]]></description>
 </item>
 </channel>
 </rss>
