@@ -10,8 +10,9 @@
     <pubDate>Mon, 01 May 2023 16:32:50 &#43;0800</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/</guid>
-    <description><![CDATA[<h2 id="背景">背景</h2>
+    <description><![CDATA[<blockquote>
 <p>对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大组件之间的通信，也可用于异步线程和主线程之间的通信。对于Android开发者来说，经常使用的消息传递方式有很多种，从最早使用的Handler、BroadcastReceiver、接口回调，到前些年流行的通信总线类框架EventBus、RxBus。Android消息传递框架总在不断地演进中</p>
+</blockquote>
 <h2 id="从eventbus说起">从EventBus说起</h2>
 <p>EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。</p>
 <p>EventBus最大的特点就是：简洁、解耦。在没有EventBus之前我们通常用广播来实现监听，或者自定义接口函数回调，有的场景我们也可以直接用Intent携带简单数据，或者在线程之间通过Handler处理消息传递。但无论是广播还是Handler机制远远不能满足我们高效的开发。EventBus简化了应用程序内各组件间、组件与后台线程间的通信。EventBus一经推出，便受到广大开发者的推崇。</p>
@@ -1805,7 +1806,9 @@
     <pubDate>Thu, 28 Jul 2022 09:35:20 &#43;0800</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/</guid>
-    <description><![CDATA[<p>性能的优化是一个老生常谈的点，也是一个比较重要的点。做过一点性能优化的工作，现在对工作中的优化点做一个总结。如有错误，还请指正。</p>
+    <description><![CDATA[<blockquote>
+<p>性能的优化是一个老生常谈的点，也是一个比较重要的点。做过一点性能优化的工作，现在对工作中的优化点做一个总结。如有错误，还请指正。</p>
+</blockquote>
 <p>在平时的优化过程中我们需要从哪几个点来优化呢？其实我们平时自己一定也用过软件，在使用软件的过程中有没有什么想吐槽的呢？</p>
 <p>“这个 app 怎么还没下载完！”、“太卡了吧！”、&ldquo;图片怎么还没加载出来！&quot;、&ldquo;怎么刚进去就卡了！&quot;、“这么点了一下就退出了！” 等等，是不是有这样的想法？这些想法其实包含了我们今天要说的内容，就是从哪些方面来优化我们的 APP ，我总结了以下几点。</p>
 <ul>

@@ -1,9 +1,7 @@
 # USB 讲解笔记
 
 
-# **USB 讲解笔记**
-
-U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端
+> U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端
 
 ## Service
 

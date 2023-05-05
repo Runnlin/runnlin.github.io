@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <title>使用LiveDataBus代替EventBus - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="使用LiveDataBus代替EventBus" />
-<meta property="og:description" content="背景 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android" />
+<meta property="og:description" content="对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-05-01T16:32:50+08:00" />
@@ -15,7 +15,7 @@
 <meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
 
 <meta name="twitter:title" content="使用LiveDataBus代替EventBus"/>
-<meta name="twitter:description" content="背景 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android"/>
+<meta name="twitter:description" content="对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大"/>
 <meta name="application-name" content="Runnlin&#39;s Blog">
 <meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -30,7 +30,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/"
-        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, repost","wordcount":  6818 ,
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, repost","wordcount":  6816 ,
         "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-01T16:32:50+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
@@ -72,7 +72,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">使用LiveDataBus代替EventBus</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6818 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6816 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -81,7 +81,6 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#背景">背景</a></li>
     <li><a href="#从eventbus说起">从EventBus说起</a></li>
     <li><a href="#发布订阅模式">发布/订阅模式</a></li>
   </ul>
@@ -140,8 +139,9 @@
     </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="背景">背景</h2>
+            </div><div class="content" id="content"><blockquote>
 <p>对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大组件之间的通信，也可用于异步线程和主线程之间的通信。对于Android开发者来说，经常使用的消息传递方式有很多种，从最早使用的Handler、BroadcastReceiver、接口回调，到前些年流行的通信总线类框架EventBus、RxBus。Android消息传递框架总在不断地演进中</p>
+</blockquote>
 <h2 id="从eventbus说起">从EventBus说起</h2>
 <p>EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。</p>
 <p>EventBus最大的特点就是：简洁、解耦。在没有EventBus之前我们通常用广播来实现监听，或者自定义接口函数回调，有的场景我们也可以直接用Intent携带简单数据，或者在线程之间通过Handler处理消息传递。但无论是广播还是Handler机制远远不能满足我们高效的开发。EventBus简化了应用程序内各组件间、组件与后台线程间的通信。EventBus一经推出，便受到广大开发者的推崇。</p>

@@ -2,8 +2,7 @@
 
 
 
-## 背景
-对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大组件之间的通信，也可用于异步线程和主线程之间的通信。对于Android开发者来说，经常使用的消息传递方式有很多种，从最早使用的Handler、BroadcastReceiver、接口回调，到前些年流行的通信总线类框架EventBus、RxBus。Android消息传递框架总在不断地演进中
+> 对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大组件之间的通信，也可用于异步线程和主线程之间的通信。对于Android开发者来说，经常使用的消息传递方式有很多种，从最早使用的Handler、BroadcastReceiver、接口回调，到前些年流行的通信总线类框架EventBus、RxBus。Android消息传递框架总在不断地演进中
 
 ## 从EventBus说起
 EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。

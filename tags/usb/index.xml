@@ -10,8 +10,9 @@
     <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/</guid>
-    <description><![CDATA[<h1 id="usb-讲解笔记"><strong>USB 讲解笔记</strong></h1>
+    <description><![CDATA[<blockquote>
 <p>U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端</p>
+</blockquote>
 <h2 id="service">Service</h2>
 <ul>
 <li>
