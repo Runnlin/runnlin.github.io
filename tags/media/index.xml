@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Media - Tag - Runnlin&#39;s Blog</title>
+        <link>https://runnlin.github.io/tags/media/</link>
+        <description>Media - Tag - Runnlin&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
+            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 16 May 2022 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/media/" rel="self" type="application/rss+xml" /><item>
+    <title>Android MediaMetadataRetriever 用法介绍</title>
+    <link>https://runnlin.github.io/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Mon, 16 May 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/2022-05-16-android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能]]></description>
+</item>
+<item>
+    <title>Android MediaScannerService（转载）</title>
+    <link>https://runnlin.github.io/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/2022-04-01-mediascannerservice-%E7%A0%94%E7%A9%B6%E8%BD%AC%E8%BD%BD/</guid>
+    <description><![CDATA[MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。 MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） MediaScannerService 是 Android 平台]]></description>
+</item>
+</channel>
+</rss>

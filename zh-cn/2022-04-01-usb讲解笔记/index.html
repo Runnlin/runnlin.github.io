@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>USB 讲解笔记 - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="USB 讲解笔记" />
+<meta property="og:description" content="USB 讲解笔记 U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端 Service USB-IF Indexing / Parsing Database 将解" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/zh-cn/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
+
+<meta name="twitter:title" content="USB 讲解笔记"/>
+<meta name="twitter:description" content="USB 讲解笔记 U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端 Service USB-IF Indexing / Parsing Database 将解"/>
+<meta name="application-name" content="Runnlin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/zh-cn/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><link rel="next" href="https://runnlin.github.io/zh-cn/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "USB 讲解笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/zh-cn\/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, USB","wordcount":  932 ,
+        "url": "https:\/\/runnlin.github.io\/zh-cn\/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="auto" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/zh-cn/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/zh-cn/posts/"> 所有文章 </a><a class="menu-item" href="/zh-cn/tags/"> 标签 </a><a class="menu-item" href="/zh-cn/categories/"> 分类 </a><a class="menu-item" href="/zh-cn/categories/documentation/"> 文档 </a><a class="menu-item" href="/zh-cn/about/" title="关于就是关于"> 关于 </a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="选择语言">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/zh-cn/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" selected>简体中文</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/zh-cn/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/zh-cn/posts/" title="">所有文章</a><a class="menu-item" href="/zh-cn/tags/" title="">标签</a><a class="menu-item" href="/zh-cn/categories/" title="">分类</a><a class="menu-item" href="/zh-cn/categories/documentation/" title="">文档</a><a class="menu-item" href="/zh-cn/about/" title="关于就是关于">关于</a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="选择语言">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/zh-cn/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" selected>简体中文</option></select>
+                </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">USB 讲解笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">收录于 <a href="/zh-cn/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 932 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#service">Service</a></li>
+    <li><a href="#client">Client</a></li>
+    <li><a href="#详细说明">详细说明</a>
+      <ul>
+        <li><a href="#usb-if">USB-IF</a></li>
+        <li><a href="#indexing--parsing">Indexing / Parsing</a></li>
+        <li><a href="#database">Database</a></li>
+        <li><a href="#ui">UI</a></li>
+        <li><a href="#logicservice">Logic(Service)</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#u盘记忆">U盘记忆</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="usb-讲解笔记"><strong>USB 讲解笔记</strong></h1>
+<p>U盘内容按媒体资源类型可以分为 Music、Picture、Video三类，当读取U盘时，整个系统可以分为 Service 和 Client 两端</p>
+<h2 id="service">Service</h2>
+<ul>
+<li>
+<p>USB-IF</p>
+</li>
+<li>
+<p>Indexing / Parsing</p>
+</li>
+<li>
+<p>Database</p>
+<p>将解析后的数据存放在数据库中备用</p>
+</li>
+</ul>
+<h2 id="client">Client</h2>
+<ul>
+<li>UI</li>
+<li>Logic</li>
+<li>Data</li>
+</ul>
+<p>Service 和 Client 通过 Android 的 IPC 来互相连通，主要是使用 AIDL 及 ContentProvider</p>
+<h2 id="详细说明">详细说明</h2>
+<h3 id="usb-if">USB-IF</h3>
+<p>Devices &ndash;[Insert]&ndash;&gt; Kernal &ndash;[UEvent]&ndash;&gt; User</p>
+<p>USB设备插入后，内核会进行分析其设备类型，可以分为</p>
+<ul>
+<li>HUB</li>
+<li>U盘</li>
+<li>Apple 设备</li>
+<li>Android 或 Unknow</li>
+</ul>
+<p>完成对设备类型的分析后，将通过 UEvent 的方式发送给 Service</p>
+<p><strong>【避坑】</strong>
+整个程序项目在系统启动后才能启动，而在启动前就已插入的USB设备会因为无法接收到插入/拔出 Event 而无法识别，必须在 Service 启动后主动检索一次系统当前已加载的 USB 设备</p>
+<h3 id="indexing--parsing">Indexing / Parsing</h3>
+<p>Index：检索所有文件，找到其中的媒体文件</p>
+<p><strong>【说明】</strong>
+项目主要采用深度遍历的方式进行文件检索，这是一个先进后出的栈：从根目录开始将所有文件以先文件夹后文件的方式入栈，当前目录所有文件入栈后依次出栈分析，若出栈的是文件则加入索引，若出栈的是文件夹则索引该文件夹后，进入该文件夹内并再次以相同逻辑将内容所有文件入栈，如此反复即可递归地完成深度遍历所有文件</p>
+<p><strong>【思考】</strong>
+若能以动态解析的方式进行索引，会大大提高用户体验</p>
+<p>Parsing：解析文件，分为 Music、Picture、Video 等，并读取其详细内容，如</p>
+<ul>
+<li>music：取得 ID3 等数据，获得音乐的专辑、流派、艺术家等信息</li>
+<li>video：取得某关键帧作为缩略图，依需求取得视频长度等</li>
+<li>picture：取得宽高大小等信息</li>
+</ul>
+<h3 id="database">Database</h3>
+<p>使用 Service 中封装好的 SQLiteOpenHelper 方法以及 ContentProvider 来对索引解析好的数据进行存储，这样在 Client 中即可通过 ContentResolver 来读取，具体是使用 HandleThread 的方式</p>
+<h3 id="ui">UI</h3>
+<p>响应控制及刷新UI：在 ui 获取到用户控制后，依业务情况通过 Proxy 发送到 Service，在其中逻辑完成后进行回调并刷新 UI，UI 层与 Service 层的联系方式是通过 StartService 或 BindService 方法</p>
+<h3 id="logicservice">Logic(Service)</h3>
+<p>获取并处理逻辑，提供 Binder 来数据交互，提供一系列 Interface 供使用</p>
+<h3 id="data">Data</h3>
+<p>封装 SQLite</p>
+<h3 id="u盘记忆">U盘记忆</h3>
+<p>USB记忆有不同的方案，目前采用的方案是：存储当前U盘的容量信息，若容量与新设备相同则认作相同U盘，该方案有以下特点：</p>
+<ol>
+<li>
+<p>不能辨别文件更改的情况，此时文件大小不变，但文件名变动不能辨认，该情况出现概率较小</p>
+</li>
+<li>
+<p>当U盘插入Android设备或其他设备时，可能会自动生成LOST.DIR或Android文件夹，其内容可能导致辨认错误，解决方案是在统计U盘内容大小时排除相关文件夹</p>
+</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-04-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/zh-cn/2022-04-01-usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/zh-cn/tags/android/">Android</a>,&nbsp;<a href="/zh-cn/tags/usb/">USB</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/zh-cn/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/zh-cn/2022-04-01-android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" class="next" rel="next" title="Android.bp 文件解析">Android.bp 文件解析<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-PJ6GG2PYMB', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-PJ6GG2PYMB" async></script></body>
+</html>

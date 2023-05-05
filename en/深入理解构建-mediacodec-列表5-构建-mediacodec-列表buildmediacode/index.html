@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode" />
+<meta property="og:description" content="构建 MediaCodec 列表——buildMediaCodecList(…) ，确切地说是构建了 std::[vector] 容器，容器内部是指向 MediaCodecInfo 对象的指针。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-02-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-02-09T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
+
+<meta name="twitter:title" content="深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode"/>
+<meta name="twitter:description" content="构建 MediaCodec 列表——buildMediaCodecList(…) ，确切地说是构建了 std::[vector] 容器，容器内部是指向 MediaCodecInfo 对象的指针。"/>
+<meta name="application-name" content="Runnlin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/" /><link rel="prev" href="https://runnlin.github.io/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/" /><link rel="next" href="https://runnlin.github.io/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/en\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  6339 ,
+        "url": "https:\/\/runnlin.github.io\/en\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="auto" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/en/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/en/posts/"> Posts </a><a class="menu-item" href="/en/tags/"> Tags </a><a class="menu-item" href="/en/categories/"> Categories </a><a class="menu-item" href="/en/about/" title="about is about"> About </a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="Select Language">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/" selected>English</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/en/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/en/posts/" title="">Posts</a><a class="menu-item" href="/en/tags/" title="">Tags</a><a class="menu-item" href="/en/categories/" title="">Categories</a><a class="menu-item" href="/en/about/" title="about is about">About</a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="Select Language">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/" selected>English</option></select>
+                </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/en/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/en/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6339 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;13 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>构建 MediaCodec 列表——buildMediaCodecList(…) ，确切地说是构建了 std::<a href="https://so.csdn.net/so/search?q=vector&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">vector</a> 容器，容器内部是指向 MediaCodecInfo 对象的指针。</p>
+<p>关于 buildMediaCodecList(…) 在 MediaCodec 中初始化流程可以参考[MediaCodec 硬解码初始化]根据分析得出 builder 调用其 buildMediaCodecList(…)，其一是 OmxInfoBuilder，其二是 Codec2InfoBuilder。现在我们来分析它们的 buildMediaCodecList(…) 具体实现。</p>
+<ol>
+<li>
+<p>获取 OmxStore 服务；</p>
+</li>
+<li>
+<p>列出角色（Role），通过调用 listRoles(…) 方法实现；</p>
+</li>
+<li>
+<p>列出服务属性（全局设置），通过 listServiceAttributes(…) 方法实现；</p>
+</li>
+<li>
+<p>调用 MediaCodecListWriter addGlobalSetting(…) 将服务属性全部写入；</p>
+</li>
+<li>
+<p>将角色转换为编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>器列表：</p>
+<p>（1）跳过不允许使用输入 surface 的条目；</p>
+<p>（2）通过属性从 OmxStore 服务获得排名（rank）；</p>
+<p>（3）为新节点创建新的 MediaCodecInfo；</p>
+<p>（4）所有 OMX 编解码器都是供应商编解码器（在供应商分区），但处理 OMX.google 编解码器是非硬件加速的和非供应商的，也就是说是软编解码；</p>
+</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="content/assets/images/OmxInfoBuilderSequenceDiagram.jpg"
+        data-srcset="content/assets/images/OmxInfoBuilderSequenceDiagram.jpg, content/assets/images/OmxInfoBuilderSequenceDiagram.jpg 1.5x, content/assets/images/OmxInfoBuilderSequenceDiagram.jpg 2x"
+        data-sizes="auto"
+        alt="content/assets/images/OmxInfoBuilderSequenceDiagram.jpg"
+        title="content/assets/images/OmxInfoBuilderSequenceDiagram.jpg" /></p>
+<p>frameworks/av/media/libstagefright/OmxInfoBuilder.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>status_t OmxInfoBuilder<span style="color:#f92672">::</span>buildMediaCodecList(MediaCodecListWriter<span style="color:#f92672">*</span> writer) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Obtain IOmxStore
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    sp<span style="color:#f92672">&lt;</span>IOmxStore<span style="color:#f92672">&gt;</span> omxStore <span style="color:#f92672">=</span> IOmxStore<span style="color:#f92672">::</span>getService();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (omxStore <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        ALOGE(<span style="color:#e6db74">&#34;Cannot find an IOmxStore service.&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NO_INIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// List service attributes (global settings)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Status status;
+</span></span><span style="display:flex;"><span>    hidl_vec<span style="color:#f92672">&lt;</span>IOmxStore<span style="color:#f92672">::</span>RoleInfo<span style="color:#f92672">&gt;</span> roles;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">auto</span> transStatus <span style="color:#f92672">=</span> omxStore<span style="color:#f92672">-&gt;</span>listRoles(
+</span></span><span style="display:flex;"><span>            [<span style="color:#f92672">&amp;</span>roles] (
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> hidl_vec<span style="color:#f92672">&lt;</span>IOmxStore<span style="color:#f92672">::</span>RoleInfo<span style="color:#f92672">&gt;&amp;</span> inRoleList) {
+</span></span><span style="display:flex;"><span>                roles <span style="color:#f92672">=</span> inRoleList;
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>transStatus.isOk()) {
+</span></span><span style="display:flex;"><span>        ALOGE(<span style="color:#e6db74">&#34;Fail to obtain codec roles from IOmxStore.&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NO_INIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    hidl_vec<span style="color:#f92672">&lt;</span>IOmxStore<span style="color:#f92672">::</span>ServiceAttribute<span style="color:#f92672">&gt;</span> serviceAttributes;
+</span></span><span style="display:flex;"><span>    transStatus <span style="color:#f92672">=</span> omxStore<span style="color:#f92672">-&gt;</span>listServiceAttributes(
+</span></span><span style="display:flex;"><span>            [<span style="color:#f92672">&amp;</span>status, <span style="color:#f92672">&amp;</span>serviceAttributes] (
+</span></span><span style="display:flex;"><span>            Status inStatus,
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> hidl_vec<span style="color:#f92672">&lt;</span>IOmxStore<span style="color:#f92672">::</span>ServiceAttribute<span style="color:#f92672">&gt;&amp;</span> inAttributes) {
+</span></span><span style="display:flex;"><span>                status <span style="color:#f92672">=</span> inStatus;
+</span></span><span style="display:flex;"><span>                serviceAttributes <span style="color:#f92672">=</span> inAttributes;
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>transStatus.isOk()) {
+</span></span><span style="display:flex;"><span>        ALOGE(<span style="color:#e6db74">&#34;Fail to obtain global settings from IOmxStore.&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NO_INIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (status <span style="color:#f92672">!=</span> Status<span style="color:#f92672">::</span>OK) {
+</span></span><span style="display:flex;"><span>        ALOGE(<span style="color:#e6db74">&#34;IOmxStore reports parsing error.&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NO_INIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> p : serviceAttributes) {
+</span></span><span style="display:flex;"><span>        writer<span style="color:#f92672">-&gt;</span>addGlobalSetting(
+</span></span><span style="display:flex;"><span>                p.key.c_str(), p.value.c_str());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Convert roles to lists of codecs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// codec name -&gt; index into swCodecs/hwCodecs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>map<span style="color:#f92672">&lt;</span>hidl_string, std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>MediaCodecInfoWriter<span style="color:#f92672">&gt;&gt;</span> codecName2Info;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> defaultRank <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>base<span style="color:#f92672">::</span>GetUintProperty(<span style="color:#e6db74">&#34;debug.stagefright.omx_default_rank&#34;</span>, <span style="color:#ae81ff">0x100u</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> defaultSwAudioRank <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>base<span style="color:#f92672">::</span>GetUintProperty(<span style="color:#e6db74">&#34;debug.stagefright.omx_default_rank.sw-audio&#34;</span>, <span style="color:#ae81ff">0x10u</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> defaultSwOtherRank <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>base<span style="color:#f92672">::</span>GetUintProperty(<span style="color:#e6db74">&#34;debug.stagefright.omx_default_rank.sw-other&#34;</span>, <span style="color:#ae81ff">0x210u</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> IOmxStore<span style="color:#f92672">::</span>RoleInfo<span style="color:#f92672">&amp;</span> role : roles) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> hidl_string<span style="color:#f92672">&amp;</span> typeName <span style="color:#f92672">=</span> role.type;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">bool</span> isEncoder <span style="color:#f92672">=</span> role.isEncoder;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">bool</span> isAudio <span style="color:#f92672">=</span> hasPrefix(role.type, <span style="color:#e6db74">&#34;audio/&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">bool</span> isVideoOrImage <span style="color:#f92672">=</span> hasPrefix(role.type, <span style="color:#e6db74">&#34;video/&#34;</span>) <span style="color:#f92672">||</span> hasPrefix(role.type, <span style="color:#e6db74">&#34;image/&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> IOmxStore<span style="color:#f92672">::</span>NodeInfo <span style="color:#f92672">&amp;</span>node : role.nodes) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> hidl_string<span style="color:#f92672">&amp;</span> nodeName <span style="color:#f92672">=</span> node.name;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// currently image and video encoders use surface input
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>mAllowSurfaceEncoders <span style="color:#f92672">&amp;&amp;</span> isVideoOrImage <span style="color:#f92672">&amp;&amp;</span> isEncoder) {
+</span></span><span style="display:flex;"><span>                ALOGD(<span style="color:#e6db74">&#34;disabling %s for media type %s because we are not using OMX input surface&#34;</span>,
+</span></span><span style="display:flex;"><span>                        nodeName.c_str(), role.type.c_str());
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">bool</span> isSoftware <span style="color:#f92672">=</span> hasPrefix(nodeName, <span style="color:#e6db74">&#34;OMX.google&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">uint32_t</span> rank <span style="color:#f92672">=</span> isSoftware
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">?</span> (isAudio <span style="color:#f92672">?</span> defaultSwAudioRank : defaultSwOtherRank)
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">:</span> defaultRank;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// get rank from IOmxStore via attribute
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> IOmxStore<span style="color:#f92672">::</span>Attribute<span style="color:#f92672">&amp;</span> attribute : node.attributes) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (attribute.key <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;rank&#34;</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">uint32_t</span> oldRank <span style="color:#f92672">=</span> rank;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">char</span> dummy;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (sscanf(attribute.value.c_str(), <span style="color:#e6db74">&#34;%u%c&#34;</span>, <span style="color:#f92672">&amp;</span>rank, <span style="color:#f92672">&amp;</span>dummy) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>                        rank <span style="color:#f92672">=</span> oldRank;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            MediaCodecInfoWriter<span style="color:#f92672">*</span> info;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">auto</span> c2i <span style="color:#f92672">=</span> codecName2Info.find(nodeName);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (c2i <span style="color:#f92672">==</span> codecName2Info.end()) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Create a new MediaCodecInfo for a new node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                c2i <span style="color:#f92672">=</span> codecName2Info.insert(std<span style="color:#f92672">::</span>make_pair(
+</span></span><span style="display:flex;"><span>                        nodeName, writer<span style="color:#f92672">-&gt;</span>addMediaCodecInfo())).first;
+</span></span><span style="display:flex;"><span>                info <span style="color:#f92672">=</span> c2i<span style="color:#f92672">-&gt;</span>second.get();
+</span></span><span style="display:flex;"><span>                info<span style="color:#f92672">-&gt;</span>setName(nodeName.c_str());
+</span></span><span style="display:flex;"><span>                info<span style="color:#f92672">-&gt;</span>setOwner(node.owner.c_str());
+</span></span><span style="display:flex;"><span>                info<span style="color:#f92672">-&gt;</span>setRank(rank);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">::</span>underlying_type<span style="color:#f92672">&lt;</span>MediaCodecInfo<span style="color:#f92672">::</span>Attributes<span style="color:#f92672">&gt;::</span>type attrs <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// all OMX codecs are vendor codecs (in the vendor partition), but
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#75715e">// treat OMX.google codecs as non-hardware-accelerated and non-vendor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>isSoftware) {
+</span></span><span style="display:flex;"><span>                    attrs <span style="color:#f92672">|=</span> MediaCodecInfo<span style="color:#f92672">::</span>kFlagIsVendor;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>std<span style="color:#f92672">::</span>count_if(
+</span></span><span style="display:flex;"><span>                            node.attributes.begin(), node.attributes.end(),
+</span></span><span style="display:flex;"><span>                            [](<span style="color:#66d9ef">const</span> IOmxStore<span style="color:#f92672">::</span>Attribute <span style="color:#f92672">&amp;</span>i) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>                                <span style="color:#66d9ef">return</span> i.key <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;attribute::software-codec&#34;</span>;
+</span></span><span style="display:flex;"><span>                                                                      })) {
+</span></span><span style="display:flex;"><span>                        attrs <span style="color:#f92672">|=</span> MediaCodecInfo<span style="color:#f92672">::</span>kFlagIsHardwareAccelerated;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (isEncoder) {
+</span></span><span style="display:flex;"><span>                    attrs <span style="color:#f92672">|=</span> MediaCodecInfo<span style="color:#f92672">::</span>kFlagIsEncoder;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                info<span style="color:#f92672">-&gt;</span>setAttributes(attrs);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// The node has been seen before. Simply retrieve the
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#75715e">// existing MediaCodecInfoWriter.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                info <span style="color:#f92672">=</span> c2i<span style="color:#f92672">-&gt;</span>second.get();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>MediaCodecInfo<span style="color:#f92672">::</span>CapabilitiesWriter<span style="color:#f92672">&gt;</span> caps <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>                    info<span style="color:#f92672">-&gt;</span>addMediaType(typeName.c_str());
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (queryCapabilities(
+</span></span><span style="display:flex;"><span>                    node, typeName.c_str(), isEncoder, caps.get()) <span style="color:#f92672">!=</span> OK) {
+</span></span><span style="display:flex;"><span>                ALOGW(<span style="color:#e6db74">&#34;Fail to add media type %s to codec %s&#34;</span>,
+</span></span><span style="display:flex;"><span>                        typeName.c_str(), nodeName.c_str());
+</span></span><span style="display:flex;"><span>                info<span style="color:#f92672">-&gt;</span>removeMediaType(typeName.c_str());
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> OK;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>第一步获取 OmxStore 服务，IOmxStore 接口定义在 hardware/interfaces/media/omx/1.0/IOmxStore.hal 文件中。这个服务在 frameworks/av/services/mediacodec/main_codecservice.cpp 中进行注册（调用了 registerAsService()）。具体可以查看《<a href="https://blog.csdn.net/tyyj90/article/details/120935509?spm=1001.2014.3001.5501" target="_blank" rel="noopener noreffer ">【Android 10 源码】深入理解 codecservice 启动</a>》一节。</p>
+<p>OmxStore listRoles(…) 函数实现非常简单，仅仅将 OmxStore 构造函数中填值的 mRoleList 作为入参送入匿名函数，最终获取 RoleInfo 列表。</p>
+<p>frameworks/av/media/libstagefright/omx/1.0/OmxStore.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Return&lt;void&gt; OmxStore::listRoles(listRoles_cb _hidl_cb) {
+</span></span><span style="display:flex;"><span>    _hidl_cb(mRoleList);
+</span></span><span style="display:flex;"><span>    return Void();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>OmxStore listServiceAttributes(…) 同样实现非常简单，根据解析状态 _hidl_cb(…) 有选择的送入不同的入参。正常没有解析错误的情况下，直接送入 mServiceAttributeList 作为入参，mServiceAttributeList 也是在 OmxStore 构造函数中初始化的。</p>
+<p>frameworks/av/media/libstagefright/omx/1.0/OmxStore.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Return&lt;void&gt; OmxStore::listServiceAttributes(listServiceAttributes_cb _hidl_cb) {
+</span></span><span style="display:flex;"><span>    if (mParsingStatus == Status::NO_ERROR) {
+</span></span><span style="display:flex;"><span>        _hidl_cb(Status::NO_ERROR, mServiceAttributeList);
+</span></span><span style="display:flex;"><span>    } else {
+</span></span><span style="display:flex;"><span>        _hidl_cb(mParsingStatus, hidl_vec&lt;ServiceAttribute&gt;());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    return Void();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>调用 MediaCodecListWriter addGlobalSetting(…) 将服务属性全部写入，将服务属性键值对逐个写入 std::vector&lt;std::pair&lt;std::string, std::string&raquo; 容器。</p>
+<p>frameworks/av/media/libstagefright/include/media/stagefright/MediaCodecListWriter.h</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>struct MediaCodecListWriter {
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>private:
+</span></span><span style="display:flex;"><span>    std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; mGlobalSettings;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>frameworks/av/media/libstagefright/MediaCodecListWriter.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>void MediaCodecListWriter::addGlobalSetting(
+</span></span><span style="display:flex;"><span>        const char* key, const char* value) {
+</span></span><span style="display:flex;"><span>    mGlobalSettings.emplace_back(key, value);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再来分析下将角色转换为编解码器列表中创建新的 MediaCodecInfo 具体流程。内部先新建 MediaCodecInfo 结构体，接着将这个新建的结构体压入 mCodecInfos 容器（std::vector<sp>），最后返回一个新的 MediaCodecInfoWriter 对象。</p>
+<p>首先调用 MediaCodecListWriter addMediaCodecInfo()。</p>
+<p>frameworks/av/media/libstagefright/MediaCodecListWriter.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>std::unique_ptr&lt;MediaCodecInfoWriter&gt;
+</span></span><span style="display:flex;"><span>        MediaCodecListWriter::addMediaCodecInfo() {
+</span></span><span style="display:flex;"><span>    sp&lt;MediaCodecInfo&gt; info = new MediaCodecInfo();
+</span></span><span style="display:flex;"><span>    mCodecInfos.push_back(info);
+</span></span><span style="display:flex;"><span>    return std::unique_ptr&lt;MediaCodecInfoWriter&gt;(
+</span></span><span style="display:flex;"><span>            new MediaCodecInfoWriter(info.get()));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目前，OMX 组件的默认 rank 是 0x100，而所有 Codec2.0 软件组件的默认 rank 是 0x200。</p>
+<p>Codec2InfoBuilder buildMediaCodecList(…) 主要工作流程如下：</p>
+<ol>
+<li>
+<p>获取 debug.stagefright.ccodec 的属性值，默认为 4，在 rk3399 android 平台并未修改；</p>
+</li>
+<li>
+<p>调用 Codec2Client::ListComponents() 获取组件列表，确切地说是返回容器 std::vector；</p>
+</li>
+<li>
+<p>首先解析 APEX XML，然后解析 vendor XML，也就是先解析”/apex/com.android.media.swcodec/etc/media_codecs.xml“ 和”/apex/com.android.media.swcodec/etc/media_codecs_performance.xml“，再去解析”/odm/etc/media_codecs_c2.xml“、”/odm/etc/media_codecs_performance_c2.xml“、”/vendor/etc/media_codecs_c2.xml“、”/vendor/etc/media_codecs_performance_c2.xml“、”/etc/media_codecs_c2.xml“、”/etc/media_codecs_performance_c2.xml“；</p>
+</li>
+<li>
+<p>解析默认 XML 文件（”/odm/etc/media_codecs.xml“、”/odm/etc/media_codecs_performance.xml“、”/vendor/etc/media_codecs.xml“、”/vendor/etc/media_codecs_performance.xml“、”/etc/media_codecs.xml“、”/etc/media_codecs_performance.xml“）；</p>
+</li>
+<li>
+<p>获取解析最终状态如果是 OK，调用 MediaCodecsXmlParser getServiceAttributeMap() 获取 AttributeMap，接着调用 MediaCodecListWriter addGlobalSetting(…) 逐个添加所有属性；</p>
+</li>
+<li>
+<p>遍历所有组件，将符合条件的先调用 MediaCodecListWriter addMediaCodecInfo() 进行添加，然后通过 addMediaCodecInfo() 返回的 MediaCodecInfoWriter 对象添加各种信息到 MediaCodecInfo。</p>
+<p>(1) 获取别名容器，将本名也添加到容器中；</p>
+<p>(2) 遍历整个别名容器中的元素；</p>
+<ul>
+<li>
+<p>调用 Codec2Client::CreateInterfaceByName(…) 获取 Codec2Client::Interface，如果获取为空，直接 continue 到下一轮循环；</p>
+</li>
+<li>
+<p>查找名称是否在 CodecMap 中，如果不存在 continue 到下一轮循环，循环之前如果是别名，会在 MediaCodecInfoWriter 中查找是否存在 MediaCodecInfo，存在的话把这个别名也添加到 MediaCodecInfo 的别名容器中；</p>
+</li>
+<li>
+<p>根据 debug.stagefright.ccodec 属性值的不同，给 rank 赋值为 1，这会改变编解码器在列表中的权重；</p>
+</li>
+<li>
+<p>通过名称在 CodecMap 中查找 MediaCodecsXmlParser::CodecProperties；</p>
+</li>
+<li>
+<p>验证是否显式启用了编解码器，或其域之一；</p>
+</li>
+<li>
+<p>如果编解码器有变体，还要检查至少有一个是启用的；</p>
+</li>
+<li>
+<p>编解码器没启用或其变体也没启用，直接进行下一轮循环；</p>
+</li>
+<li>
+<p>添加编解码器条目，这是调用 MediaCodecListWriter addMediaCodecInfo() 实现的；</p>
+</li>
+<li>
+<p>给 MediaCodecInfo 设置各种属性，包括名称、属主、属性（Attributes）、rank和别名；</p>
+</li>
+<li>
+<p>遍历 typeMap，如果编解码器条目的媒体类型被禁用 continue 到下一轮循环，调用 MediaCodecInfoWriter addMediaType(…) 获取 CapabilitiesWriter 添加能力，调用 addSupportedProfileLevels(…) 添加 Profile Level，调用 addSupportedColorFormats(…) 添加支持的颜色空间。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="content/assets/images/Codec2InfoBuilderSequenceDiagram.jpg"
+        data-srcset="content/assets/images/Codec2InfoBuilderSequenceDiagram.jpg, content/assets/images/Codec2InfoBuilderSequenceDiagram.jpg 1.5x, content/assets/images/Codec2InfoBuilderSequenceDiagram.jpg 2x"
+        data-sizes="auto"
+        alt="content/assets/images/Codec2InfoBuilderSequenceDiagram.jpg"
+        title="Codec2InfoBuilderSequenceDiagram.jpg" /></p>
+<p>frameworks/av/media/codec2/sfplugin/Codec2InfoBuilder.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">149
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">150
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">151
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">152
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">153
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">154
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">155
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">156
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">157
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">158
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">159
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">160
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">161
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">162
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">163
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">164
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">165
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">166
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">167
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">168
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">169
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">170
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">171
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">172
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">173
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">174
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">175
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">176
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">177
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">178
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">179
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">180
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">181
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">182
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">183
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">184
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">185
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">186
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">187
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">188
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">189
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">190
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">191
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">192
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">193
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">194
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">195
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">196
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">197
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">198
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">199
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">200
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">201
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">202
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">203
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">204
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">205
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">206
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">207
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">208
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">209
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">210
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">211
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">212
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">213
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">214
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">215
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">216
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">217
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">218
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">219
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">220
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">221
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">222
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">223
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">224
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">225
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">226
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">227
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">228
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">229
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">230
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">231
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">232
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">233
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">234
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">235
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">236
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">237
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">238
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">239
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">240
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">241
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">242
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">243
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">244
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">245
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">246
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">247
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">248
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">249
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">250
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">251
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">252
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">253
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">254
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">255
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">256
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">257
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">258
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">259
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">260
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">261
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">262
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">263
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">264
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">265
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">266
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">267
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>status_t Codec2InfoBuilder::buildMediaCodecList(MediaCodecListWriter* writer) {
+</span></span><span style="display:flex;"><span>    //
+</span></span><span style="display:flex;"><span>    // debug.stagefright.ccodec supports 5 values.
+</span></span><span style="display:flex;"><span>    //   0 - No Codec 2.0 components are available.
+</span></span><span style="display:flex;"><span>    //   1 - Audio decoders and encoders with prefix &#34;c2.android.&#34; are available
+</span></span><span style="display:flex;"><span>    //       and ranked first.
+</span></span><span style="display:flex;"><span>    //       All other components with prefix &#34;c2.android.&#34; are available with
+</span></span><span style="display:flex;"><span>    //       their normal ranks.
+</span></span><span style="display:flex;"><span>    //       Components with prefix &#34;c2.vda.&#34; are available with their normal
+</span></span><span style="display:flex;"><span>    //       ranks.
+</span></span><span style="display:flex;"><span>    //       All other components with suffix &#34;.avc.decoder&#34; or &#34;.avc.encoder&#34;
+</span></span><span style="display:flex;"><span>    //       are available but ranked last.
+</span></span><span style="display:flex;"><span>    //   2 - Components with prefix &#34;c2.android.&#34; are available and ranked
+</span></span><span style="display:flex;"><span>    //       first.
+</span></span><span style="display:flex;"><span>    //       Components with prefix &#34;c2.vda.&#34; are available with their normal
+</span></span><span style="display:flex;"><span>    //       ranks.
+</span></span><span style="display:flex;"><span>    //       All other components with suffix &#34;.avc.decoder&#34; or &#34;.avc.encoder&#34;
+</span></span><span style="display:flex;"><span>    //       are available but ranked last.
+</span></span><span style="display:flex;"><span>    //   3 - Components with prefix &#34;c2.android.&#34; are available and ranked
+</span></span><span style="display:flex;"><span>    //       first.
+</span></span><span style="display:flex;"><span>    //       All other components are available with their normal ranks.
+</span></span><span style="display:flex;"><span>    //   4 - All components are available with their normal ranks.
+</span></span><span style="display:flex;"><span>    //
+</span></span><span style="display:flex;"><span>    // The default value (boot time) is 1.
+</span></span><span style="display:flex;"><span>    //
+</span></span><span style="display:flex;"><span>    // Note: Currently, OMX components have default rank 0x100, while all
+</span></span><span style="display:flex;"><span>    // Codec2.0 software components have default rank 0x200.
+</span></span><span style="display:flex;"><span>    int option = ::android::base::GetIntProperty(&#34;debug.stagefright.ccodec&#34;, 4);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // Obtain Codec2Client
+</span></span><span style="display:flex;"><span>    std::vector&lt;Traits&gt; traits = Codec2Client::ListComponents();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // parse APEX XML first, followed by vendor XML
+</span></span><span style="display:flex;"><span>    MediaCodecsXmlParser parser;
+</span></span><span style="display:flex;"><span>    parser.parseXmlFilesInSearchDirs(
+</span></span><span style="display:flex;"><span>            parser.getDefaultXmlNames(),
+</span></span><span style="display:flex;"><span>            { &#34;/apex/com.android.media.swcodec/etc&#34; });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // TODO: remove these c2-specific files once product moved to default file names
+</span></span><span style="display:flex;"><span>    parser.parseXmlFilesInSearchDirs(
+</span></span><span style="display:flex;"><span>            { &#34;media_codecs_c2.xml&#34;, &#34;media_codecs_performance_c2.xml&#34; });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // parse default XML files
+</span></span><span style="display:flex;"><span>    parser.parseXmlFilesInSearchDirs();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    if (parser.getParsingStatus() != OK) {
+</span></span><span style="display:flex;"><span>        ALOGD(&#34;XML parser no good&#34;);
+</span></span><span style="display:flex;"><span>        return OK;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    MediaCodecsXmlParser::AttributeMap settings = parser.getServiceAttributeMap();
+</span></span><span style="display:flex;"><span>    for (const auto &amp;v : settings) {
+</span></span><span style="display:flex;"><span>        if (!hasPrefix(v.first, &#34;media-type-&#34;)
+</span></span><span style="display:flex;"><span>                &amp;&amp; !hasPrefix(v.first, &#34;domain-&#34;)
+</span></span><span style="display:flex;"><span>                &amp;&amp; !hasPrefix(v.first, &#34;variant-&#34;)) {
+</span></span><span style="display:flex;"><span>            writer-&gt;addGlobalSetting(v.first.c_str(), v.second.c_str());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    for (const Traits&amp; trait : traits) {
+</span></span><span style="display:flex;"><span>        C2Component::rank_t rank = trait.rank;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        // Interface must be accessible for us to list the component, and there also
+</span></span><span style="display:flex;"><span>        // must be an XML entry for the codec. Codec aliases listed in the traits
+</span></span><span style="display:flex;"><span>        // allow additional XML entries to be specified for each alias. These will
+</span></span><span style="display:flex;"><span>        // be listed as separate codecs. If no XML entry is specified for an alias,
+</span></span><span style="display:flex;"><span>        // those will be treated as an additional alias specified in the XML entry
+</span></span><span style="display:flex;"><span>        // for the interface name.
+</span></span><span style="display:flex;"><span>        std::vector&lt;std::string&gt; nameAndAliases = trait.aliases;
+</span></span><span style="display:flex;"><span>        nameAndAliases.insert(nameAndAliases.begin(), trait.name);
+</span></span><span style="display:flex;"><span>        for (const std::string &amp;nameOrAlias : nameAndAliases) {
+</span></span><span style="display:flex;"><span>            bool isAlias = trait.name != nameOrAlias;
+</span></span><span style="display:flex;"><span>            std::shared_ptr&lt;Codec2Client::Interface&gt; intf =
+</span></span><span style="display:flex;"><span>                Codec2Client::CreateInterfaceByName(nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>            if (!intf) {
+</span></span><span style="display:flex;"><span>                ALOGD(&#34;could not create interface for %s&#39;%s&#39;&#34;,
+</span></span><span style="display:flex;"><span>                        isAlias ? &#34;alias &#34; : &#34;&#34;,
+</span></span><span style="display:flex;"><span>                        nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            if (parser.getCodecMap().count(nameOrAlias) == 0) {
+</span></span><span style="display:flex;"><span>                if (isAlias) {
+</span></span><span style="display:flex;"><span>                    std::unique_ptr&lt;MediaCodecInfoWriter&gt; baseCodecInfo =
+</span></span><span style="display:flex;"><span>                        writer-&gt;findMediaCodecInfo(trait.name.c_str());
+</span></span><span style="display:flex;"><span>                    if (!baseCodecInfo) {
+</span></span><span style="display:flex;"><span>                        ALOGD(&#34;alias &#39;%s&#39; not found in xml but canonical codec info &#39;%s&#39; missing&#34;,
+</span></span><span style="display:flex;"><span>                                nameOrAlias.c_str(),
+</span></span><span style="display:flex;"><span>                                trait.name.c_str());
+</span></span><span style="display:flex;"><span>                    } else {
+</span></span><span style="display:flex;"><span>                        ALOGD(&#34;alias &#39;%s&#39; not found in xml; use an XML &lt;Alias&gt; tag for this&#34;,
+</span></span><span style="display:flex;"><span>                                nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>                        // merge alias into existing codec
+</span></span><span style="display:flex;"><span>                        baseCodecInfo-&gt;addAlias(nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                } else {
+</span></span><span style="display:flex;"><span>                    ALOGD(&#34;component &#39;%s&#39; not found in xml&#34;, trait.name.c_str());
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            std::string canonName = trait.name;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            // TODO: Remove this block once all codecs are enabled by default.
+</span></span><span style="display:flex;"><span>            switch (option) {
+</span></span><span style="display:flex;"><span>            case 0:
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            case 1:
+</span></span><span style="display:flex;"><span>                if (hasPrefix(canonName, &#34;c2.vda.&#34;)) {
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                if (hasPrefix(canonName, &#34;c2.android.&#34;)) {
+</span></span><span style="display:flex;"><span>                    if (trait.domain == C2Component::DOMAIN_AUDIO) {
+</span></span><span style="display:flex;"><span>                        rank = 1;
+</span></span><span style="display:flex;"><span>                        break;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                if (hasSuffix(canonName, &#34;.avc.decoder&#34;) ||
+</span></span><span style="display:flex;"><span>                        hasSuffix(canonName, &#34;.avc.encoder&#34;)) {
+</span></span><span style="display:flex;"><span>                    rank = std::numeric_limits&lt;decltype(rank)&gt;::max();
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            case 2:
+</span></span><span style="display:flex;"><span>                if (hasPrefix(canonName, &#34;c2.vda.&#34;)) {
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                if (hasPrefix(canonName, &#34;c2.android.&#34;)) {
+</span></span><span style="display:flex;"><span>                    rank = 1;
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                if (hasSuffix(canonName, &#34;.avc.decoder&#34;) ||
+</span></span><span style="display:flex;"><span>                        hasSuffix(canonName, &#34;.avc.encoder&#34;)) {
+</span></span><span style="display:flex;"><span>                    rank = std::numeric_limits&lt;decltype(rank)&gt;::max();
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            case 3:
+</span></span><span style="display:flex;"><span>                if (hasPrefix(canonName, &#34;c2.android.&#34;)) {
+</span></span><span style="display:flex;"><span>                    rank = 1;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                break;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            const MediaCodecsXmlParser::CodecProperties &amp;codec =
+</span></span><span style="display:flex;"><span>                parser.getCodecMap().at(nameOrAlias);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            // verify that either the codec is explicitly enabled, or one of its domains is
+</span></span><span style="display:flex;"><span>            bool codecEnabled = codec.quirkSet.find(&#34;attribute::disabled&#34;) == codec.quirkSet.end();
+</span></span><span style="display:flex;"><span>            if (!codecEnabled) {
+</span></span><span style="display:flex;"><span>                for (const std::string &amp;domain : codec.domainSet) {
+</span></span><span style="display:flex;"><span>                    const Switch enabled = isDomainEnabled(domain, settings);
+</span></span><span style="display:flex;"><span>                    ALOGV(&#34;codec entry &#39;%s&#39; is in domain &#39;%s&#39; that is &#39;%s&#39;&#34;,
+</span></span><span style="display:flex;"><span>                            nameOrAlias.c_str(), domain.c_str(), asString(enabled));
+</span></span><span style="display:flex;"><span>                    if (enabled) {
+</span></span><span style="display:flex;"><span>                        codecEnabled = true;
+</span></span><span style="display:flex;"><span>                        break;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            // if codec has variants, also check that at least one of them is enabled
+</span></span><span style="display:flex;"><span>            bool variantEnabled = codec.variantSet.empty();
+</span></span><span style="display:flex;"><span>            for (const std::string &amp;variant : codec.variantSet) {
+</span></span><span style="display:flex;"><span>                const Switch enabled = isVariantExpressionEnabled(variant, settings);
+</span></span><span style="display:flex;"><span>                ALOGV(&#34;codec entry &#39;%s&#39; has a variant &#39;%s&#39; that is &#39;%s&#39;&#34;,
+</span></span><span style="display:flex;"><span>                        nameOrAlias.c_str(), variant.c_str(), asString(enabled));
+</span></span><span style="display:flex;"><span>                if (enabled) {
+</span></span><span style="display:flex;"><span>                    variantEnabled = true;
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            if (!codecEnabled || !variantEnabled) {
+</span></span><span style="display:flex;"><span>                ALOGD(&#34;codec entry for &#39;%s&#39; is disabled&#34;, nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>                continue;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            ALOGV(&#34;adding codec entry for &#39;%s&#39;&#34;, nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>            std::unique_ptr&lt;MediaCodecInfoWriter&gt; codecInfo = writer-&gt;addMediaCodecInfo();
+</span></span><span style="display:flex;"><span>            codecInfo-&gt;setName(nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>            codecInfo-&gt;setOwner((&#34;codec2::&#34; + trait.owner).c_str());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            bool encoder = trait.kind == C2Component::KIND_ENCODER;
+</span></span><span style="display:flex;"><span>            typename std::underlying_type&lt;MediaCodecInfo::Attributes&gt;::type attrs = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            if (encoder) {
+</span></span><span style="display:flex;"><span>                attrs |= MediaCodecInfo::kFlagIsEncoder;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            if (trait.owner == &#34;software&#34;) {
+</span></span><span style="display:flex;"><span>                attrs |= MediaCodecInfo::kFlagIsSoftwareOnly;
+</span></span><span style="display:flex;"><span>            } else {
+</span></span><span style="display:flex;"><span>                attrs |= MediaCodecInfo::kFlagIsVendor;
+</span></span><span style="display:flex;"><span>                if (trait.owner == &#34;vendor-software&#34;) {
+</span></span><span style="display:flex;"><span>                    attrs |= MediaCodecInfo::kFlagIsSoftwareOnly;
+</span></span><span style="display:flex;"><span>                } else if (codec.quirkSet.find(&#34;attribute::software-codec&#34;)
+</span></span><span style="display:flex;"><span>                        == codec.quirkSet.end()) {
+</span></span><span style="display:flex;"><span>                    attrs |= MediaCodecInfo::kFlagIsHardwareAccelerated;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            codecInfo-&gt;setAttributes(attrs);
+</span></span><span style="display:flex;"><span>            if (!codec.rank.empty()) {
+</span></span><span style="display:flex;"><span>                uint32_t xmlRank;
+</span></span><span style="display:flex;"><span>                char dummy;
+</span></span><span style="display:flex;"><span>                if (sscanf(codec.rank.c_str(), &#34;%u%c&#34;, &amp;xmlRank, &amp;dummy) == 1) {
+</span></span><span style="display:flex;"><span>                    rank = xmlRank;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            ALOGV(&#34;rank: %u&#34;, (unsigned)rank);
+</span></span><span style="display:flex;"><span>            codecInfo-&gt;setRank(rank);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            for (const std::string &amp;alias : codec.aliases) {
+</span></span><span style="display:flex;"><span>                ALOGV(&#34;adding alias &#39;%s&#39;&#34;, alias.c_str());
+</span></span><span style="display:flex;"><span>                codecInfo-&gt;addAlias(alias.c_str());
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            for (auto typeIt = codec.typeMap.begin(); typeIt != codec.typeMap.end(); ++typeIt) {
+</span></span><span style="display:flex;"><span>                const std::string &amp;mediaType = typeIt-&gt;first;
+</span></span><span style="display:flex;"><span>                const Switch typeEnabled = isSettingEnabled(
+</span></span><span style="display:flex;"><span>                        &#34;media-type-&#34; + mediaType, settings, Switch::ENABLED_BY_DEFAULT());
+</span></span><span style="display:flex;"><span>                const Switch domainTypeEnabled = isSettingEnabled(
+</span></span><span style="display:flex;"><span>                        &#34;media-type-&#34; + mediaType + (encoder ? &#34;-encoder&#34; : &#34;-decoder&#34;),
+</span></span><span style="display:flex;"><span>                        settings, Switch::ENABLED_BY_DEFAULT());
+</span></span><span style="display:flex;"><span>                ALOGV(&#34;type &#39;%s-%s&#39; is &#39;%s/%s&#39;&#34;,
+</span></span><span style="display:flex;"><span>                        mediaType.c_str(), (encoder ? &#34;encoder&#34; : &#34;decoder&#34;),
+</span></span><span style="display:flex;"><span>                        asString(typeEnabled), asString(domainTypeEnabled));
+</span></span><span style="display:flex;"><span>                if (!typeEnabled || !domainTypeEnabled) {
+</span></span><span style="display:flex;"><span>                    ALOGD(&#34;media type &#39;%s&#39; for codec entry &#39;%s&#39; is disabled&#34;, mediaType.c_str(),
+</span></span><span style="display:flex;"><span>                            nameOrAlias.c_str());
+</span></span><span style="display:flex;"><span>                    continue;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                ALOGI(&#34;adding type &#39;%s&#39;&#34;, typeIt-&gt;first.c_str());
+</span></span><span style="display:flex;"><span>                const MediaCodecsXmlParser::AttributeMap &amp;attrMap = typeIt-&gt;second;
+</span></span><span style="display:flex;"><span>                std::unique_ptr&lt;MediaCodecInfo::CapabilitiesWriter&gt; caps =
+</span></span><span style="display:flex;"><span>                    codecInfo-&gt;addMediaType(mediaType.c_str());
+</span></span><span style="display:flex;"><span>                for (const auto &amp;v : attrMap) {
+</span></span><span style="display:flex;"><span>                    std::string key = v.first;
+</span></span><span style="display:flex;"><span>                    std::string value = v.second;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    size_t variantSep = key.find(&#34;:::&#34;);
+</span></span><span style="display:flex;"><span>                    if (variantSep != std::string::npos) {
+</span></span><span style="display:flex;"><span>                        std::string variant = key.substr(0, variantSep);
+</span></span><span style="display:flex;"><span>                        const Switch enabled = isVariantExpressionEnabled(variant, settings);
+</span></span><span style="display:flex;"><span>                        ALOGV(&#34;variant &#39;%s&#39; is &#39;%s&#39;&#34;, variant.c_str(), asString(enabled));
+</span></span><span style="display:flex;"><span>                        if (!enabled) {
+</span></span><span style="display:flex;"><span>                            continue;
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                        key = key.substr(variantSep + 3);
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    if (key.find(&#34;feature-&#34;) == 0 &amp;&amp; key.find(&#34;feature-bitrate-modes&#34;) != 0) {
+</span></span><span style="display:flex;"><span>                        int32_t intValue = 0;
+</span></span><span style="display:flex;"><span>                        // Ignore trailing bad characters and default to 0.
+</span></span><span style="display:flex;"><span>                        (void)sscanf(value.c_str(), &#34;%d&#34;, &amp;intValue);
+</span></span><span style="display:flex;"><span>                        caps-&gt;addDetail(key.c_str(), intValue);
+</span></span><span style="display:flex;"><span>                    } else {
+</span></span><span style="display:flex;"><span>                        caps-&gt;addDetail(key.c_str(), value.c_str());
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                addSupportedProfileLevels(intf, caps.get(), trait, mediaType);
+</span></span><span style="display:flex;"><span>                addSupportedColorFormats(intf, caps.get(), trait, mediaType);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    return OK;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139140141142143144145146147148149150151152153154155156157158159160161162163164165166167168169170171172173174175176177178179180181182183184185186187188189190191192193194195196197198199200201202203204205206207208209210211212213214215216217218219220221222223224225226227228229230231232233234235236237238239240241242243244245246247248249250251252253254255256257258259260261262263264265
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个函数实现本身不复杂，仅仅将 sList 使用匿名函数进行了初始化，而容器中的项是遍历 Cache::List() 获取后整体插入到 std::vectorC2Component::Traits。</p>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>std::vector&lt;C2Component::Traits&gt; const&amp; Codec2Client::ListComponents() {
+</span></span><span style="display:flex;"><span>    static std::vector&lt;C2Component::Traits&gt; sList{[]() {
+</span></span><span style="display:flex;"><span>        std::vector&lt;C2Component::Traits&gt; list;
+</span></span><span style="display:flex;"><span>        for (Cache&amp; cache : Cache::List()) {
+</span></span><span style="display:flex;"><span>            std::vector&lt;C2Component::Traits&gt; const&amp; traits = cache.getTraits();
+</span></span><span style="display:flex;"><span>            list.insert(list.end(), traits.begin(), traits.end());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        return list;
+</span></span><span style="display:flex;"><span>    }()};
+</span></span><span style="display:flex;"><span>    return sList;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>110
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Traits 结构体代表组件信息。</p>
+<p>frameworks/av/media/codec2/core/include/C2Component.h</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>class C2Component {
+</span></span><span style="display:flex;"><span>public:
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    /**
+</span></span><span style="display:flex;"><span>     * Information about a component.
+</span></span><span style="display:flex;"><span>     */
+</span></span><span style="display:flex;"><span>    struct Traits {
+</span></span><span style="display:flex;"><span>    // public:
+</span></span><span style="display:flex;"><span>        C2String name; ///&lt; name of the component
+</span></span><span style="display:flex;"><span>        domain_t domain; ///&lt; component domain
+</span></span><span style="display:flex;"><span>        kind_t kind; ///&lt; component kind
+</span></span><span style="display:flex;"><span>        rank_t rank; ///&lt; component rank
+</span></span><span style="display:flex;"><span>        C2String mediaType; ///&lt; media type supported by the component
+</span></span><span style="display:flex;"><span>        C2String owner; ///&lt; name of the component store owning this component
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        /**
+</span></span><span style="display:flex;"><span>         * name alias(es) for backward compatibility.
+</span></span><span style="display:flex;"><span>         * \note Multiple components can have the same alias as long as their media-type differs.
+</span></span><span style="display:flex;"><span>         */
+</span></span><span style="display:flex;"><span>        std::vector&lt;C2String&gt; aliases; ///&lt; name aliases for backward compatibility
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>110111213141516171819202122
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Codec2Client::Cache 这个类缓存一个 Codec2Client 对象及其组件特性（Traits）。客户端将在第一次需要时被创建，如果服务终止（通过调用invalidate()），则被移除。第一次从客户端调用 listComponents() 时，结果将被缓存。</p>
+<p>Cache::List() 主要工作流程：</p>
+<ol>
+<li>调用 GetServiceNames() 获取服务名 vector；</li>
+<li>构建 std::vector ，个数为上一步获取的服务名数量；</li>
+<li>遍历 std::vector 中的每个元素，并调用 init(…) 进行初始化;</li>
+<li>以上步骤在匿名函数中进行的，因此会初始化 sCaches，初始化后下次再去调用直接返回。</li>
+</ol>
+<p>Cache init(…) 方法仅仅将 index 做了一个记录。</p>
+<p>Cache::getTraits() 主要工作流程：</p>
+<ol>
+<li>调用 getClient() 获取 Codec2Client 客户端；</li>
+<li>调用Codec2Client _listComponents(…) 方法获取组件列表（std::vectorC2Component::Traits）。</li>
+</ol>
+<p>Cache::getClient() 调用 Codec2Client::_CreateFromIndex(…) 根据记录的 mIndex 获取 Codec2Client 客户端。</p>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>class Codec2Client::Cache {
+</span></span><span style="display:flex;"><span>    // Cached client
+</span></span><span style="display:flex;"><span>    std::shared_ptr&lt;Codec2Client&gt; mClient;
+</span></span><span style="display:flex;"><span>    mutable std::mutex mClientMutex;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // Cached component traits
+</span></span><span style="display:flex;"><span>    std::vector&lt;C2Component::Traits&gt; mTraits;
+</span></span><span style="display:flex;"><span>    std::once_flag mTraitsInitializationFlag;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // The index of the service. This is based on GetServiceNames().
+</span></span><span style="display:flex;"><span>    size_t mIndex;
+</span></span><span style="display:flex;"><span>    // Called by s() exactly once to initialize the cache. The index must be a
+</span></span><span style="display:flex;"><span>    // valid index into the vector returned by GetServiceNames(). Calling
+</span></span><span style="display:flex;"><span>    // init(index) will associate the cache to the service with name
+</span></span><span style="display:flex;"><span>    // GetServiceNames()[index].
+</span></span><span style="display:flex;"><span>    void init(size_t index) {
+</span></span><span style="display:flex;"><span>        mIndex = index;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>public:
+</span></span><span style="display:flex;"><span>    Cache() = default;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // Initializes mClient if needed, then returns mClient.
+</span></span><span style="display:flex;"><span>    // If the service is unavailable but listed in the manifest, this function
+</span></span><span style="display:flex;"><span>    // will block indefinitely.
+</span></span><span style="display:flex;"><span>    std::shared_ptr&lt;Codec2Client&gt; getClient() {
+</span></span><span style="display:flex;"><span>        std::scoped_lock lock{mClientMutex};
+</span></span><span style="display:flex;"><span>        if (!mClient) {
+</span></span><span style="display:flex;"><span>            mClient = Codec2Client::_CreateFromIndex(mIndex);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        return mClient;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // Causes a subsequent call to getClient() to create a new client. This
+</span></span><span style="display:flex;"><span>    // function should be called after the service dies.
+</span></span><span style="display:flex;"><span>    //
+</span></span><span style="display:flex;"><span>    // Note: This function is called only by ForAllServices().
+</span></span><span style="display:flex;"><span>    void invalidate() {
+</span></span><span style="display:flex;"><span>        std::scoped_lock lock{mClientMutex};
+</span></span><span style="display:flex;"><span>        mClient = nullptr;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // Returns a list of traits for components supported by the service. This
+</span></span><span style="display:flex;"><span>    // list is cached.
+</span></span><span style="display:flex;"><span>    std::vector&lt;C2Component::Traits&gt; const&amp; getTraits() {
+</span></span><span style="display:flex;"><span>        std::call_once(mTraitsInitializationFlag, [this]() {
+</span></span><span style="display:flex;"><span>            bool success{false};
+</span></span><span style="display:flex;"><span>            // Spin until _listComponents() is successful.
+</span></span><span style="display:flex;"><span>            while (true) {
+</span></span><span style="display:flex;"><span>                std::shared_ptr&lt;Codec2Client&gt; client = getClient();
+</span></span><span style="display:flex;"><span>                mTraits = client-&gt;_listComponents(&amp;success);
+</span></span><span style="display:flex;"><span>                if (success) {
+</span></span><span style="display:flex;"><span>                    break;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                using namespace std::chrono_literals;
+</span></span><span style="display:flex;"><span>                static constexpr auto kServiceRetryPeriod = 5s;
+</span></span><span style="display:flex;"><span>                LOG(INFO) &lt;&lt; &#34;Failed to retrieve component traits from service &#34;
+</span></span><span style="display:flex;"><span>                             &#34;\&#34;&#34; &lt;&lt; GetServiceNames()[mIndex] &lt;&lt; &#34;\&#34;. &#34;
+</span></span><span style="display:flex;"><span>                             &#34;Retrying...&#34;;
+</span></span><span style="display:flex;"><span>                std::this_thread::sleep_for(kServiceRetryPeriod);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>        return mTraits;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    // List() returns the list of all caches.
+</span></span><span style="display:flex;"><span>    static std::vector&lt;Cache&gt;&amp; List() {
+</span></span><span style="display:flex;"><span>        static std::vector&lt;Cache&gt; sCaches{[]() {
+</span></span><span style="display:flex;"><span>            size_t numServices = GetServiceNames().size();
+</span></span><span style="display:flex;"><span>            std::vector&lt;Cache&gt; caches(numServices);
+</span></span><span style="display:flex;"><span>            for (size_t i = 0; i &lt; numServices; ++i) {
+</span></span><span style="display:flex;"><span>                caches[i].init(i);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            return caches;
+</span></span><span style="display:flex;"><span>        }()};
+</span></span><span style="display:flex;"><span>        return sCaches;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>1011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上提交的几个函数需要再次分析下，首先来分析 Codec2Client::GetServiceNames()。</p>
+<ol>
+<li>调用 IServiceManager::getService() 获取“大内总管”，调用其 listManifestByInterface(…) 从清单文件中检索 IComponentStore::descriptor 这个描述符对应的服务；</li>
+<li>获取到服务名称列表后，在匿名函数内进行筛选（三个分类为 default、vendor 和 other）；</li>
+<li>对每个类别中的服务名称进行排序；</li>
+<li>按照如下顺序连接三个列表：default、vendor 和 other；</li>
+<li>总结 log 输出。</li>
+</ol>
+<p>在 rk3399 android 10 平台上可见 Log：Codec2Client: Available Codec2 services: “software”</p>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>std::vector&lt;std::string&gt; const&amp; Codec2Client::GetServiceNames() {
+</span></span><span style="display:flex;"><span>    static std::vector&lt;std::string&gt; sServiceNames{[]() {
+</span></span><span style="display:flex;"><span>        using ::android::hardware::media::c2::V1_0::IComponentStore;
+</span></span><span style="display:flex;"><span>        using ::android::hidl::manager::V1_2::IServiceManager;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        while (true) {
+</span></span><span style="display:flex;"><span>            sp&lt;IServiceManager&gt; serviceManager = IServiceManager::getService();
+</span></span><span style="display:flex;"><span>            CHECK(serviceManager) &lt;&lt; &#34;Hardware service manager is not running.&#34;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            // There are three categories of services based on names.
+</span></span><span style="display:flex;"><span>            std::vector&lt;std::string&gt; defaultNames; // Prefixed with &#34;default&#34;
+</span></span><span style="display:flex;"><span>            std::vector&lt;std::string&gt; vendorNames;  // Prefixed with &#34;vendor&#34;
+</span></span><span style="display:flex;"><span>            std::vector&lt;std::string&gt; otherNames;   // Others
+</span></span><span style="display:flex;"><span>            Return&lt;void&gt; transResult;
+</span></span><span style="display:flex;"><span>            transResult = serviceManager-&gt;listManifestByInterface(
+</span></span><span style="display:flex;"><span>                    IComponentStore::descriptor,
+</span></span><span style="display:flex;"><span>                    [&amp;defaultNames, &amp;vendorNames, &amp;otherNames](
+</span></span><span style="display:flex;"><span>                            hidl_vec&lt;hidl_string&gt; const&amp; instanceNames) {
+</span></span><span style="display:flex;"><span>                        for (hidl_string const&amp; instanceName : instanceNames) {
+</span></span><span style="display:flex;"><span>                            char const* name = instanceName.c_str();
+</span></span><span style="display:flex;"><span>                            if (strncmp(name, &#34;default&#34;, 7) == 0) {
+</span></span><span style="display:flex;"><span>                                defaultNames.emplace_back(name);
+</span></span><span style="display:flex;"><span>                            } else if (strncmp(name, &#34;vendor&#34;, 6) == 0) {
+</span></span><span style="display:flex;"><span>                                vendorNames.emplace_back(name);
+</span></span><span style="display:flex;"><span>                            } else {
+</span></span><span style="display:flex;"><span>                                otherNames.emplace_back(name);
+</span></span><span style="display:flex;"><span>                            }
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                    });
+</span></span><span style="display:flex;"><span>            if (transResult.isOk()) {
+</span></span><span style="display:flex;"><span>                // Sort service names in each category.
+</span></span><span style="display:flex;"><span>                std::sort(defaultNames.begin(), defaultNames.end());
+</span></span><span style="display:flex;"><span>                std::sort(vendorNames.begin(), vendorNames.end());
+</span></span><span style="display:flex;"><span>                std::sort(otherNames.begin(), otherNames.end());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                // Concatenate the three lists in this order: default, vendor,
+</span></span><span style="display:flex;"><span>                // other.
+</span></span><span style="display:flex;"><span>                std::vector&lt;std::string&gt;&amp; names = defaultNames;
+</span></span><span style="display:flex;"><span>                names.reserve(names.size() + vendorNames.size() + otherNames.size());
+</span></span><span style="display:flex;"><span>                names.insert(names.end(),
+</span></span><span style="display:flex;"><span>                             std::make_move_iterator(vendorNames.begin()),
+</span></span><span style="display:flex;"><span>                             std::make_move_iterator(vendorNames.end()));
+</span></span><span style="display:flex;"><span>                names.insert(names.end(),
+</span></span><span style="display:flex;"><span>                             std::make_move_iterator(otherNames.begin()),
+</span></span><span style="display:flex;"><span>                             std::make_move_iterator(otherNames.end()));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                // Summarize to logcat.
+</span></span><span style="display:flex;"><span>                if (names.empty()) {
+</span></span><span style="display:flex;"><span>                    LOG(INFO) &lt;&lt; &#34;No Codec2 services declared in the manifest.&#34;;
+</span></span><span style="display:flex;"><span>                } else {
+</span></span><span style="display:flex;"><span>                    std::stringstream stringOutput;
+</span></span><span style="display:flex;"><span>                    stringOutput &lt;&lt; &#34;Available Codec2 services:&#34;;
+</span></span><span style="display:flex;"><span>                    for (std::string const&amp; name : names) {
+</span></span><span style="display:flex;"><span>                        stringOutput &lt;&lt; &#34; \&#34;&#34; &lt;&lt; name &lt;&lt; &#34;\&#34;&#34;;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    LOG(INFO) &lt;&lt; stringOutput.str();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return names;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            LOG(ERROR) &lt;&lt; &#34;Could not retrieve the list of service instances of &#34;
+</span></span><span style="display:flex;"><span>                       &lt;&lt; IComponentStore::descriptor
+</span></span><span style="display:flex;"><span>                       &lt;&lt; &#34;. Retrying...&#34;;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }()};
+</span></span><span style="display:flex;"><span>    return sServiceNames;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再来分析 Codec2Client _listComponents(…) 干了什么？</p>
+<ol>
+<li>调用 getServiceName() 获取服务名；</li>
+<li>mBase 是指向 IComponentStore 的指针，调用其 listComponents(…) 实际由 hal 层服务实现，在匿名函数内将 hidl_vecIComponentStore::ComponentTraits 转化为 std::vectorC2Component::Traits，并将每一项的 owner 设置为服务名。</li>
+</ol>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>std::vector&lt;C2Component::Traits&gt; Codec2Client::_listComponents(
+</span></span><span style="display:flex;"><span>        bool* success) const {
+</span></span><span style="display:flex;"><span>    std::vector&lt;C2Component::Traits&gt; traits;
+</span></span><span style="display:flex;"><span>    std::string const&amp; serviceName = getServiceName();
+</span></span><span style="display:flex;"><span>    Return&lt;void&gt; transStatus = mBase-&gt;listComponents(
+</span></span><span style="display:flex;"><span>            [&amp;traits, &amp;serviceName](Status s,
+</span></span><span style="display:flex;"><span>                   const hidl_vec&lt;IComponentStore::ComponentTraits&gt;&amp; t) {
+</span></span><span style="display:flex;"><span>                if (s != Status::OK) {
+</span></span><span style="display:flex;"><span>                    LOG(DEBUG) &lt;&lt; &#34;_listComponents -- call failed: &#34;
+</span></span><span style="display:flex;"><span>                               &lt;&lt; static_cast&lt;c2_status_t&gt;(s) &lt;&lt; &#34;.&#34;;
+</span></span><span style="display:flex;"><span>                    return;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                traits.resize(t.size());
+</span></span><span style="display:flex;"><span>                for (size_t i = 0; i &lt; t.size(); ++i) {
+</span></span><span style="display:flex;"><span>                    if (!objcpy(&amp;traits[i], t[i])) {
+</span></span><span style="display:flex;"><span>                        LOG(ERROR) &lt;&lt; &#34;_listComponents -- corrupted output.&#34;;
+</span></span><span style="display:flex;"><span>                        return;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    traits[i].owner = serviceName;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>    if (!transStatus.isOk()) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) &lt;&lt; &#34;_listComponents -- transaction failed.&#34;;
+</span></span><span style="display:flex;"><span>        *success = false;
+</span></span><span style="display:flex;"><span>    } else {
+</span></span><span style="display:flex;"><span>        *success = true;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    return traits;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>10111213141516171819202122232425262728
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>getServiceName() 方法根据 mServiceIndex 直接从 GetServiceNames() 返回的容器中取出服务名。</p>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<p>现在再来摸清楚 Codec2Client::_CreateFromIndex(…)，这里的 Base 是个啥？不难看出 Base 就是 IComponentStore 的别名。</p>
+<p>Base::getService(…) 获取到 hal 远端服务的代理，最后初始化了 Codec2Client，调用了其构造函数。这里会在 rk3399 android 10 平台上打印以下 Log：</p>
+<p>Codec2Client: Creating a Codec2 client to service “software”</p>
+<p>Codec2Client: Client to Codec2 service “software” created</p>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>std::shared_ptr&lt;Codec2Client&gt; Codec2Client::_CreateFromIndex(size_t index) {
+</span></span><span style="display:flex;"><span>    std::string const&amp; name = GetServiceNames()[index];
+</span></span><span style="display:flex;"><span>    LOG(INFO) &lt;&lt; &#34;Creating a Codec2 client to service \&#34;&#34; &lt;&lt; name &lt;&lt; &#34;\&#34;&#34;;
+</span></span><span style="display:flex;"><span>    sp&lt;Base&gt; baseStore = Base::getService(name);
+</span></span><span style="display:flex;"><span>    CHECK(baseStore) &lt;&lt; &#34;Codec2 service \&#34;&#34; &lt;&lt; name &lt;&lt; &#34;\&#34;&#34;
+</span></span><span style="display:flex;"><span>                        &#34; inaccessible for unknown reasons.&#34;;
+</span></span><span style="display:flex;"><span>    LOG(INFO) &lt;&lt; &#34;Client to Codec2 service \&#34;&#34; &lt;&lt; name &lt;&lt; &#34;\&#34; created&#34;;
+</span></span><span style="display:flex;"><span>    return std::make_shared&lt;Codec2Client&gt;(baseStore, index);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>匿名函数内调用远端 ComponentStore getConfigurable() 等初始化 Codec2ConfigurableClient。初始化 mBase 和 mServiceIndex 字段，获取远端 ClientManager 代理。</p>
+<p>frameworks/av/media/codec2/hidl/client/client.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Codec2Client::Codec2Client(const sp&lt;IComponentStore&gt;&amp; base,
+</span></span><span style="display:flex;"><span>                           size_t serviceIndex)
+</span></span><span style="display:flex;"><span>      : Configurable{
+</span></span><span style="display:flex;"><span>            [base]() -&gt; sp&lt;IConfigurable&gt; {
+</span></span><span style="display:flex;"><span>                Return&lt;sp&lt;IConfigurable&gt;&gt; transResult =
+</span></span><span style="display:flex;"><span>                        base-&gt;getConfigurable();
+</span></span><span style="display:flex;"><span>                return transResult.isOk() ?
+</span></span><span style="display:flex;"><span>                        static_cast&lt;sp&lt;IConfigurable&gt;&gt;(transResult) :
+</span></span><span style="display:flex;"><span>                        nullptr;
+</span></span><span style="display:flex;"><span>            }()
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        mBase{base},
+</span></span><span style="display:flex;"><span>        mServiceIndex{serviceIndex} {
+</span></span><span style="display:flex;"><span>    Return&lt;sp&lt;IClientManager&gt;&gt; transResult = base-&gt;getPoolClientManager();
+</span></span><span style="display:flex;"><span>    if (!transResult.isOk()) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) &lt;&lt; &#34;getPoolClientManager -- transaction failed.&#34;;
+</span></span><span style="display:flex;"><span>    } else {
+</span></span><span style="display:flex;"><span>        mHostPoolManager = static_cast&lt;sp&lt;IClientManager&gt;&gt;(transResult);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>1011121314151617181920
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-02-09</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/en/tags/codec/">Codec</a>,&nbsp;<a href="/en/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/">深入理解构建 MediaCodec 列表</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/en/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/" class="prev" rel="prev" title="深入理解构建 MediaCodec 列表：6-MediaCodec 组件分配"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>深入理解构建 MediaCodec 列表：6-MediaCodec 组件分配</a>
+            <a href="/en/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" class="next" rel="next" title="深入理解构建 MediaCodec 列表：4-software Codec2 服务启动">深入理解构建 MediaCodec 列表：4-software Codec2 服务启动<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-PJ6GG2PYMB', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-PJ6GG2PYMB" async></script></body>
+</html>

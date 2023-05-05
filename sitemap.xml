@@ -1,16 +1,16 @@
-<?xml-stylesheet type="text/xsl" href="http://example.org/sitemap.xsl"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
-  <url>
-    <loc>http://example.org/categories/</loc>
-  </url>
+  <sitemap>
+    <loc>https://runnlin.github.io/en/sitemap.xml</loc>
+    
+      <lastmod>2023-02-09T00:00:00+00:00</lastmod>
+    
+  </sitemap>
   
-  <url>
-    <loc>http://example.org/</loc>
-  </url>
+  <sitemap>
+    <loc>https://runnlin.github.io/zh-cn/sitemap.xml</loc>
+    
+  </sitemap>
   
-  <url>
-    <loc>http://example.org/tags/</loc>
-  </url>
-  
-</urlset>
+</sitemapindex>
