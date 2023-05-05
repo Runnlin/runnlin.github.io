@@ -1,0 +1,88 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Android - Tag - Runnlin&#39;s Blog</title>
+        <link>https://runnlin.github.io/tags/android/</link>
+        <description>Android - Tag - Runnlin&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
+            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 24 Aug 2022 20:38:30 &#43;0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/android/" rel="self" type="application/rss+xml" /><item>
+    <title>Android 音频硬编解码知多少</title>
+    <link>https://runnlin.github.io/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/</link>
+    <pubDate>Wed, 24 Aug 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/</guid>
+    <description><![CDATA[一、使用 AAC 音频硬解码的背景因为各种原因，在日常的开发中开发者或多或少都要接触一些音视频编解码相关的功能，所以有时候选择编解码工具就变得尤为重]]></description>
+</item>
+<item>
+    <title>Android性能优化总结</title>
+    <link>https://runnlin.github.io/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/</link>
+    <pubDate>Thu, 28 Jul 2022 09:35:20 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/</guid>
+    <description><![CDATA[性能的优化是一个老生常谈的点，也是一个比较重要的点。做过一点性能优化的工作，现在对工作中的优化点做一个总结。如有错误，还请指正。 在平时的优化]]></description>
+</item>
+<item>
+    <title>Android广播原理分析</title>
+    <link>https://runnlin.github.io/android%E5%B9%BF%E6%92%AD%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</link>
+    <pubDate>Wed, 27 Jul 2022 20:12:03 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android%E5%B9%BF%E6%92%AD%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[一、 Boradcast 前题概要 1、广播分为前台广播和后台广播 发送前台广播 (Intent.FLAG_RECEIVER_FOREGROUND 标志) 1 2 3 val intent = Intent(Intent.ACTION_SHUTDOWN) intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND) sendBroadcast(intent) 默认发送的是后台广播 1 2 val intent = Intent(Intent.ACTION_SHUTDOWN) sendBroadcast(intent) 在 ActivityManagerService 中，前台广播和后台广]]></description>
+</item>
+<item>
+    <title>Android MediaMetadataRetriever 用法介绍</title>
+    <link>https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Mon, 16 May 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能]]></description>
+</item>
+<item>
+    <title>init 工作流程简述</title>
+    <link>https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
+    <pubDate>Thu, 28 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</guid>
+    <description><![CDATA[Init 工作流程简述 init的工作流程可以精简为以下四点： 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作]]></description>
+</item>
+<item>
+    <title>Android Vold分析</title>
+    <link>https://runnlin.github.io/android-vold%E5%88%86%E6%9E%90/</link>
+    <pubDate>Mon, 25 Apr 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-vold%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[Android Vold分析 当接收到UEvent消息后，除了APP层可能会进行额外的逻辑以外，其中一个很重要的组件Vold会进行重要的挂载操作，可以说没有]]></description>
+</item>
+<item>
+    <title>Android MediaScannerService</title>
+    <link>https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/</guid>
+    <description><![CDATA[MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。 MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） MediaScannerService 是 Android 平台]]></description>
+</item>
+<item>
+    <title>Android 四大组件综述</title>
+    <link>https://runnlin.github.io/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/</guid>
+    <description><![CDATA[四大组件综述 frameworks/base/services/core/java/com/android/server/am/ - ActivityManagerService.java - ProcessRecord - ActivityStackSupervisor.java - ActivityStack.java - ActiveServices - BroadcastQueue 1. 进程管理 描述进程的数据结构：ProcessRecord 管理进程的核心模块：AMS 四大组件在Andro]]></description>
+</item>
+<item>
+    <title>Android 大型项目LocalMedia-USB模块学习笔记</title>
+    <link>https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[整体架构 Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供]]></description>
+</item>
+<item>
+    <title>Android 深入浅出之 Binder 机制（转载）</title>
+    <link>https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/</guid>
+    <description><![CDATA[Android 深入浅出之 Binder 机制 一 说明 Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder 的话，在很大]]></description>
+</item>
+</channel>
+</rss>
