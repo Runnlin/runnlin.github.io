@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>深入理解构建 MediaCodec 列表：4-software Codec2 服务启动 - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="深入理解构建 MediaCodec 列表：4-software Codec2 服务启动" />
+<meta property="og:description" content="想要支持 Codec2 框架，需要实现其要求的 hal 接口，并实现相应的支撑服务。这里以源码中实现 software Codec2 服务启动为例进行分析。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-02-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-02-09T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
+
+<meta name="twitter:title" content="深入理解构建 MediaCodec 列表：4-software Codec2 服务启动"/>
+<meta name="twitter:description" content="想要支持 Codec2 框架，需要实现其要求的 hal 接口，并实现相应的支撑服务。这里以源码中实现 software Codec2 服务启动为例进行分析。"/>
+<meta name="application-name" content="Runnlin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" /><link rel="prev" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/" /><link rel="next" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "深入理解构建 MediaCodec 列表：4-software Codec2 服务启动",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  3712 ,
+        "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="auto" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/" title="about is about"> About </a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="about is about">About</a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：4-software Codec2 服务启动</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3712 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;8 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>想要支持 Codec2 <a href="https://so.csdn.net/so/search?q=%E6%A1%86%E6%9E%B6&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">框架</a>，需要实现其要求的 hal 接口，并实现相应的支撑服务。这里以源码中实现 software Codec2 服务启动为例进行分析。</p>
+<p>software Codec2 服务启动位于 CodecServiceRegistrant.cpp 中。在 rk3399 Android 10 平台上可以看到启动 Log：</p>
+<p>CodecServiceRegistrant: Creating software Codec2 service…</p>
+<p>CodecServiceRegistrant: Software Codec2 service created.</p>
+<p>可是 RegisterCodecServices() 并不是 main 函数，说明这并不是代码起点。</p>
+<ol>
+<li>调用 android::GetCodec2PlatformComponentStore() 创建 C2PlatformComponentStore 对象；</li>
+<li>将 C2PlatformComponentStore 对象作为入参构建 utils::ComponentStore 对象。</li>
+</ol>
+<p>frameworks/av/services/mediacodec/registrant/CodecServiceRegistrant.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">void</span> RegisterCodecServices() {
+</span></span><span style="display:flex;"><span>    using namespace <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>hardware<span style="color:#f92672">::</span>media<span style="color:#f92672">::</span>c2<span style="color:#f92672">::</span>V1_0;
+</span></span><span style="display:flex;"><span>    LOG(INFO) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Creating software Codec2 service...&#34;</span>;
+</span></span><span style="display:flex;"><span>    android<span style="color:#f92672">::</span>sp<span style="color:#f92672">&lt;</span>IComponentStore<span style="color:#f92672">&gt;</span> store <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>        new utils<span style="color:#f92672">::</span>ComponentStore(
+</span></span><span style="display:flex;"><span>                android<span style="color:#f92672">::</span>GetCodec2PlatformComponentStore());
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (store <span style="color:#f92672">==</span> nullptr) {
+</span></span><span style="display:flex;"><span>        LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;Cannot create software Codec2 service.&#34;</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (store<span style="color:#f92672">-&gt;</span>registerAsService(<span style="color:#e6db74">&#34;software&#34;</span>) <span style="color:#f92672">!=</span> android<span style="color:#f92672">::</span>OK) {
+</span></span><span style="display:flex;"><span>            LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;Cannot register software Codec2 service.&#34;</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            LOG(INFO) <span style="color:#f92672">&lt;&lt;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;Software Codec2 service created.&#34;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重点来了，main_swcodecservice.cpp main 函数中发现了启动 software Codec2 service 的调用，启动就是从这里开始的。</p>
+<p>frameworks/av/services/mediacodec/main_swcodecservice.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">void</span> RegisterCodecServices();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc __unused, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> argv)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    LOG(INFO) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;media swcodec service starting&#34;</span>;
+</span></span><span style="display:flex;"><span>    signal(SIGPIPE, SIG_IGN);
+</span></span><span style="display:flex;"><span>    SetUpMinijail(kSystemSeccompPolicyPath, kVendorSeccompPolicyPath);
+</span></span><span style="display:flex;"><span>    strcpy(argv[<span style="color:#ae81ff">0</span>], <span style="color:#e6db74">&#34;media.swcodec&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>hardware<span style="color:#f92672">::</span>configureRpcThreadpool(<span style="color:#ae81ff">64</span>, false);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    RegisterCodecServices();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">::</span>android<span style="color:#f92672">::</span>hardware<span style="color:#f92672">::</span>joinRpcThreadpool();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>android::GetCodec2PlatformComponentStore() 函数定义在 C2PlatformSupport.h 中。注释解释这个函数的作用是返回平台组件仓库（store），如果返回为空说明获取失败了。</p>
+<p>frameworks/av/media/codec2/vndk/include/C2PlatformSupport.h</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>namespace android {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Returns the platform component store.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * \retval nullptr if the platform component store could not be obtained
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> GetCodec2PlatformComponentStore();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>创建一个指向 C2ComponentStore 的“弱”指针；</li>
+<li>“弱”指针上调用 C2ComponentStore lock() 获取对象；</li>
+<li>如果上一步无法获取，调用 C2PlatformComponentStore 构造函数构造 C2PlatformComponentStore 对象。</li>
+</ol>
+<p>第一次启动务必会调用到 C2PlatformComponentStore 无参构造器。</p>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> GetCodec2PlatformComponentStore() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>mutex mutex;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>weak_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> platformStore;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(mutex);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> store <span style="color:#f92672">=</span> platformStore.lock();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (store <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        store <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>make_shared<span style="color:#f92672">&lt;</span>C2PlatformComponentStore<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>        platformStore <span style="color:#f92672">=</span> store;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> store;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>初始化了三个变量 mVisited、mReflector 和 mInterface。然后将各种 so 路径添加到 std::map&lt;C2String, ComponentLoader&gt;。不难看出这些 so 就是各种软编解码具体实现。</p>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>C2PlatformComponentStore<span style="color:#f92672">::</span>C2PlatformComponentStore()
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">:</span> mVisited(false),
+</span></span><span style="display:flex;"><span>      mReflector(std<span style="color:#f92672">::</span>make_shared<span style="color:#f92672">&lt;</span>C2ReflectorHelper<span style="color:#f92672">&gt;</span>()),
+</span></span><span style="display:flex;"><span>      mInterface(mReflector) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">auto</span> emplace <span style="color:#f92672">=</span> [this](<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>libPath) {
+</span></span><span style="display:flex;"><span>        mComponents.emplace(libPath, libPath);
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// TODO: move this also into a .so so it can be updated
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_aacdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_aacenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_amrnbdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_amrnbenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_amrwbdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_amrwbenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_av1dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_avcdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_avcenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_flacdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_flacenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_g711alawdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_g711mlawdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_gsmdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_h263dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_h263enc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_hevcdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_hevcenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_mp3dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_mpeg2dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_mpeg4dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_mpeg4enc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_opusdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_opusenc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_rawdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_vorbisdec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_vp8dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_vp8enc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_vp9dec.so&#34;</span>);
+</span></span><span style="display:flex;"><span>    emplace(<span style="color:#e6db74">&#34;libcodec2_soft_vp9enc.so&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>构造 CachedConfigurable 对象赋值给 mConfigurable；</li>
+<li>调用 android::GetCodec2PlatformComponentStore() 获取指向 C2ComponentStore 的共享指针；</li>
+<li>调用 SetPreferredCodec2ComponentStore(…) 如果平台分配器 store 是活的使用 C2ComponentStore 共享指针进行更新；</li>
+<li>调用 C2ComponentStore getParamReflector() 检索结构描述符；</li>
+<li>CachedConfigurable 对象调用其 init(…) 函数初始化。</li>
+</ol>
+<p>frameworks/av/media/codec2/hidl/1.0/utils/ComponentStore.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>ComponentStore<span style="color:#f92672">::</span>ComponentStore(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;&amp;</span> store)
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">:</span> mConfigurable{new CachedConfigurable(std<span style="color:#f92672">::</span>make_unique<span style="color:#f92672">&lt;</span>StoreIntf<span style="color:#f92672">&gt;</span>(store))},
+</span></span><span style="display:flex;"><span>        mStore{store} {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> platformStore <span style="color:#f92672">=</span> android<span style="color:#f92672">::</span>GetCodec2PlatformComponentStore();
+</span></span><span style="display:flex;"><span>    SetPreferredCodec2ComponentStore(store);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Retrieve struct descriptors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    mParamReflector <span style="color:#f92672">=</span> mStore<span style="color:#f92672">-&gt;</span>getParamReflector();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Retrieve supported parameters from store
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    mInit <span style="color:#f92672">=</span> mConfigurable<span style="color:#f92672">-&gt;</span>init(this);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>CachedConfigurable 构造函数非常简单，仅仅将入参 ConfigurableC2Intf（实际为指向 StoreIntf 的结构体）（通用 Codec 2.0 接口包装器） 指针用来初始化其 mIntf 字段。</p>
+<p>frameworks/av/media/codec2/hidl/1.0/utils/Configurable.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>CachedConfigurable<span style="color:#f92672">::</span>CachedConfigurable(
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>ConfigurableC2Intf<span style="color:#f92672">&gt;&amp;&amp;</span> intf)
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">:</span> mIntf{std<span style="color:#f92672">::</span>move(intf)} {
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>使用入参更新全局变量 gPreferredComponentStore，实际是一个 std::shared_ptr 指针；</li>
+<li>如果平台分配器 store 是活的，使用 C2ComponentStore 共享指针进行更新。</li>
+</ol>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>namespace {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>mutex gPreferredComponentStoreMutex;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> gPreferredComponentStore;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>mutex gPlatformAllocatorStoreMutex;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>weak_ptr<span style="color:#f92672">&lt;</span>C2PlatformAllocatorStoreImpl<span style="color:#f92672">&gt;</span> gPlatformAllocatorStore;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>......
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> SetPreferredCodec2ComponentStore(std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> componentStore) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>mutex mutex;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(mutex); <span style="color:#75715e">// don&#39;t interleve set-s
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// update preferred store
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(gPreferredComponentStoreMutex);
+</span></span><span style="display:flex;"><span>        gPreferredComponentStore <span style="color:#f92672">=</span> componentStore;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// update platform allocator&#39;s store as well if it is alive
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2PlatformAllocatorStoreImpl<span style="color:#f92672">&gt;</span> allocatorStore;
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(gPlatformAllocatorStoreMutex);
+</span></span><span style="display:flex;"><span>        allocatorStore <span style="color:#f92672">=</span> gPlatformAllocatorStore.lock();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (allocatorStore) {
+</span></span><span style="display:flex;"><span>        allocatorStore<span style="color:#f92672">-&gt;</span>setComponentStore(componentStore);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>使用入参更新 _mComponentStore 字段；</li>
+<li>调用 UseComponentStoreForIonAllocator() 函数，给 Ion 分配器使用组件 store。</li>
+</ol>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> C2PlatformAllocatorStoreImpl<span style="color:#f92672">::</span>setComponentStore(std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> store) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// technically this set lock is not needed, but is here for safety in case we add more
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// getter orders
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(_mComponentStoreSetLock);
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(_mComponentStoreReadLock);
+</span></span><span style="display:flex;"><span>        _mComponentStore <span style="color:#f92672">=</span> store;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2AllocatorIon<span style="color:#f92672">&gt;</span> allocator;
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(gIonAllocatorMutex);
+</span></span><span style="display:flex;"><span>        allocator <span style="color:#f92672">=</span> gIonAllocator.lock();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (allocator) {
+</span></span><span style="display:flex;"><span>        UseComponentStoreForIonAllocator(allocator, store);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>minUsage 赋初值等于 0，maxUsage 初值则是结合了 C2MemoryUsage::CPU_READ 和 C2MemoryUsage::CPU_WRITE 的期望值；</li>
+<li>调用 getpagesize() 获取页面大小赋值给 blockSize；</li>
+<li>构建一个查询条件容器（包括 usage 和 capacity） std::vector，调用 C2ComponentStore querySupportedValues_sm(…) 进行查询；</li>
+<li>根据查询结果更新 minUsage、maxUsage 和 blockSize；</li>
+<li>构造一个函数指针 C2AllocatorIon::UsageMapperFn mapper 指向匿名函数，匿名函数的作用是调用 C2ComponentStore config_sm(…) 进行配置 C2StoreIonUsageInfo（此结构内部包含了最小和最大使用量以及块大小 ），配置成功后更新匿名函数入参 align、heapMask 和 flags；</li>
+<li>调用 C2AllocatorIon setUsageMapper(…) 设置 Mapper。</li>
+</ol>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">UseComponentStoreForIonAllocator</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2AllocatorIon<span style="color:#f92672">&gt;</span> allocator,
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> store) {
+</span></span><span style="display:flex;"><span>    C2AllocatorIon<span style="color:#f92672">::</span>UsageMapperFn mapper;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint64_t</span> minUsage <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint64_t</span> maxUsage <span style="color:#f92672">=</span> C2MemoryUsage(C2MemoryUsage<span style="color:#f92672">::</span>CPU_READ, C2MemoryUsage<span style="color:#f92672">::</span>CPU_WRITE).expected;
+</span></span><span style="display:flex;"><span>    size_t blockSize <span style="color:#f92672">=</span> getpagesize();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// query min and max usage as well as block size via supported values
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    C2StoreIonUsageInfo usageInfo;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>C2FieldSupportedValuesQuery<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        C2FieldSupportedValuesQuery<span style="color:#f92672">::</span>Possible(C2ParamField<span style="color:#f92672">::</span>Make(usageInfo, usageInfo.usage)),
+</span></span><span style="display:flex;"><span>        C2FieldSupportedValuesQuery<span style="color:#f92672">::</span>Possible(C2ParamField<span style="color:#f92672">::</span>Make(usageInfo, usageInfo.capacity)),
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    c2_status_t res <span style="color:#f92672">=</span> store<span style="color:#f92672">-&gt;</span>querySupportedValues_sm(query);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (res <span style="color:#f92672">==</span> C2_OK) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (query[<span style="color:#ae81ff">0</span>].status <span style="color:#f92672">==</span> C2_OK) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> C2FieldSupportedValues <span style="color:#f92672">&amp;</span>fsv <span style="color:#f92672">=</span> query[<span style="color:#ae81ff">0</span>].values;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (fsv.type <span style="color:#f92672">==</span> C2FieldSupportedValues<span style="color:#f92672">::</span>FLAGS <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>fsv.values.empty()) {
+</span></span><span style="display:flex;"><span>                minUsage <span style="color:#f92672">=</span> fsv.values[<span style="color:#ae81ff">0</span>].u64;
+</span></span><span style="display:flex;"><span>                maxUsage <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (C2Value<span style="color:#f92672">::</span>Primitive v : fsv.values) {
+</span></span><span style="display:flex;"><span>                    maxUsage <span style="color:#f92672">|=</span> v.u64;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (query[<span style="color:#ae81ff">1</span>].status <span style="color:#f92672">==</span> C2_OK) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> C2FieldSupportedValues <span style="color:#f92672">&amp;</span>fsv <span style="color:#f92672">=</span> query[<span style="color:#ae81ff">1</span>].values;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (fsv.type <span style="color:#f92672">==</span> C2FieldSupportedValues<span style="color:#f92672">::</span>RANGE <span style="color:#f92672">&amp;&amp;</span> fsv.range.step.u32 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>                blockSize <span style="color:#f92672">=</span> fsv.range.step.u32;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        mapper <span style="color:#f92672">=</span> [store](C2MemoryUsage usage, size_t capacity,
+</span></span><span style="display:flex;"><span>                         size_t <span style="color:#f92672">*</span>align, <span style="color:#66d9ef">unsigned</span> <span style="color:#f92672">*</span>heapMask, <span style="color:#66d9ef">unsigned</span> <span style="color:#f92672">*</span>flags) <span style="color:#f92672">-&gt;</span> c2_status_t {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (capacity <span style="color:#f92672">&gt;</span> UINT32_MAX) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> C2_BAD_VALUE;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            C2StoreIonUsageInfo usageInfo <span style="color:#f92672">=</span> { usage.expected, capacity };
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>C2SettingResult<span style="color:#f92672">&gt;&gt;</span> failures; <span style="color:#75715e">// TODO: remove
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            c2_status_t res <span style="color:#f92672">=</span> store<span style="color:#f92672">-&gt;</span>config_sm({<span style="color:#f92672">&amp;</span>usageInfo}, <span style="color:#f92672">&amp;</span>failures);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (res <span style="color:#f92672">==</span> C2_OK) {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">*</span>align <span style="color:#f92672">=</span> usageInfo.minAlignment;
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">*</span>heapMask <span style="color:#f92672">=</span> usageInfo.heapMask;
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">*</span>flags <span style="color:#f92672">=</span> usageInfo.allocFlags;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    allocator<span style="color:#f92672">-&gt;</span>setUsageMapper(mapper, minUsage, maxUsage, blockSize);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据注释不难理解 UsageMapperFn 的作用，分配器使用的 usage mapper 函数，函数入参：(usage, capacity) ，函数返回值 ：(align, heapMask, flags)。容量与默认块大小（默认页大小）对齐，以减少缓存开销。</p>
+<p>setUsageMapper(…) 的作用是更新用于后续新分配的 usage mapper，以及支持的最小和最大 usage 掩码和用于 mapper 的默认块大小。</p>
+<p>frameworks/av/media/codec2/vndk/include/C2AllocatorIon.h</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>namespace android {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class C2AllocatorIon : public C2Allocator {
+</span></span><span style="display:flex;"><span>public:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Usage mapper function used by the allocator
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//   (usage, capacity) =&gt; (align, heapMask, flags)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// capacity is aligned to the default block-size (defaults to page size) to reduce caching
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// overhead
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">::</span>function<span style="color:#f92672">&lt;</span>c2_status_t(C2MemoryUsage, size_t,
+</span></span><span style="display:flex;"><span>                      <span style="color:#75715e">/* =&gt; */</span> size_t<span style="color:#f92672">*</span>, <span style="color:#66d9ef">unsigned</span><span style="color:#f92672">*</span>, <span style="color:#66d9ef">unsigned</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&gt;</span> UsageMapperFn;
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Updates the usage mapper for subsequent new allocations, as well as the supported
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * minimum and maximum usage masks and default block-size to use for the mapper.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * \param mapper this method is called to map Codec 2.0 buffer usage to ion flags
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *        required by the ion device
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * \param minUsage minimum buffer usage required for supported allocations (defaults to 0)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * \param maxUsage maximum buffer usage supported by the ion allocator (defaults to SW_READ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *        | SW_WRITE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * \param blockSize alignment used prior to calling |mapper| for the buffer capacity.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *        This also helps reduce the size of cache required for caching mapper results.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *        (defaults to the page size)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> setUsageMapper(
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> UsageMapperFn <span style="color:#f92672">&amp;</span>mapper, <span style="color:#66d9ef">uint64_t</span> minUsage, <span style="color:#66d9ef">uint64_t</span> maxUsage, <span style="color:#66d9ef">uint64_t</span> blockSize);
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>不难得出 maxUsage = C2MemoryUsage(C2MemoryUsage::CPU_READ, C2MemoryUsage::CPU_WRITE).expected，实际为 <strong>0x001 | 0x100 = 0x101</strong>。</p>
+<p>frameworks/av/media/codec2/core/include/C2BufferBase.h</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> C2MemoryUsage {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// public:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Buffer read usage.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">enum</span> read_t : <span style="color:#66d9ef">uint64_t</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/** Buffer is read by the CPU. */</span>
+</span></span><span style="display:flex;"><span>        CPU_READ        <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>        ......
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Buffer write usage.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">enum</span> write_t : <span style="color:#66d9ef">uint64_t</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/** Buffer is writted to by the CPU. */</span>
+</span></span><span style="display:flex;"><span>        CPU_WRITE        <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>        ......
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** Create a usage from separate consumer and producer usage mask. \deprecated */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">inline</span> C2MemoryUsage(<span style="color:#66d9ef">uint64_t</span> consumer, <span style="color:#66d9ef">uint64_t</span> producer)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">:</span> expected(consumer <span style="color:#f92672">|</span> producer) { }
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint64_t</span> expected; <span style="color:#75715e">// expected buffer usage
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于是 android 10 系统所以实际一定满足 &gt;= <strong>ANDROID_API_L</strong> 的条件。</p>
+<p>bionic/libc/include/unistd.h</p>
+<p>直接返回了 PAGE_SIZE，PAGE_SIZE 定义在 /sys/user.h 下，其值等于 4096，也就是 4KB 页面大小。至于这个地方为啥没使用 sysconf(3) 系统调用，注释中做了说明是为了防止静态库变的臃肿，因为会把 stdio 相关代码合进来。</p>
+<p>bionic/libc/bionic/getpagesize.cpp</p>
+<p>bionic/libc/include/sys/user.h</p>
+<p>根据前面的分析，C2ComponentStore 实际指向 C2PlatformComponentStore。</p>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c2_status_t C2PlatformComponentStore<span style="color:#f92672">::</span>querySupportedValues_sm(
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>C2FieldSupportedValuesQuery<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>fields) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> mInterface.querySupportedValues(fields, C2_MAY_BLOCK);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>mInterface 初始化传入了指向 C2ReflectorHelper 的共享指针。具体 Interface 结构体构造过程不再展开。</p>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>class C2PlatformComponentStore : public C2ComponentStore {
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    private:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> Interface : public C2InterfaceHelper {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2StoreIonUsageInfo<span style="color:#f92672">&gt;</span> mIonUsageInfo;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Interface(std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ReflectorHelper<span style="color:#f92672">&gt;</span> reflector)
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">:</span> C2InterfaceHelper(reflector) {
+</span></span><span style="display:flex;"><span>            setDerivedInstance(this);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">struct</span> Setter {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">static</span> C2R setIonUsage(<span style="color:#66d9ef">bool</span> <span style="color:#75715e">/* mayBlock */</span>, C2P<span style="color:#f92672">&lt;</span>C2StoreIonUsageInfo<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>me) {
+</span></span><span style="display:flex;"><span>                    me.set().heapMask <span style="color:#f92672">=</span> <span style="color:#f92672">~</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                    me.set().allocFlags <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                    me.set().minAlignment <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> C2R<span style="color:#f92672">::</span>Ok();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            addParameter(
+</span></span><span style="display:flex;"><span>                DefineParam(mIonUsageInfo, <span style="color:#e6db74">&#34;ion-usage&#34;</span>)
+</span></span><span style="display:flex;"><span>                .withDefault(new C2StoreIonUsageInfo())
+</span></span><span style="display:flex;"><span>                .withFields({
+</span></span><span style="display:flex;"><span>                    C2F(mIonUsageInfo, usage).flags({C2MemoryUsage<span style="color:#f92672">::</span>CPU_READ <span style="color:#f92672">|</span> C2MemoryUsage<span style="color:#f92672">::</span>CPU_WRITE}),
+</span></span><span style="display:flex;"><span>                    C2F(mIonUsageInfo, capacity).inRange(<span style="color:#ae81ff">0</span>, UINT32_MAX, <span style="color:#ae81ff">1024</span>),
+</span></span><span style="display:flex;"><span>                    C2F(mIonUsageInfo, heapMask).any(),
+</span></span><span style="display:flex;"><span>                    C2F(mIonUsageInfo, allocFlags).flags({}),
+</span></span><span style="display:flex;"><span>                    C2F(mIonUsageInfo, minAlignment).equalTo(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>                })
+</span></span><span style="display:flex;"><span>                .withSetter(Setter<span style="color:#f92672">::</span>setIonUsage)
+</span></span><span style="display:flex;"><span>                .build());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>回到主题，Interface querySupportedValues(…) 实际是调用父类 C2InterfaceHelper querySupportedValues(…) 实现的。同样 C2PlatformComponentStore::config_sm(…) 内部调用 Interface config(…) 实现，其实也是调用父类 C2InterfaceHelper config(…) 。</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c2_status_t C2PlatformComponentStore<span style="color:#f92672">::</span>config_sm(
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>C2Param<span style="color:#f92672">*&gt;</span> <span style="color:#f92672">&amp;</span>params,
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>C2SettingResult<span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> failures) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> mInterface.config(params, C2_MAY_BLOCK, failures);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此处直接返回了 mReflector，这个字段是在 C2PlatformComponentStore 构造器中初始化的，其为指向 C2ReflectorHelper（实现参数反射，这个类是动态的，设计成由多个接口共享。这允许接口根据需要添加结构描述符） 的指针。</p>
+<p>最后来分析一番 CachedConfigurable 对象调用其 init(…) 函数初始化。</p>
+<p>主要功能为从存储区检索支持的参数。前面分析道 mIntf 指向 StoreIntf 结构体，所以此处调用实际为调用 StoreIntf querySupportedParams(…) 函数，最后调用 ComponentStore validateSupportedParams(…) 校验支持参数。</p>
+<p>frameworks/av/media/codec2/hidl/1.0/utils/Configurable.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c2_status_t CachedConfigurable<span style="color:#f92672">::</span>init(ComponentStore<span style="color:#f92672">*</span> store) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 从存储区检索支持的参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    c2_status_t init <span style="color:#f92672">=</span> mIntf<span style="color:#f92672">-&gt;</span>querySupportedParams(<span style="color:#f92672">&amp;</span>mSupportedParams);
+</span></span><span style="display:flex;"><span>    c2_status_t validate <span style="color:#f92672">=</span> store<span style="color:#f92672">-&gt;</span>validateSupportedParams(mSupportedParams);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> init <span style="color:#f92672">==</span> C2_OK <span style="color:#f92672">?</span> C2_OK : validate;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>StoreIntf querySupportedParams(…) 分发给了 C2ComponentStore querySupportedParams_nb(…) 方法。</p>
+<p>frameworks/av/media/codec2/hidl/1.0/utils/ComponentStore.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> StoreIntf : public ConfigurableC2Intf {
+</span></span><span style="display:flex;"><span>    StoreIntf(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;&amp;</span> store)
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">:</span> ConfigurableC2Intf{store <span style="color:#f92672">?</span> store<span style="color:#f92672">-&gt;</span>getName() <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#ae81ff">0</span>},
+</span></span><span style="display:flex;"><span>            mStore{store} {
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    virtual c2_status_t querySupportedParams(
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> params
+</span></span><span style="display:flex;"><span>            ) <span style="color:#66d9ef">const</span> override {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> mStore<span style="color:#f92672">-&gt;</span>querySupportedParams_nb(params);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>protected:
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ComponentStore<span style="color:#f92672">&gt;</span> mStore;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>mInterface 是在 C2PlatformComponentStore 构造器中初始化的，mInterface 是一个 Interface 结构（继承自 C2InterfaceHelper），所以调用其 querySupportedParams(…) 函数实际实现在其父类 C2InterfaceHelper 中。</p>
+<p>frameworks/av/media/codec2/vndk/C2Store.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c2_status_t C2PlatformComponentStore<span style="color:#f92672">::</span>querySupportedParams_nb(
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> params) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> mInterface.querySupportedParams(params);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>C2InterfaceHelper::querySupportedParams(…) 内部仅仅调用了 C2InterfaceHelper::FactoryImpl querySupportedParams(…) 方法。</p>
+<p>frameworks/av/media/codec2/vndk/util/C2InterfaceHelper.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c2_status_t C2InterfaceHelper<span style="color:#f92672">::</span>querySupportedParams(
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> params) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(mMutex);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> _mFactory<span style="color:#f92672">-&gt;</span>querySupportedParams(params);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>遍历 _mParams（std::map&lt;ParamRef, std::shared_ptr&gt;）将其 value 转化为 C2ParamDescriptor 添加到入参提供的容器。</p>
+<p>frameworks/av/media/codec2/vndk/util/C2InterfaceHelper.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> C2InterfaceHelper<span style="color:#f92672">::</span>FactoryImpl : public C2InterfaceHelper<span style="color:#f92672">::</span>Factory {
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>public:
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>    c2_status_t querySupportedParams(
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> params) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>it : _mParams) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// TODO: change querySupportedParams signature?
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            params<span style="color:#f92672">-&gt;</span>push_back(
+</span></span><span style="display:flex;"><span>                    std<span style="color:#f92672">::</span>const_pointer_cast<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;</span>(it.second<span style="color:#f92672">-&gt;</span>getDescriptor()));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// TODO: handle errors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> C2_OK;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    ......
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>逐个遍历入参容器中的 C2ParamDescriptor，将 map 中不存在的 CoreIndex-C2ParamDescriptor 结构对插入到 map（std::map&lt;C2Param::CoreIndex, std::shared_ptr&gt;）中。</p>
+<p>frameworks/av/media/codec2/hidl/1.0/utils/ComponentStore.cpp</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c2_status_t ComponentStore<span style="color:#f92672">::</span>validateSupportedParams(
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;&gt;&amp;</span> params) {
+</span></span><span style="display:flex;"><span>    c2_status_t res <span style="color:#f92672">=</span> C2_OK;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2ParamDescriptor<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>desc : params) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>desc) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// All descriptors should be valid
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            res <span style="color:#f92672">=</span> res <span style="color:#f92672">?</span> res : C2_BAD_VALUE;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        C2Param<span style="color:#f92672">::</span>CoreIndex coreIndex <span style="color:#f92672">=</span> desc<span style="color:#f92672">-&gt;</span>index().coreIndex();
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&gt;</span> lock(mStructDescriptorsMutex);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">auto</span> it <span style="color:#f92672">=</span> mStructDescriptors.find(coreIndex);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (it <span style="color:#f92672">==</span> mStructDescriptors.end()) {
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>C2StructDescriptor<span style="color:#f92672">&gt;</span> structDesc <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>                    mParamReflector<span style="color:#f92672">-&gt;</span>describe(coreIndex);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>structDesc) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// All supported params must be described
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                res <span style="color:#f92672">=</span> C2_BAD_INDEX;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            mStructDescriptors.insert({ coreIndex, structDesc });
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-02-09</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A84-software-codec2-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/codec/">Codec</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/">深入理解构建 MediaCodec 列表</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A85-%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8buildmediacode/" class="prev" rel="prev" title="深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>深入理解构建 MediaCodec 列表：5-构建 MediaCodec 列表：buildMediaCode</a>
+            <a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" class="next" rel="next" title="深入理解构建 MediaCodec 列表：3-Codecservice 启动">深入理解构建 MediaCodec 列表：3-Codecservice 启动<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-PJ6GG2PYMB', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-PJ6GG2PYMB" async></script></body>
+</html>

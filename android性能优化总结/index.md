@@ -1,7 +1,6 @@
 # Android性能优化总结
 
 
-> 性能的优化是一个老生常谈的点，也是一个比较重要的点。做过一点性能优化的工作，现在对工作中的优化点做一个总结。如有错误，还请指正。有哪些方面需要优化在平时的优化过程中我们需要从哪几个点来优化呢？
 
 性能的优化是一个老生常谈的点，也是一个比较重要的点。做过一点性能优化的工作，现在对工作中的优化点做一个总结。如有错误，还请指正。
 
@@ -61,7 +60,6 @@ android {
         resConfigs "zh" 
     }
 }
-复制代码
 ```
 
 如何减少 so 库资源大小
@@ -76,7 +74,6 @@ release 包的 so 中移除调试符号。可以使用 Android NDK 中提供的 
 ```
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
-复制代码
 ```
 
 2. 别人编译的 so
@@ -99,7 +96,6 @@ android {
         }
     }
 }
-复制代码
 ```
 
 各个平台的差别如下：
@@ -154,7 +150,6 @@ ThisTime: 770
 TotalTime: 770
 WaitTime: 848
 Complete
-复制代码
 ```
 
 **ThisTime**: 表示最后一个 Activity 启动时间
@@ -205,7 +200,6 @@ class Debug {
 
     }
 }
-复制代码
 ```
 
 利用 Debug 类的这两个方法，可以生成一个 `trace` 文件，这个 `trace` 文件，可以直接在 `AS` 里面打开，可以看到从 `startMethodTracingSampling` 到 `startMethodTracing` 过程中的方法调用等信息，也可以较好的分析启动问题。
@@ -269,14 +263,12 @@ public void uncaughtException(Thread t, Throwable e) {
             }
         }
     }
-复制代码
 ```
 
 查阅代码发现，发现 `ThreadGroup` 最终会给 `Thread` 的 `defaultUncaughtExceptionHandler` 处理。
 
 ```
 private static volatile UncaughtExceptionHandler defaultUncaughtExceptionHandler;
-复制代码
 ```
 
 上面的代码显示：`Thread` 的 `defaultUncaughtExceptionHandler` 是 `Thread` 类的一个静态变量。
@@ -296,7 +288,6 @@ Java 层如何收集未处理的异常的信息说过了，我们来看看 Nativ
 ```
 #include <signal.h> 
 int sigaction(int signum,const struct sigaction *act,struct sigaction *oldact));
-复制代码
 ```
 
 * signum：代表信号编码，可以是除 SIGKILL 及 SIGSTOP 外的任何一个特定有效的信号，如果为这两个信号定义自己的处理函数，将导致信号安装错误。
@@ -389,7 +380,6 @@ dependencies {
   // debugImplementation because LeakCanary should only run in debug builds.
   debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }
-复制代码
 ```
 
 leakcanary 比较核心的一个原理就是利用了弱引用的一个特性，这个特性就是：

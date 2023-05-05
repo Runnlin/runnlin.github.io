@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Android MediaMetadataRetriever 用法介绍 - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="Android MediaMetadataRetriever 用法介绍" />
+<meta property="og:description" content="Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-05-16T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
+
+<meta name="twitter:title" content="Android MediaMetadataRetriever 用法介绍"/>
+<meta name="twitter:description" content="Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能"/>
+<meta name="application-name" content="Runnlin&#39;s Blog">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/" /><link rel="prev" href="https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/" /><link rel="next" href="https://runnlin.github.io/h264_is_magic/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Android MediaMetadataRetriever 用法介绍",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/android-mediametadataretriever%E4%BB%8B%E7%BB%8D\/"
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, Media","wordcount":  3023 ,
+        "url": "https:\/\/runnlin.github.io\/android-mediametadataretriever%E4%BB%8B%E7%BB%8D\/","datePublished": "2022-05-16T00:00:00+00:00","dateModified": "2022-05-16T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="auto" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/" title="about is about"> About </a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="about is about">About</a><a class="menu-item" href="https://github.com/Runnlin" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android MediaMetadataRetriever 用法介绍</h1><h2 class="single-subtitle">MediaMetadataRetriever</h2><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-05-16">2022-05-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3023 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;7 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mediametadataretriever类简单介绍">MediaMetadataRetriever类简单介绍</a></li>
+    <li><a href="#mediametadataretriever常量以及属性进行简单介绍">MediaMetadataRetriever常量以及属性进行简单介绍</a></li>
+    <li><a href="#mediametadataretriever-获取这个对象的方法">MediaMetadataRetriever 获取这个对象的方法</a></li>
+    <li><a href="#mediametadataretriever中的使用方法进行详细介绍">MediaMetadataRetriever中的使用方法进行详细介绍</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="android-medataretriever介绍">Android MedataRetriever介绍</h1>
+<blockquote>
+<p>MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能截取视频的第一帧获取视频长宽等等，通过它能展示一个媒体文件几乎所有的信息</p>
+</blockquote>
+<h2 id="mediametadataretriever类简单介绍">MediaMetadataRetriever类简单介绍</h2>
+<ol>
+<li>属于在android api的那个包下：<code>android.media.MediaMetadataRetriever</code></li>
+<li>类简单介绍： MediaMetadataRetriever类提供了用于从输入媒体文件检索帧和元数据的统一接口。</li>
+<li>这个是android提供的类，用来获取本地和网络media相关文件的信息</li>
+</ol>
+<h2 id="mediametadataretriever常量以及属性进行简单介绍">MediaMetadataRetriever常量以及属性进行简单介绍</h2>
+<ol>
+<li>METADATA_KEY_ALBUM ：检索数据源的专辑标题信息的元数据键。</li>
+<li>METADATA_KEY_ALBUMARTIST： 检索与数据源相关的表演者或艺术家的信息的元数据键。</li>
+<li>METADATA_KEY_ARTIST：检索有关数据源的艺术家的信息的元数据键。</li>
+<li>METADATA_KEY_AUTHOR：检索有关数据源作者的信息的元数据键 。</li>
+<li>METADATA_KEY_BITRATE：此键检索平均比特率（以比特/秒），如果可用的话。</li>
+<li>METADATA_KEY_CD_TRACK_NUMBER：元数据关键字，用于检索描述原始数据记录中音频数据源的顺序的数字字符串</li>
+<li>METADATA_KEY_COMPILATION：检索音乐专辑编辑状态的元数据键</li>
+<li>METADATA_KEY_COMPOSER：检索有关数据源的作曲家的信息的元数据键</li>
+<li>METADATA_KEY_DATE：检索或创建数据源时的日期的元数据键</li>
+<li>METADATA_KEY_DISC_NUMBER：用于检索描述音频数据源的集合的哪一部分的数字字符串的元数据键</li>
+<li>METADATA_KEY_DURATION：检索数据源回放持续时间的元数据键</li>
+<li>METADATA_KEY_GENRE:检索数据源的内容类型或类型的元数据键</li>
+<li>METADATA_KEY_HAS_AUDIO:如果存在此密钥，则媒体包含音频内容</li>
+<li>METADATA_KEY_HAS_VIDEO:如果存在此密钥，则媒体包含视频内容</li>
+<li>METADATA_KEY_LOCATION:此键检索位置信息，如果可用的话。该位置应根据ISO-6709标准，在MP4/3GP框“@ XYZ”下指定。例如，经度为90度和度为180度的位置将被检索为“-90＋180”。</li>
+<li>METADATA_KEY_MIMETYPE:检索数据源MIME类型的元数据键。一些示例MIME类型包括：&ldquo;video/mp4&rdquo;, &ldquo;audio/mp4&rdquo;, &ldquo;audio/amr-wb&rdquo;</li>
+<li>METADATA_KEY_NUM_TRACKS:元数据键，用于检索数据源（如MP4或3GPP文件）中的音轨的数目，如音频、视频、文本。</li>
+<li>METADATA_KEY_TITLE:检索数据源标题的元数据键</li>
+<li>METADATA_KEY_VIDEO_HEIGHT:如果媒体包含视频，则该键检索其高度</li>
+<li>METADATA_KEY_VIDEO_ROTATION:此键检索视频旋转角度的程度，如果可用的话。视频旋转角度可以是0, 90, 180度，也可以是270度</li>
+<li>METADATA_KEY_VIDEO_WIDTH:如果媒体包含视频，则该密钥检索其宽度</li>
+<li>METADATA_KEY_WRITER:检索数据源的作者（如歌词作者）信息的元数据键</li>
+<li>METADATA_KEY_YEAR:检索创建或修改数据源的一年的元数据密钥</li>
+<li>OPTION_CLOSEST:此选项与GETFrimeTimeTime（long，int）一起使用，以检索与最接近或给定时间的数据源相关联的帧（不一定是关键帧）</li>
+<li>OPTION_CLOSEST_SYNC:（时间）或给定时间的数据源相关联的同步（或密钥）帧。</li>
+<li>OPTION_NEXT_SYNC:此选项与GETFrimeTimeTime（long，int）一起使用，以检索与数据源相关联的同步（或密钥）帧，该数据源位于或在给定时间之后。</li>
+<li>OPTION_PREVIOUS_SYNC:此选项与GETFrimeTimeTime（long，int）一起使用，以检索与数据源相关联的同步（或密钥）帧，该数据源正好位于给定时间之前或给定时间</li>
+</ol>
+<h2 id="mediametadataretriever-获取这个对象的方法">MediaMetadataRetriever 获取这个对象的方法</h2>
+<p>public MediaMetadataRetriever ()</p>
+<h2 id="mediametadataretriever中的使用方法进行详细介绍">MediaMetadataRetriever中的使用方法进行详细介绍</h2>
+<ol>
+<li>
+<p>public String extractMetadata (int keyCode)
+方法描述：在 setDataSource()之后调用此方法。此方法检索与键值相关联的元数据值。当前支持的键代码被列为Meta DATAXXXX常量。使用任何其他值，它返回空指针</p>
+</li>
+<li>
+<p>public byte[] getEmbeddedPicture ()
+方法描述：在 setDataSource()之后调用此方法。此方法找到与数据源相关联的可选图形或相册/封面艺术。如果有超过一张照片，（任何）其中一个被退还</p>
+</li>
+<li>
+<p>public Bitmap getFrameAtTime (long timeUs, int option)
+方法介绍:在SETDATABORCEL（）之后调用此方法。该方法通过考虑给定的选项，在给定的时间位置找到具有代表性的帧，并将其作为位图返回。这对于生成输入数据源的缩略图或在给定的时间位置获得和显示帧是有用的。 timeUs :帧将被检索的时间位置。当在给定的时间位置检索帧时，不能保证数据源具有位于该位置的帧。当这种情况发生时，附近的一个框架将被返回。如果TimeSo为负，则将忽略时间位置和选项，并且可以将实现视为代表的任何帧返回 option:关于如何找到框架的提示。如果希望检索一个具有比TimeS更早或相同的时间戳的同步帧，请使用opthyPyviousSyc。如果希望检索一个比TimeS晚于或相同的时间戳的同步帧，请使用opthyNXTySyc。如果想检索一个同步帧，它的时间戳与TimeS最接近或相同，则使用opthyLoestStSyc。如果希望检索一个可能是或可能不是同步帧但与TimeS最接近或相同的帧，则使用OpthOffice最接近。如果没有时间同步帧，OpTestIm最常用的性能开销与其他选项相比更大</p>
+</li>
+<li>
+<p>public Bitmap getFrameAtTime (long timeUs)
+方法介绍：在SETDATABORCEL（）之后调用此方法。如果可能的话，该方法找到一个接近给定时间位置的有代表性的帧，并将其作为位图返回。这对于生成输入数据源的缩略图是有用的。如果不关心帧是如何找到的，只要它接近给定的时间，调用这个方法；否则，请调用GETFrimeTimeTime timeUs :帧将被检索的时间位置。当在给定的时间位置检索帧时，不能保证数据源具有位于该位置的帧。当这种情况发生时，附近的一个框架将被返回。如果TimeSo为负，则将忽略时间位置和选项，并且可以将实现视为代表的任何帧返回</p>
+</li>
+<li>
+<p>public Bitmap getFrameAtTime ()
+方法介绍：在SETDATABORCEL（）之后调用此方法。如果可能的话，该方法在任何时间位置找到一个有代表性的帧，并将其作为位图返回。这对于生成输入数据源的缩略图是有用的。如果不关心框架的位置，请调用此方法；否则，请调用GETFrimeTimeTime:（long）或GETFrimeTimeTime（long，int）</p>
+</li>
+<li>
+<p>public void release ()
+方法介绍：当一个对象完成时调用它。此方法释放内存内部分配的内存</p>
+</li>
+<li>
+<p>public void setDataSource (FileDescriptor fd, long offset, long length)
+方法介绍：fd 要播放的文件的文件描述符 offset 开始位置 length 结束位置</p>
+</li>
+<li>
+<p>public void setDataSource (String path)
+方法介绍：这个方法主要是设置media类型文件的路径，包括音视频等</p>
+</li>
+<li>
+<p>public void setDataSource (FileDescriptor fd)
+方法介绍：这个是是设置文件的描述符</p>
+</li>
+<li>
+<p>public void setDataSource (String uri, Map&lt;String, String&gt; headers)
+方法介绍：设置网络音视频url地址，第二个参数是设置参数的请求头</p>
+</li>
+<li>
+<p>public void setDataSource (Context context, Uri uri)
+方法介绍：设置网络media文件的url路径</p>
+</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-05-16</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/media/">Media</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/" class="prev" rel="prev" title="init 工作流程简述"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>init 工作流程简述</a>
+            <a href="/h264_is_magic/" class="next" rel="next" title="H264 is magic">H264 is magic<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-PJ6GG2PYMB', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-PJ6GG2PYMB" async></script></body>
+</html>
