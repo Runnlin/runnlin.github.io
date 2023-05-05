@@ -12,7 +12,7 @@ Android 中调用硬[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&
 2. 根据视频长宽以及 MIME_TYPE 创建 MediaFormat 配置（设置解码颜色空间、Profile Baseline 和 Profile Level 等）；
 3. 将 MediaFormat 配置、Surface（解码后绘制图像解码可为 null）等传入解码器配置函数 configure 进行配置。
 
-```
+```java
 public class H264Decoder {
     private static final String TAG = "H264Decoder";
     private final static String MIME_TYPE = "video/avc"; // H.264 Advanced Video
@@ -62,7 +62,6 @@ public class H264Decoder {
     }
     ......
 }
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748
 ```
 
 现在分析第一步，createDecoderByType 如何查找实例化 MediaCodec ？
@@ -101,7 +100,7 @@ public class H264Decoder {
 
 frameworks/base/media/java/android/media/MediaCodec.java
 
-```
+```java
 final public class MediaCodec {
     ......
     @NonNull
@@ -111,7 +110,6 @@ final public class MediaCodec {
     }
     ......
 }
-12345678
 ```
 
 1. 获取 Looper 对象，如果是在普通线程中调用那么 Looper.myLooper() 必然不为 null，则用这个 Looper 对象构造 EventHandler。否则使用 Looper.getMainLooper() 获取主线程 Looper 对象并构造 EventHandler；
@@ -122,7 +120,7 @@ final public class MediaCodec {
 
 frameworks/base/media/java/android/media/MediaCodec.java
 
-```
+```java
 final public class MediaCodec {
     ......
     private EventHandler mEventHandler;
@@ -155,7 +153,6 @@ final public class MediaCodec {
     private String mNameAtCreation;
     ......
 }
-12345678910111213141516171819202122232425262728293031
 ```
 
 1. 创建 JMediaCodec 对象；
@@ -165,7 +162,7 @@ final public class MediaCodec {
 
 frameworks/base/media/jni/android_media_MediaCodec.cpp
 
-```
+```c
 static void android_media_MediaCodec_native_setup(
         JNIEnv *env, jobject thiz,
         jstring name, jboolean nameIsType, jboolean encoder) {
@@ -215,7 +212,6 @@ static const JNINativeMethod gMethods[] = {
       (void *)android_media_MediaCodec_native_setup },
     ......
 };
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748
 ```
 
 1. 缓存一些 jni 对象供后续使用；
@@ -224,7 +220,7 @@ static const JNINativeMethod gMethods[] = {
 
 frameworks/base/media/jni/android_media_MediaCodec.cpp
 
-```
+```c
 JMediaCodec::JMediaCodec(
         JNIEnv *env, jobject thiz,
         const char *name, bool nameIsType, bool encoder)
@@ -257,7 +253,6 @@ JMediaCodec::JMediaCodec(
     }
     CHECK((mCodec != NULL) != (mInitStatus != OK));
 }
-12345678910111213141516171819202122232425262728293031
 ```
 
 最后两个入参都是 -1。
@@ -268,7 +263,7 @@ JMediaCodec::JMediaCodec(
 
 frameworks/av/media/libstagefright/MediaCodec.cpp
 
-```
+```c
 sp<MediaCodec> MediaCodec::CreateByType(
         const sp<ALooper> &looper, const AString &mime, bool encoder, status_t *err, pid_t pid,
         uid_t uid) {
@@ -298,7 +293,6 @@ sp<MediaCodec> MediaCodec::CreateByType(
     }
     return NULL;
 }
-12345678910111213141516171819202122232425262728
 ```
 
 1. 调用 getInstance() 获取 BpMediaCodecList 对象；

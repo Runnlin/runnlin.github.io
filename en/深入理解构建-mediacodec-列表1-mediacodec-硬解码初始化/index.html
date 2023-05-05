@@ -30,7 +30,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/en\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96\/"
-        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  6650 ,
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  6638 ,
         "url": "https:\/\/runnlin.github.io\/en\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
@@ -78,7 +78,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/en/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/en/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6650 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6638 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -152,59 +152,57 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>public class H264Decoder {
-</span></span><span style="display:flex;"><span>    private static final String TAG = &#34;H264Decoder&#34;;
-</span></span><span style="display:flex;"><span>    private final static String MIME_TYPE = &#34;video/avc&#34;; // H.264 Advanced Video
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">H264Decoder</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String TAG <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;H264Decoder&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String MIME_TYPE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;video/avc&#34;</span><span style="color:#f92672">;</span> <span style="color:#75715e">// H.264 Advanced Video
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> MediaCodec mDecoderMediaCodec<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    private MediaCodec mDecoderMediaCodec;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mFps<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Surface mSurface<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mWidth<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mHeight<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mInitMediaCodecTryTimes <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    private int mFps;
-</span></span><span style="display:flex;"><span>    private Surface mSurface;
-</span></span><span style="display:flex;"><span>    private int mWidth;
-</span></span><span style="display:flex;"><span>    private int mHeight;
-</span></span><span style="display:flex;"><span>    private int mInitMediaCodecTryTimes = 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">H264Decoder</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> width<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> height<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> fps<span style="color:#f92672">,</span> Surface surface<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        mWidth <span style="color:#f92672">=</span> width<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        mHeight <span style="color:#f92672">=</span> height<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        mFps <span style="color:#f92672">=</span> fps<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        mSurface <span style="color:#f92672">=</span> surface<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    public H264Decoder(int width, int height, int fps, Surface surface) {
-</span></span><span style="display:flex;"><span>        mWidth = width;
-</span></span><span style="display:flex;"><span>        mHeight = height;
-</span></span><span style="display:flex;"><span>        mFps = fps;
-</span></span><span style="display:flex;"><span>        mSurface = surface;
+</span></span><span style="display:flex;"><span>        initMediaCodec<span style="color:#f92672">(</span>width<span style="color:#f92672">,</span> height<span style="color:#f92672">,</span> surface<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        initMediaCodec(width, height, surface);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    private void initMediaCodec(int width, int height, Surface surface) {
-</span></span><span style="display:flex;"><span>        try {
-</span></span><span style="display:flex;"><span>            mDecoderMediaCodec = MediaCodec.createDecoderByType(MIME_TYPE);
-</span></span><span style="display:flex;"><span>            //创建配置
-</span></span><span style="display:flex;"><span>            MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, width, height);
-</span></span><span style="display:flex;"><span>            mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);
-</span></span><span style="display:flex;"><span>            //mediaFormat.setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline);
-</span></span><span style="display:flex;"><span>            //mediaFormat.setInteger(&#34;level&#34;, MediaCodecInfo.CodecProfileLevel.AVCLevel4); // Level 4
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            mDecoderMediaCodec.configure(mediaFormat, surface, null, 0);
-</span></span><span style="display:flex;"><span>        } catch (Exception e) {
-</span></span><span style="display:flex;"><span>            e.printStackTrace();
-</span></span><span style="display:flex;"><span>            //创建解码失败
-</span></span><span style="display:flex;"><span>            Log.e(TAG, &#34;init MediaCodec fail.&#34;);
-</span></span><span style="display:flex;"><span>            // 重新尝试六次
-</span></span><span style="display:flex;"><span>            if (mInitMediaCodecTryTimes &lt; 6) {
-</span></span><span style="display:flex;"><span>                mInitMediaCodecTryTimes++;
-</span></span><span style="display:flex;"><span>                try {
-</span></span><span style="display:flex;"><span>                    Thread.sleep(20);
-</span></span><span style="display:flex;"><span>                } catch (InterruptedException ie) {
-</span></span><span style="display:flex;"><span>                    ie.printStackTrace();
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                initMediaCodec(mWidth, mHeight, mSurface);
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>123456789101112131415161718192021222324252627282930313233343536373839404142434445464748
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initMediaCodec</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> width<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> height<span style="color:#f92672">,</span> Surface surface<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mDecoderMediaCodec <span style="color:#f92672">=</span> MediaCodec<span style="color:#f92672">.</span><span style="color:#a6e22e">createDecoderByType</span><span style="color:#f92672">(</span>MIME_TYPE<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//创建配置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            MediaFormat mediaFormat <span style="color:#f92672">=</span> MediaFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">createVideoFormat</span><span style="color:#f92672">(</span>MIME_TYPE<span style="color:#f92672">,</span> width<span style="color:#f92672">,</span> height<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            mediaFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">setInteger</span><span style="color:#f92672">(</span>MediaFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">KEY_COLOR_FORMAT</span><span style="color:#f92672">,</span> MediaCodecInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">CodecCapabilities</span><span style="color:#f92672">.</span><span style="color:#a6e22e">COLOR_FormatYUV420Flexible</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//mediaFormat.setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">//mediaFormat.setInteger(&#34;level&#34;, MediaCodecInfo.CodecProfileLevel.AVCLevel4); // Level 4
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            mDecoderMediaCodec<span style="color:#f92672">.</span><span style="color:#a6e22e">configure</span><span style="color:#f92672">(</span>mediaFormat<span style="color:#f92672">,</span> surface<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//创建解码失败
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;init MediaCodec fail.&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 重新尝试六次
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mInitMediaCodecTryTimes <span style="color:#f92672">&lt;</span> 6<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                mInitMediaCodecTryTimes<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span>20<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException ie<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    ie<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                initMediaCodec<span style="color:#f92672">(</span>mWidth<span style="color:#f92672">,</span> mHeight<span style="color:#f92672">,</span> mSurface<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在分析第一步，createDecoderByType 如何查找实例化 MediaCodec ？</p>
@@ -227,28 +225,26 @@
 <p>frameworks/base/media/java/android/media/MediaCodec.java</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>final public class MediaCodec {
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>    @NonNull
-</span></span><span style="display:flex;"><span>    public static MediaCodec createDecoderByType(@NonNull String type)
-</span></span><span style="display:flex;"><span>            throws IOException {
-</span></span><span style="display:flex;"><span>        return new MediaCodec(type, true /* nameIsType */, false /* encoder */);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>12345678
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MediaCodec</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@NonNull</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> MediaCodec <span style="color:#a6e22e">createDecoderByType</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@NonNull</span> String type<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> MediaCodec<span style="color:#f92672">(</span>type<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span> <span style="color:#75715e">/* nameIsType */</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span> <span style="color:#75715e">/* encoder */</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ol>
@@ -293,42 +289,40 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>final public class MediaCodec {
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>    private EventHandler mEventHandler;
-</span></span><span style="display:flex;"><span>    private EventHandler mOnFrameRenderedHandler;
-</span></span><span style="display:flex;"><span>    private EventHandler mCallbackHandler;
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>    final private Object mBufferLock;
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>    private MediaCodec(
-</span></span><span style="display:flex;"><span>            @NonNull String name, boolean nameIsType, boolean encoder) {
-</span></span><span style="display:flex;"><span>        Looper looper;
-</span></span><span style="display:flex;"><span>        if ((looper = Looper.myLooper()) != null) {
-</span></span><span style="display:flex;"><span>            mEventHandler = new EventHandler(this, looper);
-</span></span><span style="display:flex;"><span>        } else if ((looper = Looper.getMainLooper()) != null) {
-</span></span><span style="display:flex;"><span>            mEventHandler = new EventHandler(this, looper);
-</span></span><span style="display:flex;"><span>        } else {
-</span></span><span style="display:flex;"><span>            mEventHandler = null;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        mCallbackHandler = mEventHandler;
-</span></span><span style="display:flex;"><span>        mOnFrameRenderedHandler = mEventHandler;
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MediaCodec</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EventHandler mEventHandler<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EventHandler mOnFrameRenderedHandler<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EventHandler mCallbackHandler<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">private</span> Object mBufferLock<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">MediaCodec</span><span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">@NonNull</span> String name<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> nameIsType<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> encoder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        Looper looper<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>looper <span style="color:#f92672">=</span> Looper<span style="color:#f92672">.</span><span style="color:#a6e22e">myLooper</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mEventHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> EventHandler<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> looper<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>looper <span style="color:#f92672">=</span> Looper<span style="color:#f92672">.</span><span style="color:#a6e22e">getMainLooper</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mEventHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> EventHandler<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> looper<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mEventHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        mCallbackHandler <span style="color:#f92672">=</span> mEventHandler<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        mOnFrameRenderedHandler <span style="color:#f92672">=</span> mEventHandler<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        mBufferLock = new Object();
+</span></span><span style="display:flex;"><span>        mBufferLock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        // save name used at creation
-</span></span><span style="display:flex;"><span>        mNameAtCreation = nameIsType ? null : name;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// save name used at creation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        mNameAtCreation <span style="color:#f92672">=</span> nameIsType <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> name<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        native_setup(name, nameIsType, encoder);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>        native_setup<span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> nameIsType<span style="color:#f92672">,</span> encoder<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    private String mNameAtCreation;
-</span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>12345678910111213141516171819202122232425262728293031
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String mNameAtCreation<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ol>
@@ -389,59 +383,57 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>static void android_media_MediaCodec_native_setup(
-</span></span><span style="display:flex;"><span>        JNIEnv *env, jobject thiz,
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">android_media_MediaCodec_native_setup</span>(
+</span></span><span style="display:flex;"><span>        JNIEnv <span style="color:#f92672">*</span>env, jobject thiz,
 </span></span><span style="display:flex;"><span>        jstring name, jboolean nameIsType, jboolean encoder) {
-</span></span><span style="display:flex;"><span>    if (name == NULL) {
-</span></span><span style="display:flex;"><span>        jniThrowException(env, &#34;java/lang/NullPointerException&#34;, NULL);
-</span></span><span style="display:flex;"><span>        return;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (name <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        jniThrowException(env, <span style="color:#e6db74">&#34;java/lang/NullPointerException&#34;</span>, NULL);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    const char *tmp = env-&gt;GetStringUTFChars(name, NULL);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> env<span style="color:#f92672">-&gt;</span>GetStringUTFChars(name, NULL);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    if (tmp == NULL) {
-</span></span><span style="display:flex;"><span>        return;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (tmp <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    sp&lt;JMediaCodec&gt; codec = new JMediaCodec(env, thiz, tmp, nameIsType, encoder);
+</span></span><span style="display:flex;"><span>    sp<span style="color:#f92672">&lt;</span>JMediaCodec<span style="color:#f92672">&gt;</span> codec <span style="color:#f92672">=</span> new JMediaCodec(env, thiz, tmp, nameIsType, encoder);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    const status_t err = codec-&gt;initCheck();
-</span></span><span style="display:flex;"><span>    if (err == NAME_NOT_FOUND) {
-</span></span><span style="display:flex;"><span>        // fail and do not try again.
-</span></span><span style="display:flex;"><span>        jniThrowException(env, &#34;java/lang/IllegalArgumentException&#34;,
-</span></span><span style="display:flex;"><span>                String8::format(&#34;Failed to initialize %s, error %#x&#34;, tmp, err));
-</span></span><span style="display:flex;"><span>        env-&gt;ReleaseStringUTFChars(name, tmp);
-</span></span><span style="display:flex;"><span>        return;
-</span></span><span style="display:flex;"><span>    } if (err == NO_MEMORY) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> status_t err <span style="color:#f92672">=</span> codec<span style="color:#f92672">-&gt;</span>initCheck();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (err <span style="color:#f92672">==</span> NAME_NOT_FOUND) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// fail and do not try again.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        jniThrowException(env, <span style="color:#e6db74">&#34;java/lang/IllegalArgumentException&#34;</span>,
+</span></span><span style="display:flex;"><span>                String8<span style="color:#f92672">::</span>format(<span style="color:#e6db74">&#34;Failed to initialize %s, error %#x&#34;</span>, tmp, err));
+</span></span><span style="display:flex;"><span>        env<span style="color:#f92672">-&gt;</span>ReleaseStringUTFChars(name, tmp);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">if</span> (err <span style="color:#f92672">==</span> NO_MEMORY) {
 </span></span><span style="display:flex;"><span>        throwCodecException(env, err, ACTION_CODE_TRANSIENT,
-</span></span><span style="display:flex;"><span>                String8::format(&#34;Failed to initialize %s, error %#x&#34;, tmp, err));
-</span></span><span style="display:flex;"><span>        env-&gt;ReleaseStringUTFChars(name, tmp);
-</span></span><span style="display:flex;"><span>        return;
-</span></span><span style="display:flex;"><span>    } else if (err != OK) {
-</span></span><span style="display:flex;"><span>        // believed possible to try again
-</span></span><span style="display:flex;"><span>        jniThrowException(env, &#34;java/io/IOException&#34;,
-</span></span><span style="display:flex;"><span>                String8::format(&#34;Failed to find matching codec %s, error %#x&#34;, tmp, err));
-</span></span><span style="display:flex;"><span>        env-&gt;ReleaseStringUTFChars(name, tmp);
-</span></span><span style="display:flex;"><span>        return;
+</span></span><span style="display:flex;"><span>                String8<span style="color:#f92672">::</span>format(<span style="color:#e6db74">&#34;Failed to initialize %s, error %#x&#34;</span>, tmp, err));
+</span></span><span style="display:flex;"><span>        env<span style="color:#f92672">-&gt;</span>ReleaseStringUTFChars(name, tmp);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (err <span style="color:#f92672">!=</span> OK) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// believed possible to try again
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        jniThrowException(env, <span style="color:#e6db74">&#34;java/io/IOException&#34;</span>,
+</span></span><span style="display:flex;"><span>                String8<span style="color:#f92672">::</span>format(<span style="color:#e6db74">&#34;Failed to find matching codec %s, error %#x&#34;</span>, tmp, err));
+</span></span><span style="display:flex;"><span>        env<span style="color:#f92672">-&gt;</span>ReleaseStringUTFChars(name, tmp);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    env-&gt;ReleaseStringUTFChars(name, tmp);
+</span></span><span style="display:flex;"><span>    env<span style="color:#f92672">-&gt;</span>ReleaseStringUTFChars(name, tmp);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    codec-&gt;registerSelf();
+</span></span><span style="display:flex;"><span>    codec<span style="color:#f92672">-&gt;</span>registerSelf();
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    setMediaCodec(env,thiz, codec);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>......
-</span></span><span style="display:flex;"><span>static const JNINativeMethod gMethods[] = {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> JNINativeMethod gMethods[] <span style="color:#f92672">=</span> {
 </span></span><span style="display:flex;"><span>    ......
-</span></span><span style="display:flex;"><span>    { &#34;native_setup&#34;, &#34;(Ljava/lang/String;ZZ)V&#34;,
-</span></span><span style="display:flex;"><span>      (void *)android_media_MediaCodec_native_setup },
+</span></span><span style="display:flex;"><span>    { <span style="color:#e6db74">&#34;native_setup&#34;</span>, <span style="color:#e6db74">&#34;(Ljava/lang/String;ZZ)V&#34;</span>,
+</span></span><span style="display:flex;"><span>      (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)android_media_MediaCodec_native_setup },
 </span></span><span style="display:flex;"><span>    ......
 </span></span><span style="display:flex;"><span>};
-</span></span><span style="display:flex;"><span>123456789101112131415161718192021222324252627282930313233343536373839404142434445464748
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ol>
@@ -484,42 +476,40 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>JMediaCodec::JMediaCodec(
-</span></span><span style="display:flex;"><span>        JNIEnv *env, jobject thiz,
-</span></span><span style="display:flex;"><span>        const char *name, bool nameIsType, bool encoder)
-</span></span><span style="display:flex;"><span>    : mClass(NULL),
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>JMediaCodec<span style="color:#f92672">::</span>JMediaCodec(
+</span></span><span style="display:flex;"><span>        JNIEnv <span style="color:#f92672">*</span>env, jobject thiz,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name, <span style="color:#66d9ef">bool</span> nameIsType, <span style="color:#66d9ef">bool</span> encoder)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">:</span> mClass(NULL),
 </span></span><span style="display:flex;"><span>      mObject(NULL) {
-</span></span><span style="display:flex;"><span>    jclass clazz = env-&gt;GetObjectClass(thiz);
-</span></span><span style="display:flex;"><span>    CHECK(clazz != NULL);
+</span></span><span style="display:flex;"><span>    jclass clazz <span style="color:#f92672">=</span> env<span style="color:#f92672">-&gt;</span>GetObjectClass(thiz);
+</span></span><span style="display:flex;"><span>    CHECK(clazz <span style="color:#f92672">!=</span> NULL);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    mClass = (jclass)env-&gt;NewGlobalRef(clazz);
-</span></span><span style="display:flex;"><span>    mObject = env-&gt;NewWeakGlobalRef(thiz);
+</span></span><span style="display:flex;"><span>    mClass <span style="color:#f92672">=</span> (jclass)env<span style="color:#f92672">-&gt;</span>NewGlobalRef(clazz);
+</span></span><span style="display:flex;"><span>    mObject <span style="color:#f92672">=</span> env<span style="color:#f92672">-&gt;</span>NewWeakGlobalRef(thiz);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    cacheJavaObjects(env);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    mLooper = new ALooper;
-</span></span><span style="display:flex;"><span>    mLooper-&gt;setName(&#34;MediaCodec_looper&#34;);
+</span></span><span style="display:flex;"><span>    mLooper <span style="color:#f92672">=</span> new ALooper;
+</span></span><span style="display:flex;"><span>    mLooper<span style="color:#f92672">-&gt;</span>setName(<span style="color:#e6db74">&#34;MediaCodec_looper&#34;</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    mLooper-&gt;start(
-</span></span><span style="display:flex;"><span>            false,      // runOnCallingThread
-</span></span><span style="display:flex;"><span>            true,       // canCallJava
-</span></span><span style="display:flex;"><span>            ANDROID_PRIORITY_VIDEO);
+</span></span><span style="display:flex;"><span>    mLooper<span style="color:#f92672">-&gt;</span>start(
+</span></span><span style="display:flex;"><span>            false,      <span style="color:#75715e">// runOnCallingThread
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            true,       <span style="color:#75715e">// canCallJava
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            ANDROID_PRIORITY_VIDEO);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    if (nameIsType) {
-</span></span><span style="display:flex;"><span>        mCodec = MediaCodec::CreateByType(mLooper, name, encoder, &amp;mInitStatus);
-</span></span><span style="display:flex;"><span>        if (mCodec == nullptr || mCodec-&gt;getName(&amp;mNameAtCreation) != OK) {
-</span></span><span style="display:flex;"><span>            mNameAtCreation = &#34;(null)&#34;;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (nameIsType) {
+</span></span><span style="display:flex;"><span>        mCodec <span style="color:#f92672">=</span> MediaCodec<span style="color:#f92672">::</span>CreateByType(mLooper, name, encoder, <span style="color:#f92672">&amp;</span>mInitStatus);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (mCodec <span style="color:#f92672">==</span> nullptr <span style="color:#f92672">||</span> mCodec<span style="color:#f92672">-&gt;</span>getName(<span style="color:#f92672">&amp;</span>mNameAtCreation) <span style="color:#f92672">!=</span> OK) {
+</span></span><span style="display:flex;"><span>            mNameAtCreation <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;(null)&#34;</span>;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    } else {
-</span></span><span style="display:flex;"><span>        mCodec = MediaCodec::CreateByComponentName(mLooper, name, &amp;mInitStatus);
-</span></span><span style="display:flex;"><span>        mNameAtCreation = name;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        mCodec <span style="color:#f92672">=</span> MediaCodec<span style="color:#f92672">::</span>CreateByComponentName(mLooper, name, <span style="color:#f92672">&amp;</span>mInitStatus);
+</span></span><span style="display:flex;"><span>        mNameAtCreation <span style="color:#f92672">=</span> name;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    CHECK((mCodec != NULL) != (mInitStatus != OK));
+</span></span><span style="display:flex;"><span>    CHECK((mCodec <span style="color:#f92672">!=</span> NULL) <span style="color:#f92672">!=</span> (mInitStatus <span style="color:#f92672">!=</span> OK));
 </span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>12345678910111213141516171819202122232425262728293031
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>最后两个入参都是 -1。</p>
@@ -560,39 +550,37 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sp&lt;MediaCodec&gt; MediaCodec::CreateByType(
-</span></span><span style="display:flex;"><span>        const sp&lt;ALooper&gt; &amp;looper, const AString &amp;mime, bool encoder, status_t *err, pid_t pid,
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>sp<span style="color:#f92672">&lt;</span>MediaCodec<span style="color:#f92672">&gt;</span> MediaCodec<span style="color:#f92672">::</span>CreateByType(
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> sp<span style="color:#f92672">&lt;</span>ALooper<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>looper, <span style="color:#66d9ef">const</span> AString <span style="color:#f92672">&amp;</span>mime, <span style="color:#66d9ef">bool</span> encoder, status_t <span style="color:#f92672">*</span>err, pid_t pid,
 </span></span><span style="display:flex;"><span>        uid_t uid) {
-</span></span><span style="display:flex;"><span>    Vector&lt;AString&gt; matchingCodecs;
+</span></span><span style="display:flex;"><span>    Vector<span style="color:#f92672">&lt;</span>AString<span style="color:#f92672">&gt;</span> matchingCodecs;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    MediaCodecList::findMatchingCodecs(
+</span></span><span style="display:flex;"><span>    MediaCodecList<span style="color:#f92672">::</span>findMatchingCodecs(
 </span></span><span style="display:flex;"><span>            mime.c_str(),
 </span></span><span style="display:flex;"><span>            encoder,
-</span></span><span style="display:flex;"><span>            0,
-</span></span><span style="display:flex;"><span>            &amp;matchingCodecs);
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&amp;</span>matchingCodecs);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    if (err != NULL) {
-</span></span><span style="display:flex;"><span>        *err = NAME_NOT_FOUND;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (err <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">*</span>err <span style="color:#f92672">=</span> NAME_NOT_FOUND;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    for (size_t i = 0; i &lt; matchingCodecs.size(); ++i) {
-</span></span><span style="display:flex;"><span>        sp&lt;MediaCodec&gt; codec = new MediaCodec(looper, pid, uid);
-</span></span><span style="display:flex;"><span>        AString componentName = matchingCodecs[i];
-</span></span><span style="display:flex;"><span>        status_t ret = codec-&gt;init(componentName);
-</span></span><span style="display:flex;"><span>        if (err != NULL) {
-</span></span><span style="display:flex;"><span>            *err = ret;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (size_t i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> matchingCodecs.size(); <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        sp<span style="color:#f92672">&lt;</span>MediaCodec<span style="color:#f92672">&gt;</span> codec <span style="color:#f92672">=</span> new MediaCodec(looper, pid, uid);
+</span></span><span style="display:flex;"><span>        AString componentName <span style="color:#f92672">=</span> matchingCodecs[i];
+</span></span><span style="display:flex;"><span>        status_t ret <span style="color:#f92672">=</span> codec<span style="color:#f92672">-&gt;</span>init(componentName);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (err <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">*</span>err <span style="color:#f92672">=</span> ret;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        if (ret == OK) {
-</span></span><span style="display:flex;"><span>            return codec;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">==</span> OK) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> codec;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        ALOGD(&#34;Allocating component &#39;%s&#39; failed (%d), try next one.&#34;,
+</span></span><span style="display:flex;"><span>        ALOGD(<span style="color:#e6db74">&#34;Allocating component &#39;%s&#39; failed (%d), try next one.&#34;</span>,
 </span></span><span style="display:flex;"><span>                componentName.c_str(), ret);
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    return NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>12345678910111213141516171819202122232425262728
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ol>

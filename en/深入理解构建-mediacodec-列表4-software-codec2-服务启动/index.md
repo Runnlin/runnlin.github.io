@@ -17,7 +17,7 @@ CodecServiceRegistrant: Software Codec2 service created.
 
 frameworks/av/services/mediacodec/registrant/CodecServiceRegistrant.cpp
 
-```
+```c
 extern "C" void RegisterCodecServices() {
     using namespace ::android::hardware::media::c2::V1_0;
     LOG(INFO) << "Creating software Codec2 service...";
@@ -37,14 +37,13 @@ extern "C" void RegisterCodecServices() {
         }
     }
 }
-12345678910111213141516171819
 ```
 
 重点来了，main_swcodecservice.cpp main 函数中发现了启动 software Codec2 service 的调用，启动就是从这里开始的。
 
 frameworks/av/services/mediacodec/main_swcodecservice.cpp
 
-```
+```c
 extern "C" void RegisterCodecServices();
 
 int main(int argc __unused, char** argv)
@@ -60,15 +59,13 @@ int main(int argc __unused, char** argv)
 
     ::android::hardware::joinRpcThreadpool();
 }
-
-12345678910111213141516
 ```
 
 android::GetCodec2PlatformComponentStore() 函数定义在 C2PlatformSupport.h 中。注释解释这个函数的作用是返回平台组件仓库（store），如果返回为空说明获取失败了。
 
 frameworks/av/media/codec2/vndk/include/C2PlatformSupport.h
 
-```
+```c
 namespace android {
 /**
  * Returns the platform component store.
@@ -87,7 +84,7 @@ std::shared_ptr<C2ComponentStore> GetCodec2PlatformComponentStore();
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```cpp
 std::shared_ptr<C2ComponentStore> GetCodec2PlatformComponentStore() {
     static std::mutex mutex;
     static std::weak_ptr<C2ComponentStore> platformStore;
@@ -99,14 +96,13 @@ std::shared_ptr<C2ComponentStore> GetCodec2PlatformComponentStore() {
     }
     return store;
 }
-12345678910
 ```
 
 初始化了三个变量 mVisited、mReflector 和 mInterface。然后将各种 so 路径添加到 std::map<C2String, ComponentLoader>。不难看出这些 so 就是各种软编解码具体实现。
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 C2PlatformComponentStore::C2PlatformComponentStore()
     : mVisited(false),
       mReflector(std::make_shared<C2ReflectorHelper>()),
@@ -148,7 +144,6 @@ C2PlatformComponentStore::C2PlatformComponentStore()
     emplace("libcodec2_soft_vp9dec.so");
     emplace("libcodec2_soft_vp9enc.so");
 }
-12345678910111213141516171819202122232425262728293031323334353637383940
 ```
 
 1. 构造 CachedConfigurable 对象赋值给 mConfigurable；
@@ -159,7 +154,7 @@ C2PlatformComponentStore::C2PlatformComponentStore()
 
 frameworks/av/media/codec2/hidl/1.0/utils/ComponentStore.cpp
 
-```
+```c
 ComponentStore::ComponentStore(const std::shared_ptr<C2ComponentStore>& store)
       : mConfigurable{new CachedConfigurable(std::make_unique<StoreIntf>(store))},
         mStore{store} {
@@ -173,14 +168,13 @@ ComponentStore::ComponentStore(const std::shared_ptr<C2ComponentStore>& store)
     // Retrieve supported parameters from store
     mInit = mConfigurable->init(this);
 }
-123456789101112
 ```
 
 CachedConfigurable 构造函数非常简单，仅仅将入参 ConfigurableC2Intf（实际为指向 StoreIntf 的结构体）（通用 Codec 2.0 接口包装器） 指针用来初始化其 mIntf 字段。
 
 frameworks/av/media/codec2/hidl/1.0/utils/Configurable.cpp
 
-```
+```c
 CachedConfigurable::CachedConfigurable(
         std::unique_ptr<ConfigurableC2Intf>&& intf)
       : mIntf{std::move(intf)} {
@@ -193,7 +187,7 @@ CachedConfigurable::CachedConfigurable(
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 namespace {
     std::mutex gPreferredComponentStoreMutex;
     std::shared_ptr<C2ComponentStore> gPreferredComponentStore;
@@ -222,7 +216,6 @@ void SetPreferredCodec2ComponentStore(std::shared_ptr<C2ComponentStore> componen
         allocatorStore->setComponentStore(componentStore);
     }
 }
-123456789101112131415161718192021222324252627
 ```
 
 1. 使用入参更新 _mComponentStore 字段；
@@ -230,7 +223,7 @@ void SetPreferredCodec2ComponentStore(std::shared_ptr<C2ComponentStore> componen
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 void C2PlatformAllocatorStoreImpl::setComponentStore(std::shared_ptr<C2ComponentStore> store) {
     // technically this set lock is not needed, but is here for safety in case we add more
     // getter orders
@@ -248,7 +241,6 @@ void C2PlatformAllocatorStoreImpl::setComponentStore(std::shared_ptr<C2Component
         UseComponentStoreForIonAllocator(allocator, store);
     }
 }
-110111213141516
 ```
 
 1. minUsage 赋初值等于 0，maxUsage 初值则是结合了 C2MemoryUsage::CPU_READ 和 C2MemoryUsage::CPU_WRITE 的期望值；
@@ -260,7 +252,7 @@ void C2PlatformAllocatorStoreImpl::setComponentStore(std::shared_ptr<C2Component
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 void UseComponentStoreForIonAllocator(
         const std::shared_ptr<C2AllocatorIon> allocator,
         std::shared_ptr<C2ComponentStore> store) {
@@ -313,7 +305,6 @@ void UseComponentStoreForIonAllocator(
 
     allocator->setUsageMapper(mapper, minUsage, maxUsage, blockSize);
 }
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051
 ```
 
 根据注释不难理解 UsageMapperFn 的作用，分配器使用的 usage mapper 函数，函数入参：(usage, capacity) ，函数返回值 ：(align, heapMask, flags)。容量与默认块大小（默认页大小）对齐，以减少缓存开销。
@@ -322,7 +313,7 @@ setUsageMapper(…) 的作用是更新用于后续新分配的 usage mapper，�
 
 frameworks/av/media/codec2/vndk/include/C2AllocatorIon.h
 
-```
+```c
 namespace android {
 
 class C2AllocatorIon : public C2Allocator {
@@ -352,14 +343,13 @@ public:
             const UsageMapperFn &mapper, uint64_t minUsage, uint64_t maxUsage, uint64_t blockSize);
     ......
 }
-12345678910111213141516171819202122232425262728
 ```
 
 不难得出 maxUsage = C2MemoryUsage(C2MemoryUsage::CPU_READ, C2MemoryUsage::CPU_WRITE).expected，实际为 **0x001 | 0x100 = 0x101**。
 
 frameworks/av/media/codec2/core/include/C2BufferBase.h
 
-```
+```c
 struct C2MemoryUsage {
 // public:
     /**
@@ -386,7 +376,6 @@ struct C2MemoryUsage {
     ......
     uint64_t expected; // expected buffer usage
 };
-134567891011121314151617181920212223242526
 ```
 
 由于是 android 10 系统所以实际一定满足 >= **ANDROID_API_L** 的条件。
@@ -403,7 +392,7 @@ bionic/libc/include/sys/user.h
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 c2_status_t C2PlatformComponentStore::querySupportedValues_sm(
         std::vector<C2FieldSupportedValuesQuery> &fields) const {
     return mInterface.querySupportedValues(fields, C2_MAY_BLOCK);
@@ -415,7 +404,7 @@ mInterface 初始化传入了指向 C2ReflectorHelper 的共享指针。具体 I
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 class C2PlatformComponentStore : public C2ComponentStore {
     ......
     private:
@@ -451,18 +440,16 @@ class C2PlatformComponentStore : public C2ComponentStore {
     };
     ......
 }
-12345678910111213141516171819202122232425262728293031323334
 ```
 
 回到主题，Interface querySupportedValues(…) 实际是调用父类 C2InterfaceHelper querySupportedValues(…) 实现的。同样 C2PlatformComponentStore::config_sm(…) 内部调用 Interface config(…) 实现，其实也是调用父类 C2InterfaceHelper config(…) 。
 
-```
+```c
 c2_status_t C2PlatformComponentStore::config_sm(
         const std::vector<C2Param*> &params,
         std::vector<std::unique_ptr<C2SettingResult>> *const failures) {
     return mInterface.config(params, C2_MAY_BLOCK, failures);
 }
-
 ```
 
 此处直接返回了 mReflector，这个字段是在 C2PlatformComponentStore 构造器中初始化的，其为指向 C2ReflectorHelper（实现参数反射，这个类是动态的，设计成由多个接口共享。这允许接口根据需要添加结构描述符） 的指针。
@@ -473,21 +460,20 @@ c2_status_t C2PlatformComponentStore::config_sm(
 
 frameworks/av/media/codec2/hidl/1.0/utils/Configurable.cpp
 
-```
+```c
 c2_status_t CachedConfigurable::init(ComponentStore* store) {
     // 从存储区检索支持的参数
     c2_status_t init = mIntf->querySupportedParams(&mSupportedParams);
     c2_status_t validate = store->validateSupportedParams(mSupportedParams);
     return init == C2_OK ? C2_OK : validate;
 }
-
 ```
 
 StoreIntf querySupportedParams(…) 分发给了 C2ComponentStore querySupportedParams_nb(…) 方法。
 
 frameworks/av/media/codec2/hidl/1.0/utils/ComponentStore.cpp
 
-```
+```c
 struct StoreIntf : public ConfigurableC2Intf {
     StoreIntf(const std::shared_ptr<C2ComponentStore>& store)
           : ConfigurableC2Intf{store ? store->getName() : "", 0},
@@ -504,39 +490,36 @@ protected:
     std::shared_ptr<C2ComponentStore> mStore;
 };
 }
-123456789101112131415
 ```
 
 mInterface 是在 C2PlatformComponentStore 构造器中初始化的，mInterface 是一个 Interface 结构（继承自 C2InterfaceHelper），所以调用其 querySupportedParams(…) 函数实际实现在其父类 C2InterfaceHelper 中。
 
 frameworks/av/media/codec2/vndk/C2Store.cpp
 
-```
+```c
 c2_status_t C2PlatformComponentStore::querySupportedParams_nb(
         std::vector<std::shared_ptr<C2ParamDescriptor>> *const params) const {
     return mInterface.querySupportedParams(params);
 }
-
 ```
 
 C2InterfaceHelper::querySupportedParams(…) 内部仅仅调用了 C2InterfaceHelper::FactoryImpl querySupportedParams(…) 方法。
 
 frameworks/av/media/codec2/vndk/util/C2InterfaceHelper.cpp
 
-```
+```c
 c2_status_t C2InterfaceHelper::querySupportedParams(
         std::vector<std::shared_ptr<C2ParamDescriptor>> *const params) const {
     std::lock_guard<std::mutex> lock(mMutex);
     return _mFactory->querySupportedParams(params);
 }
-
 ```
 
 遍历 _mParams（std::map<ParamRef, std::shared_ptr>）将其 value 转化为 C2ParamDescriptor 添加到入参提供的容器。
 
 frameworks/av/media/codec2/vndk/util/C2InterfaceHelper.cpp
 
-```
+```c
 struct C2InterfaceHelper::FactoryImpl : public C2InterfaceHelper::Factory {
     ......
 public:
@@ -553,14 +536,13 @@ public:
     }
     ......
 }
-1101112131415
 ```
 
 逐个遍历入参容器中的 C2ParamDescriptor，将 map 中不存在的 CoreIndex-C2ParamDescriptor 结构对插入到 map（std::map<C2Param::CoreIndex, std::shared_ptr>）中。
 
 frameworks/av/media/codec2/hidl/1.0/utils/ComponentStore.cpp
 
-```
+```c
 c2_status_t ComponentStore::validateSupportedParams(
         const std::vector<std::shared_ptr<C2ParamDescriptor>>& params) {
     c2_status_t res = C2_OK;
@@ -586,5 +568,4 @@ c2_status_t ComponentStore::validateSupportedParams(
     }
     return res;
 }
-110111213141516171819202122232425
 ```
