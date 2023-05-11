@@ -4,7 +4,7 @@
 
 Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)芯片级支持
 
-![[加载so.png]]
+![](../assets/images/加载so.png)
 
 {{< admonition tip >}}
 
@@ -438,7 +438,6 @@ OMX_ERRORTYPE Rockchip_OMX_Component_Register(ROCKCHIP_OMX_COMPONENT_REGLIST **c
 
     return ret;
 }
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071
 ```
 
 `Rockchip_OMX_Component_Register(…) `方法中进行了两次调用 `Rockchip_OMX_COMPONENT_Library_Register(…)` 方法，一次入参为 NULL，另一次入参是 `RockchipRegisterComponentType` 数组。
@@ -761,7 +760,8 @@ OMX_ERRORTYPE Rockchip_OSAL_MutexCreate(OMX_HANDLETYPE *mutexHandle)
 
 `OMXMaster()` 构造函数中最后一行调用了 `addPlatformPlugin()`，也就是添加软编码插件库。软编码插件库编译 bp 定义在 `frameworks/av/media/libstagefright/omx/Android.bp` 中，编译源文件只使用到了` SoftOMXPlugin.cpp`。
 `OMXMaster::addPlugin(const char *libname`) 方法中对 `createOMXPlugin` 函数指针的调用实际上会调用到` frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp `类中的 `createOMXPlugin()` 函数。
-![[addPlatformPlugin.jpg]]
+
+![](../assets/images/addPlatformPlugin.jpg)
 
 
 > frameworks/av/media/libstagefright/omx/Android.bp

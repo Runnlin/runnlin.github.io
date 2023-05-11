@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96\/"
-        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  8271 ,
+        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  8255 ,
         "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -103,7 +103,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：2-Omx 初始化</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;8271 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;8255 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;17 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -130,7 +130,14 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><p>Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>芯片级支持</p>
-<p>![[加载so.png]]</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="../assets/images/%e5%8a%a0%e8%bd%bdso.png"
+        data-srcset="../assets/images/%e5%8a%a0%e8%bd%bdso.png, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 1.5x, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 2x"
+        data-sizes="auto"
+        alt="../assets/images/加载so.png"
+        title="../assets/images/加载so.png" /></p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
@@ -843,7 +850,6 @@
 </span><span class="lnt">69
 </span><span class="lnt">70
 </span><span class="lnt">71
-</span><span class="lnt">72
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">static</span> <span class="k">const</span> <span class="n">ROCKCHIP_COMPONENT_INFO</span> <span class="n">kCompInfo</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
@@ -917,7 +923,6 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="mi">1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>Rockchip_OMX_Component_Register(…) </code>方法中进行了两次调用 <code>Rockchip_OMX_COMPONENT_Library_Register(…)</code> 方法，一次入参为 NULL，另一次入参是 <code>RockchipRegisterComponentType</code> 数组。</p>
@@ -1508,8 +1513,15 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><code>OMXMaster()</code> 构造函数中最后一行调用了 <code>addPlatformPlugin()</code>，也就是添加软编码插件库。软编码插件库编译 bp 定义在 <code>frameworks/av/media/libstagefright/omx/Android.bp</code> 中，编译源文件只使用到了<code> SoftOMXPlugin.cpp</code>。
-<code>OMXMaster::addPlugin(const char *libname</code>) 方法中对 <code>createOMXPlugin</code> 函数指针的调用实际上会调用到<code>frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp</code>类中的 <code>createOMXPlugin()</code> 函数。
-![[addPlatformPlugin.jpg]]</p>
+<code>OMXMaster::addPlugin(const char *libname</code>) 方法中对 <code>createOMXPlugin</code> 函数指针的调用实际上会调用到<code>frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp</code>类中的 <code>createOMXPlugin()</code> 函数。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="../assets/images/addPlatformPlugin.jpg"
+        data-srcset="../assets/images/addPlatformPlugin.jpg, ../assets/images/addPlatformPlugin.jpg 1.5x, ../assets/images/addPlatformPlugin.jpg 2x"
+        data-sizes="auto"
+        alt="../assets/images/addPlatformPlugin.jpg"
+        title="../assets/images/addPlatformPlugin.jpg" /></p>
 <blockquote>
 <p>frameworks/av/media/libstagefright/omx/Android.bp</p>
 </blockquote>
