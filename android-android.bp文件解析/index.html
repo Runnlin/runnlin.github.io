@@ -1,45 +1,44 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-CN, en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Android.bp 文件解析 - Runnlin&#39;s Whisper</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="Android.bp 文件解析" />
+        <title>Android.bp 文件解析 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android.bp 文件解析" />
 <meta property="og:description" content="Android.bp 文件解析 Android.bp文件是什么？ Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://runnlin.github.io/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://runnlin.github.io/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Whisper" />
-
+<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00" /><meta property="og:site_name" content="我的网站" />
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
+<meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
 
 <meta name="twitter:title" content="Android.bp 文件解析"/>
 <meta name="twitter:description" content="Android.bp 文件解析 Android.bp文件是什么？ Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
 <meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><link rel="prev" href="https://runnlin.github.io/usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><link rel="next" href="https://runnlin.github.io/android-%E9%A2%84%E7%BC%96%E8%AF%91/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" /><link rel="prev" href="https://runnlin.github.io/usb%E8%AE%B2%E8%A7%A3%E7%AC%94%E8%AE%B0/" /><link rel="next" href="https://runnlin.github.io/android-%E9%A2%84%E7%BC%96%E8%AF%91/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
         "headline": "Android.bp 文件解析",
-        "inLanguage": "",
+        "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/"
-        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android","wordcount":  3433 ,
-        "url": "https:\/\/runnlin.github.io\/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+        },"genre": "posts","keywords": "Android","wordcount":  3433 ,
+        "url": "https:\/\/runnlin.github.io\/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","publisher": {
             "@type": "Organization",
-            "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
+            "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
     </script></head>
-    <body data-header-desktop="auto" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
 
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
@@ -47,7 +46,18 @@
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                     <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
                 </a></div>
         </div>
@@ -62,11 +72,32 @@
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                 <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
             </a></div>
     </div>
-</header><main class="main">
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content" id="toc-content-auto"></div>
@@ -74,7 +105,7 @@
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3433 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;7 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="">
+        </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
@@ -98,30 +129,30 @@
 <h2 id="androidbp文件配置规则">Android.bp文件配置规则</h2>
 <h3 id="模块和属性">【模块和属性】</h3>
 <p>Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cc_binary {
-</span></span><span style="display:flex;"><span>        name: ”avbctl”,
-</span></span><span style="display:flex;"><span>        defaults: [“avb_defaults”],
-</span></span><span style="display:flex;"><span>        static_libs: [
-</span></span><span style="display:flex;"><span>                  “libavb_user”,
-</span></span><span style="display:flex;"><span>                  “libfs_mgr”,
-</span></span><span style="display:flex;"><span>        ],
-</span></span><span style="display:flex;"><span>        shared_libs: [“libbase”],
-</span></span><span style="display:flex;"><span>        srcs: [“tools/avbctl/avbctl.cc”],
-</span></span><span style="display:flex;"><span>}
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cc_binary {
+</span></span><span class="line"><span class="cl">        name: ”avbctl”,
+</span></span><span class="line"><span class="cl">        defaults: [“avb_defaults”],
+</span></span><span class="line"><span class="cl">        static_libs: [
+</span></span><span class="line"><span class="cl">                  “libavb_user”,
+</span></span><span class="line"><span class="cl">                  “libfs_mgr”,
+</span></span><span class="line"><span class="cl">        ],
+</span></span><span class="line"><span class="cl">        shared_libs: [“libbase”],
+</span></span><span class="line"><span class="cl">        srcs: [“tools/avbctl/avbctl.cc”],
+</span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>上面例子中的cc_binary就是模块类型，表示该模块目标为二进制可执行文件。
@@ -132,38 +163,38 @@
 <p>模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。</p>
 <p>● 查看全部支持的模块和各个模块支持的属性定义，请查看这个网址：<a href="https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html" target="_blank" rel="noopener noreffer ">https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html</a>。</p>
 <p>● cc_defaults模块比较特殊，它表示该模块的属性可以被其他模块重复引用，类似于我们的头文件被其他cpp文件引用，举例：</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cc_defaults {
-</span></span><span style="display:flex;"><span>   name: &#34;gzip_defaults&#34;,
-</span></span><span style="display:flex;"><span>   shared_libs: [&#34;libz&#34;],
-</span></span><span style="display:flex;"><span>   stl: &#34;none&#34;,
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cc_binary {
-</span></span><span style="display:flex;"><span>   name: &#34;gzip&#34;,
-</span></span><span style="display:flex;"><span>   defaults: [&#34;gzip_defaults&#34;],
-</span></span><span style="display:flex;"><span>   /*这里等价于
-</span></span><span style="display:flex;"><span>   shared_libs: [&#34;libz&#34;],
-</span></span><span style="display:flex;"><span>    stl: &#34;none&#34;,*/
-</span></span><span style="display:flex;"><span>   srcs: [&#34;src/test/minigzip.c&#34;],
-</span></span><span style="display:flex;"><span>}
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cc_defaults {
+</span></span><span class="line"><span class="cl">   name: &#34;gzip_defaults&#34;,
+</span></span><span class="line"><span class="cl">   shared_libs: [&#34;libz&#34;],
+</span></span><span class="line"><span class="cl">   stl: &#34;none&#34;,
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cc_binary {
+</span></span><span class="line"><span class="cl">   name: &#34;gzip&#34;,
+</span></span><span class="line"><span class="cl">   defaults: [&#34;gzip_defaults&#34;],
+</span></span><span class="line"><span class="cl">   /*这里等价于
+</span></span><span class="line"><span class="cl">   shared_libs: [&#34;libz&#34;],
+</span></span><span class="line"><span class="cl">    stl: &#34;none&#34;,*/
+</span></span><span class="line"><span class="cl">   srcs: [&#34;src/test/minigzip.c&#34;],
+</span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>● 属性可以使用列表数组的形式，也可以使用unix通配符，例如：”*.java”</p>
@@ -174,345 +205,345 @@
 如果找不到想要的，可以在官网找：<a href="https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html" target="_blank" rel="noopener noreffer ">https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html</a></p>
 <h3 id="变量">【变量】</h3>
 <p>变量可以直接定义，使用“=”号赋值，例如：</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>avbctl_srcs = [“tools/avbctl/avbctl.cc”],
-</span></span><span style="display:flex;"><span>cc_binary {
-</span></span><span style="display:flex;"><span>        name: ”avbctl”,
-</span></span><span style="display:flex;"><span>        defaults: [“avb_defaults”],
-</span></span><span style="display:flex;"><span>        static_libs: [
-</span></span><span style="display:flex;"><span>                  “libavb_user”,
-</span></span><span style="display:flex;"><span>                  “libfs_mgr”,
-</span></span><span style="display:flex;"><span>        ],
-</span></span><span style="display:flex;"><span>        shared_libs: [“libbase”],
-</span></span><span style="display:flex;"><span>        srcs: avbctl_srcs,
-</span></span><span style="display:flex;"><span>}
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">avbctl_srcs = [“tools/avbctl/avbctl.cc”],
+</span></span><span class="line"><span class="cl">cc_binary {
+</span></span><span class="line"><span class="cl">        name: ”avbctl”,
+</span></span><span class="line"><span class="cl">        defaults: [“avb_defaults”],
+</span></span><span class="line"><span class="cl">        static_libs: [
+</span></span><span class="line"><span class="cl">                  “libavb_user”,
+</span></span><span class="line"><span class="cl">                  “libfs_mgr”,
+</span></span><span class="line"><span class="cl">        ],
+</span></span><span class="line"><span class="cl">        shared_libs: [“libbase”],
+</span></span><span class="line"><span class="cl">        srcs: avbctl_srcs,
+</span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="条件编译">【条件编译】</h3>
 <p>例如我们的mk文件中包括条件判断：</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>LOCAL_PATH := $(call my-dir)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>include $(CLEAR_VARS)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>LOCAL_MODULE := fs_mgr
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>ifeq ($(ENABLE_USER2ENG),true)
-</span></span><span style="display:flex;"><span>LOCAL_CFLAGS += -DALLOW_ADBD_DISABLE_VERITY=1
-</span></span><span style="display:flex;"><span>LOCAL_CFLAGS += -DENABLE_USER2ENG=1
-</span></span><span style="display:flex;"><span>endif
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>LOCAL_CFLAGS += -Wno-error=implicit-function-declaration
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>ifeq ($(shell if [ -d $(TOPDIR)paxdroid/external/libethtool ]; then echo &#34;exist&#34;; else echo &#34;notexist&#34;; fi;), exist)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>LOCAL_SHARED_LIBRARIES +=libethtool
-</span></span><span style="display:flex;"><span>endif
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>include $(BUILD_EXECUTABLE)
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">LOCAL_PATH := $(call my-dir)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">include $(CLEAR_VARS)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LOCAL_MODULE := fs_mgr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ifeq ($(ENABLE_USER2ENG),true)
+</span></span><span class="line"><span class="cl">LOCAL_CFLAGS += -DALLOW_ADBD_DISABLE_VERITY=1
+</span></span><span class="line"><span class="cl">LOCAL_CFLAGS += -DENABLE_USER2ENG=1
+</span></span><span class="line"><span class="cl">endif
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LOCAL_CFLAGS += -Wno-error=implicit-function-declaration
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ifeq ($(shell if [ -d $(TOPDIR)paxdroid/external/libethtool ]; then echo &#34;exist&#34;; else echo &#34;notexist&#34;; fi;), exist)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">LOCAL_SHARED_LIBRARIES +=libethtool
+</span></span><span class="line"><span class="cl">endif
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">include $(BUILD_EXECUTABLE)
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们先分析下上面两个条件的意思，如果变量ENABLE_USER2ENG的值为true，那么追加这两个编译参数，否则不追加。第二个条件是说如果存在paxdroid/external/libethtool这个目录，那么就添加libethtool这个动态库，否则不添加。</p>
 <p>要转换为bp写法，就需要我们通过go语言写一个新文件，新建一个自定义类型的模块，来判断这些条件，比如我的修改是在system/core/fs_mgr/Android.bp,那么要在添加 system/core/fs_mgr/fs_mgr.go，</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//这是申明当前的包名，就是你在哪个文件夹下，就写啥
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">fs_mgr</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//导入android的soong工具目录
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">import</span> (
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;android/soong/android&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;android/soong/cc&#34;</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#e6db74">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//一般情况下不需要引用os包，这里要判断文件夹是否存在需要引用
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;os&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//初始化入口函数
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">init</span>() {
-</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// for DEBUG
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;init start&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//注册模块名：fs_mgr_condition，模块名的方法入口是：fs_mgrDefaultsFactory方法
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">android</span>.<span style="color:#a6e22e">RegisterModuleType</span>(<span style="color:#e6db74">&#34;fs_mgr_condition&#34;</span>, <span style="color:#a6e22e">fs_mgrDefaultsFactory</span>)
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//实现fs_mgrDefaultsFactory方法：
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">fs_mgrDefaultsFactory</span>() (<span style="color:#a6e22e">android</span>.<span style="color:#a6e22e">Module</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//如果我们编译的目标是bin文件，这里就是调用cc.DefaultsFactory()
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//如果编译目标是so库，那么调用的是cc.LibrarySharedFactory()。这里我们举例目标是bin文件：
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">module</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cc</span>.<span style="color:#a6e22e">DefaultsFactory</span>()
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//添加装载时的钩子函数fs_mgrDefaults
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">android</span>.<span style="color:#a6e22e">AddLoadHook</span>(<span style="color:#a6e22e">module</span>, <span style="color:#a6e22e">fs_mgrDefaults</span>)
-</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">module</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//实现钩子函数
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">fs_mgrDefaults</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">android</span>.<span style="color:#a6e22e">LoadHookContext</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//这里定义我们所有需要受到条件控制的变量，比如我们这里需要根据条件来控制Cflags和依赖
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//的动态库两个变量，所以我们只需要定义这两个即可，按照实际需求定义：
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">props</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">Cflags</span> []<span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Shared_libs</span> []<span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>   }
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">props</span>{}
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">Cflags</span> = <span style="color:#a6e22e">getCflags</span>(<span style="color:#a6e22e">ctx</span>)
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">Shared_libs</span> = <span style="color:#a6e22e">getShared_libs</span>(<span style="color:#a6e22e">ctx</span>)
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">AppendProperties</span>(<span style="color:#a6e22e">p</span>)
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//实现getCflags(ctx)方法
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getCflags</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">android</span>.<span style="color:#a6e22e">BaseContext</span>) ([]<span style="color:#66d9ef">string</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">cppflags</span> []<span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;ENABLE_USER2ENG:&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">AConfig</span>().<span style="color:#a6e22e">IsEnvTrue</span>(<span style="color:#e6db74">&#34;ENABLE_USER2ENG&#34;</span>))
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">AConfig</span>().<span style="color:#a6e22e">IsEnvTrue</span>(<span style="color:#e6db74">&#34;ENABLE_USER2ENG&#34;</span>)
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">cppflags</span> = append(<span style="color:#a6e22e">cppflags</span>, <span style="color:#e6db74">&#34;-DALLOW_ADBD_DISABLE_VERITY=1&#34;</span>, <span style="color:#e6db74">&#34;-DENABLE_USER2ENG=1&#34;</span>)
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cppflags</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//实现getShared_libs(ctx)方法
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getShared_libs</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">android</span>.<span style="color:#a6e22e">BaseContext</span>) ([]<span style="color:#66d9ef">string</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">shared_libs</span> []<span style="color:#66d9ef">string</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//判断文件是否存在，该方法返回两个参数，一个isExists，一个error
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">isExists</span>,<span style="color:#66d9ef">error</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">PathExists</span> (<span style="color:#e6db74">&#34;paxdroid/external/libethtool&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isExists</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">error</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span>){
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//路径存在
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">shared_libs</span> = append(<span style="color:#a6e22e">shared_libs</span>, <span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">libethtool</span><span style="color:#960050;background-color:#1e0010">”</span>)
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">shared_libs</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//实现判断文件夹是否存在的工具方法：
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">PathExists</span>(<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">bool</span>, <span style="color:#66d9ef">error</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stat</span>(<span style="color:#a6e22e">path</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">IsNotExist</span>(<span style="color:#a6e22e">err</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">err</span>
-</span></span><span style="display:flex;"><span>}
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//这是申明当前的包名，就是你在哪个文件夹下，就写啥
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">fs_mgr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//导入android的soong工具目录
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;android/soong/android&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;android/soong/cc&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//一般情况下不需要引用os包，这里要判断文件夹是否存在需要引用
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="s">&#34;os&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//初始化入口函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// for DEBUG
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;init start&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//注册模块名：fs_mgr_condition，模块名的方法入口是：fs_mgrDefaultsFactory方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">android</span><span class="p">.</span><span class="nf">RegisterModuleType</span><span class="p">(</span><span class="s">&#34;fs_mgr_condition&#34;</span><span class="p">,</span> <span class="nx">fs_mgrDefaultsFactory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现fs_mgrDefaultsFactory方法：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">fs_mgrDefaultsFactory</span><span class="p">()</span> <span class="p">(</span><span class="nx">android</span><span class="p">.</span><span class="nx">Module</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//如果我们编译的目标是bin文件，这里就是调用cc.DefaultsFactory()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//如果编译目标是so库，那么调用的是cc.LibrarySharedFactory()。这里我们举例目标是bin文件：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">module</span> <span class="o">:=</span> <span class="nx">cc</span><span class="p">.</span><span class="nf">DefaultsFactory</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//添加装载时的钩子函数fs_mgrDefaults
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">android</span><span class="p">.</span><span class="nf">AddLoadHook</span><span class="p">(</span><span class="nx">module</span><span class="p">,</span> <span class="nx">fs_mgrDefaults</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">module</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现钩子函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">fs_mgrDefaults</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">android</span><span class="p">.</span><span class="nx">LoadHookContext</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//这里定义我们所有需要受到条件控制的变量，比如我们这里需要根据条件来控制Cflags和依赖
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//的动态库两个变量，所以我们只需要定义这两个即可，按照实际需求定义：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="kd">type</span> <span class="nx">props</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="nx">Cflags</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Shared_libs</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">props</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">p</span><span class="p">.</span><span class="nx">Cflags</span> <span class="p">=</span> <span class="nf">getCflags</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">p</span><span class="p">.</span><span class="nx">Shared_libs</span> <span class="p">=</span> <span class="nf">getShared_libs</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">ctx</span><span class="p">.</span><span class="nf">AppendProperties</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现getCflags(ctx)方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">getCflags</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">android</span><span class="p">.</span><span class="nx">BaseContext</span><span class="p">)</span> <span class="p">([]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">cppflags</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ENABLE_USER2ENG:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ctx</span><span class="p">.</span><span class="nf">AConfig</span><span class="p">().</span><span class="nf">IsEnvTrue</span><span class="p">(</span><span class="s">&#34;ENABLE_USER2ENG&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">ctx</span><span class="p">.</span><span class="nf">AConfig</span><span class="p">().</span><span class="nf">IsEnvTrue</span><span class="p">(</span><span class="s">&#34;ENABLE_USER2ENG&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nx">cppflags</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">cppflags</span><span class="p">,</span> <span class="s">&#34;-DALLOW_ADBD_DISABLE_VERITY=1&#34;</span><span class="p">,</span> <span class="s">&#34;-DENABLE_USER2ENG=1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">cppflags</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现getShared_libs(ctx)方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">getShared_libs</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">android</span><span class="p">.</span><span class="nx">BaseContext</span><span class="p">)</span> <span class="p">([]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">shared_libs</span> <span class="p">[]</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//判断文件是否存在，该方法返回两个参数，一个isExists，一个error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">isExists</span><span class="p">,</span><span class="kt">error</span> <span class="o">:=</span> <span class="nf">PathExists</span> <span class="p">(</span><span class="s">&#34;paxdroid/external/libethtool&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">isExists</span> <span class="o">&amp;&amp;</span> <span class="kt">error</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//路径存在
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">shared_libs</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">shared_libs</span><span class="p">,</span> <span class="err">“</span><span class="nx">libethtool</span><span class="err">”</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">shared_libs</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//实现判断文件夹是否存在的工具方法：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">PathExists</span><span class="p">(</span><span class="nx">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Stat</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">os</span><span class="p">.</span><span class="nf">IsNotExist</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>go脚本写完了，相应的再Android.bp文件引用，如下：</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// 这些个必须添加，编译刚刚写的那个go脚本需要的一些依赖
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">bootstrap_go_package</span> {
-</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 名字和包路径和刚刚写的go文件一致
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">name</span>: <span style="color:#e6db74">&#34;soong-fs_mgr&#34;</span>,
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">pkgPath</span>: <span style="color:#e6db74">&#34;android/soong/fs_mgr&#34;</span>,
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">deps</span>: [
-</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;blueprint&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;blueprint-pathtools&#34;</span>,
-</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;soong&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;soong-android&#34;</span>,
-</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;soong-cc&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;soong-genrule&#34;</span>,
-</span></span><span style="display:flex;"><span>   ],
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//这里的srcs就写我们刚刚写的go脚本
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">srcs</span>: [
-</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;fs_mgr.go&#34;</span>,
-</span></span><span style="display:flex;"><span>   ],
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">pluginFor</span>: [<span style="color:#e6db74">&#34;soong_build&#34;</span>],
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// fs_mgr_condition 是我们在go语言中自定义的模块类型，模块的类型是fs_mgr_condition，
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 这个模块名字叫做：fs_mgr_defaults
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">fs_mgr_condition</span> {
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">name</span>: <span style="color:#e6db74">&#34;fs_mgr_defaults&#34;</span>,
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//-----------------------------------------------------------------------
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//以上所有代码是标准的添加自定义模块来实现条件控制的代码，我们可以记下来作为参考，
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//下面的代码才是我们编译具体模块的：
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cc_binary</span> {
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">name</span>: <span style="color:#e6db74">&#34;fs_mgr&#34;</span>,
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//这里引用上面定义的模块
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">defaults</span>: [<span style="color:#e6db74">&#34;fs_mgr_defaults&#34;</span>],
-</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">cppflags</span>: [<span style="color:#e6db74">&#34;-Wno-error=implicit-function-declaration &#34;</span>],
-</span></span><span style="display:flex;"><span>}
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// 这些个必须添加，编译刚刚写的那个go脚本需要的一些依赖
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">bootstrap_go_package</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// 名字和包路径和刚刚写的go文件一致
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;soong-fs_mgr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">pkgPath</span><span class="p">:</span> <span class="s">&#34;android/soong/fs_mgr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">deps</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;blueprint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;blueprint-pathtools&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;soong&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;soong-android&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;soong-cc&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;soong-genrule&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="p">],</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//这里的srcs就写我们刚刚写的go脚本
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">srcs</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">          <span class="s">&#34;fs_mgr.go&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="p">],</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">pluginFor</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;soong_build&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// fs_mgr_condition 是我们在go语言中自定义的模块类型，模块的类型是fs_mgr_condition，
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 这个模块名字叫做：fs_mgr_defaults
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">fs_mgr_condition</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;fs_mgr_defaults&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//-----------------------------------------------------------------------
+</span></span></span><span class="line"><span class="cl"><span class="c1">//以上所有代码是标准的添加自定义模块来实现条件控制的代码，我们可以记下来作为参考，
+</span></span></span><span class="line"><span class="cl"><span class="c1">//下面的代码才是我们编译具体模块的：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">cc_binary</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;fs_mgr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//这里引用上面定义的模块
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nx">defaults</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;fs_mgr_defaults&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">cppflags</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;-Wno-error=implicit-function-declaration &#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="操作符">【操作符】</h3>
 <p>String类型、字符串列表类型和Map类型支持操作符“+”，例如：</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>binder_src_files <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;lib/libsystool_client/binder.c&#34;</span>],
-</span></span><span style="display:flex;"><span>cc_library_static {
-</span></span><span style="display:flex;"><span>   srcs: [<span style="color:#e6db74">&#34;lib/libsystool_client/systool_client_static.c&#34;</span>,
-</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;ipc/pipe_client.c&#34;</span>,
-</span></span><span style="display:flex;"><span>   ] <span style="color:#f92672">+</span> binder_src_files,
-</span></span><span style="display:flex;"><span>}
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">binder_src_files</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#34;lib/libsystool_client/binder.c&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="n">cc_library_static</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nl">srcs</span><span class="p">:</span> <span class="p">[</span><span class="s">&#34;lib/libsystool_client/systool_client_static.c&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">       <span class="s">&#34;ipc/pipe_client.c&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="p">]</span> <span class="o">+</span> <span class="n">binder_src_files</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div></div><div class="post-footer" id="post-footer">
@@ -543,7 +574,7 @@
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span></div>
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
@@ -552,8 +583,5 @@
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"lightgallery":true,"twemoji":true};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
-            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
-            gtag('config', 'G-1XN65684PW', { 'anonymize_ip': true });
-        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-1XN65684PW" async></script></body>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>
