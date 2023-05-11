@@ -9,7 +9,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-05-01T16:32:50+08:00" />
-<meta property="article:modified_time" content="2023-05-01T16:32:50+08:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+<meta property="article:modified_time" content="2023-05-11T11:41:50+08:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
@@ -30,8 +30,8 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/"
-        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, repost","wordcount":  6816 ,
-        "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-01T16:32:50+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+        },"image": ["https:\/\/runnlin.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Android, repost","wordcount":  7342 ,
+        "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-11T11:41:50+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Runnlin","logo": "https:\/\/runnlin.github.io\/images\/avatar.png"},"author": {
                 "@type": "Person",
@@ -72,8 +72,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">使用LiveDataBus代替EventBus</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6816 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;7342 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;15 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
@@ -135,6 +135,14 @@
           </ul>
         </li>
         <li><a href="#源码说明">源码说明</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#源码说明-1">源码说明</a></li>
       </ul>
     </li>
   </ul>
@@ -214,47 +222,45 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RxBus</span> {
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RxBus</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">Subject</span>&lt;<span style="color:#f92672">Object</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">Object</span>&gt; <span style="color:#a6e22e">bus</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Subject<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">,</span> Object<span style="color:#f92672">&gt;</span> bus<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">RxBus() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bus</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">SerializedSubject</span>&lt;&gt;(<span style="color:#a6e22e">PublishSubject</span>.<span style="color:#a6e22e">create</span>());
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">RxBus</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        bus <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SerializedSubject<span style="color:#f92672">&lt;&gt;(</span>PublishSubject<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SingletonHolder</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">RxBus</span> <span style="color:#a6e22e">defaultRxBus</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RxBus</span>();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SingletonHolder</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> RxBus defaultRxBus <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RxBus<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">RxBus</span> <span style="color:#a6e22e">getInstance() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SingletonHolder</span>.<span style="color:#a6e22e">defaultRxBus</span>;
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> RxBus <span style="color:#a6e22e">getInstance</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> SingletonHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">defaultRxBus</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 发送
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">post</span>(Object <span style="color:#a6e22e">o</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">onNext</span>(<span style="color:#a6e22e">o</span>);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">post</span><span style="color:#f92672">(</span>Object o<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        bus<span style="color:#f92672">.</span><span style="color:#a6e22e">onNext</span><span style="color:#f92672">(</span>o<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 是否有Observable订阅
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasObservable() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">hasObservers</span>();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasObservable</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bus<span style="color:#f92672">.</span><span style="color:#a6e22e">hasObservers</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 转换为特定类型的Obserbale
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> &lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">Observable</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">toObservable</span>(<span style="color:#a6e22e">Class</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#66d9ef">type</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">ofType</span>(<span style="color:#66d9ef">type</span>);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">复制代码</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> Observable<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">toObservable</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> type<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bus<span style="color:#f92672">.</span><span style="color:#a6e22e">ofType</span><span style="color:#f92672">(</span>type<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="基于rxjava2的rxbus实现">基于RxJava2的RxBus实现：</h3>
@@ -293,43 +299,41 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RxBus2</span> {
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RxBus2</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">Subject</span>&lt;<span style="color:#f92672">Object</span>&gt; <span style="color:#a6e22e">bus</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Subject<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> bus<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">RxBus2() {</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">RxBus2</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">// toSerialized method made bus thread safe
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">bus</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">PublishSubject</span>.<span style="color:#a6e22e">create</span>().<span style="color:#a6e22e">toSerialized</span>();
-</span></span><span style="display:flex;"><span>    }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        bus <span style="color:#f92672">=</span> PublishSubject<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toSerialized</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">RxBus2</span> <span style="color:#a6e22e">getInstance() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Holder</span>.<span style="color:#a6e22e">BUS</span>;
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> RxBus2 <span style="color:#a6e22e">getInstance</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Holder<span style="color:#f92672">.</span><span style="color:#a6e22e">BUS</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Holder</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">RxBus2</span> <span style="color:#a6e22e">BUS</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RxBus2</span>();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Holder</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> RxBus2 BUS <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RxBus2<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">post</span>(Object <span style="color:#a6e22e">obj</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">onNext</span>(<span style="color:#a6e22e">obj</span>);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">post</span><span style="color:#f92672">(</span>Object obj<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        bus<span style="color:#f92672">.</span><span style="color:#a6e22e">onNext</span><span style="color:#f92672">(</span>obj<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> &lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">Observable</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">toObservable</span>(<span style="color:#a6e22e">Class</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">tClass</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">ofType</span>(<span style="color:#a6e22e">tClass</span>);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> Observable<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">toObservable</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> tClass<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bus<span style="color:#f92672">.</span><span style="color:#a6e22e">ofType</span><span style="color:#f92672">(</span>tClass<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Observable</span>&lt;<span style="color:#f92672">Object</span>&gt; <span style="color:#a6e22e">toObservable() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">bus</span>;
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Observable<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">toObservable</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bus<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasObservers() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">hasObservers</span>();
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">复制代码</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasObservers</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bus<span style="color:#f92672">.</span><span style="color:#a6e22e">hasObservers</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="引入livedatabus的想法">引入LiveDataBus的想法</h1>
@@ -422,37 +426,35 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LiveDataBus</span> {
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LiveDataBus</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">Map</span>&lt;<span style="color:#f92672">String</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">MutableLiveData</span><span style="color:#960050;background-color:#1e0010">&lt;</span><span style="color:#a6e22e">Object</span>&gt;<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bus</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> MutableLiveData<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;&gt;</span> bus<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">LiveDataBus() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bus</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HashMap</span>&lt;&gt;();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">LiveDataBus</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        bus <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SingletonHolder</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">LiveDataBus</span> <span style="color:#a6e22e">DATA_BUS</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LiveDataBus</span>();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SingletonHolder</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> LiveDataBus DATA_BUS <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LiveDataBus<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">LiveDataBus</span> <span style="color:#66d9ef">get</span>() {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SingletonHolder</span>.<span style="color:#a6e22e">DATA_BUS</span>;
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> LiveDataBus <span style="color:#a6e22e">get</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> SingletonHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">DATA_BUS</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> &lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">getChannel</span>(String <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">Class</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#66d9ef">type</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">containsKey</span>(<span style="color:#a6e22e">target</span>)) {
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">target</span>, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MutableLiveData</span>&lt;&gt;());
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">T</span>&gt;) <span style="color:#a6e22e">bus</span>.<span style="color:#66d9ef">get</span>(<span style="color:#a6e22e">target</span>);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> MutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getChannel</span><span style="color:#f92672">(</span>String target<span style="color:#f92672">,</span> Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> type<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>bus<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>target<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            bus<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> MutableLiveData<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>MutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;)</span> bus<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>target<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">Object</span>&gt; <span style="color:#a6e22e">getChannel</span>(String <span style="color:#a6e22e">target</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">getChannel</span>(<span style="color:#a6e22e">target</span>, Object.<span style="color:#66d9ef">class</span>);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">复制代码</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> MutableLiveData<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getChannel</span><span style="color:#f92672">(</span>String target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> getChannel<span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> Object<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>短短二十行代码，就实现了一个通信总线的全部功能，并且还具有生命周期感知功能，并且使用起来也及其简单：</p>
@@ -465,27 +467,23 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>LiveDataBus.get().getChannel(&#34;key_test&#34;, Boolean.class)
-</span></span><span style="display:flex;"><span>        .observe(this, new Observer&lt;Boolean&gt;() {
-</span></span><span style="display:flex;"><span>            @Override
-</span></span><span style="display:flex;"><span>            public void onChanged(@Nullable Boolean aBoolean) {
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>        });
-</span></span><span style="display:flex;"><span>复制代码
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>LiveDataBus<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getChannel</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;key_test&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">.</span><span style="color:#a6e22e">observe</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Observer<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onChanged</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Boolean aBoolean<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">});</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>发送消息：</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>LiveDataBus.<span style="color:#66d9ef">get</span>().getChannel(<span style="color:#e6db74">&#34;key_test&#34;</span>).setValue(<span style="color:#66d9ef">true</span>);
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">复制代码</span>
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>LiveDataBus<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getChannel</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;key_test&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">setValue</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们发送了一个名为&quot;key_test&quot;，值为true的事件。 这个时候订阅者就会收到消息，并作相应的处理，非常简单。</p>
@@ -668,131 +666,129 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LiveDataBus</span> {
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LiveDataBus</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">Map</span>&lt;<span style="color:#f92672">String</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">BusMutableLiveData</span><span style="color:#960050;background-color:#1e0010">&lt;</span><span style="color:#a6e22e">Object</span>&gt;<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bus</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> BusMutableLiveData<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;&gt;</span> bus<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">LiveDataBus() {</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bus</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HashMap</span>&lt;&gt;();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">LiveDataBus</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        bus <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SingletonHolder</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">final</span> <span style="color:#a6e22e">LiveDataBus</span> <span style="color:#a6e22e">DEFAULT_BUS</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LiveDataBus</span>();
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SingletonHolder</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> LiveDataBus DEFAULT_BUS <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LiveDataBus<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">LiveDataBus</span> <span style="color:#66d9ef">get</span>() {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SingletonHolder</span>.<span style="color:#a6e22e">DEFAULT_BUS</span>;
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> LiveDataBus <span style="color:#a6e22e">get</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> SingletonHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">DEFAULT_BUS</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> &lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#66d9ef">with</span>(String <span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">Class</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#66d9ef">type</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">containsKey</span>(<span style="color:#a6e22e">key</span>)) {
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">bus</span>.<span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">key</span>, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">BusMutableLiveData</span>&lt;&gt;());
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">T</span>&gt;) <span style="color:#a6e22e">bus</span>.<span style="color:#66d9ef">get</span>(<span style="color:#a6e22e">key</span>);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> MutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">with</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">,</span> Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> type<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>bus<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            bus<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> BusMutableLiveData<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>MutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;)</span> bus<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">Object</span>&gt; <span style="color:#66d9ef">with</span>(String <span style="color:#a6e22e">key</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">with</span>(<span style="color:#a6e22e">key</span>, Object.<span style="color:#66d9ef">class</span>);
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> MutableLiveData<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">with</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> with<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> Object<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ObserverWrapper</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ObserverWrapper</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">observer</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ObserverWrapper</span>(<span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">observer</span>) {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">observer</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observer</span>;
-</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ObserverWrapper</span><span style="color:#f92672">(</span>Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">observer</span> <span style="color:#f92672">=</span> observer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@Override</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onChanged</span>(<span style="color:#66d9ef">@Nullable</span> <span style="color:#a6e22e">T</span> <span style="color:#a6e22e">t</span>) {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">observer</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isCallOnObserve</span>()) {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span>;
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">observer</span>.<span style="color:#a6e22e">onChanged</span>(<span style="color:#a6e22e">t</span>);
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onChanged</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> T t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>observer <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isCallOnObserve<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                observer<span style="color:#f92672">.</span><span style="color:#a6e22e">onChanged</span><span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isCallOnObserve() {</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">StackTraceElement</span>[] <span style="color:#a6e22e">stackTrace</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Thread</span>.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getStackTrace</span>();
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">stackTrace</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">stackTrace</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (<span style="color:#a6e22e">StackTraceElement</span> <span style="color:#a6e22e">element</span> : <span style="color:#66d9ef">stackTrace</span>) {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (<span style="color:#e6db74">&#34;android.arch.lifecycle.LiveData&#34;</span>.<span style="color:#a6e22e">equals</span>(<span style="color:#a6e22e">element</span>.<span style="color:#a6e22e">getClassName</span>()) <span style="color:#f92672">&amp;&amp;</span>
-</span></span><span style="display:flex;"><span>                            <span style="color:#e6db74">&#34;observeForever&#34;</span>.<span style="color:#a6e22e">equals</span>(<span style="color:#a6e22e">element</span>.<span style="color:#a6e22e">getMethodName</span>())) {
-</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isCallOnObserve</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            StackTraceElement<span style="color:#f92672">[]</span> stackTrace <span style="color:#f92672">=</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stackTrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> stackTrace<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>StackTraceElement element <span style="color:#f92672">:</span> stackTrace<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.arch.lifecycle.LiveData&#34;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>element<span style="color:#f92672">.</span><span style="color:#a6e22e">getClassName</span><span style="color:#f92672">())</span> <span style="color:#f92672">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#e6db74">&#34;observeForever&#34;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>element<span style="color:#f92672">.</span><span style="color:#a6e22e">getMethodName</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BusMutableLiveData</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">MutableLiveData</span>&lt;<span style="color:#f92672">T</span>&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BusMutableLiveData</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> MutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">Map</span>&lt;<span style="color:#f92672">Observer</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">Observer</span>&gt; <span style="color:#a6e22e">observerMap</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HashMap</span>&lt;&gt;();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> Map<span style="color:#f92672">&lt;</span>Observer<span style="color:#f92672">,</span> Observer<span style="color:#f92672">&gt;</span> observerMap <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@Override</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">observe</span>(<span style="color:#66d9ef">@NonNull</span> <span style="color:#a6e22e">LifecycleOwner</span> <span style="color:#a6e22e">owner</span>, <span style="color:#66d9ef">@NonNull</span> <span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">observer</span>) {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">observe</span>(<span style="color:#a6e22e">owner</span>, <span style="color:#a6e22e">observer</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">hook</span>(<span style="color:#a6e22e">observer</span>);
-</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">Exception</span> <span style="color:#a6e22e">e</span>) {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">printStackTrace</span>();
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">observe</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@NonNull</span> LifecycleOwner owner<span style="color:#f92672">,</span> <span style="color:#a6e22e">@NonNull</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">observe</span><span style="color:#f92672">(</span>owner<span style="color:#f92672">,</span> observer<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                hook<span style="color:#f92672">(</span>observer<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@Override</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">observeForever</span>(<span style="color:#66d9ef">@NonNull</span> <span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">observer</span>) {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">observerMap</span>.<span style="color:#a6e22e">containsKey</span>(<span style="color:#a6e22e">observer</span>)) {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">observerMap</span>.<span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">observer</span>, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ObserverWrapper</span>(<span style="color:#a6e22e">observer</span>));
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">observeForever</span>(<span style="color:#a6e22e">observerMap</span>.<span style="color:#66d9ef">get</span>(<span style="color:#a6e22e">observer</span>));
-</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">observeForever</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@NonNull</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>observerMap<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>observer<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                observerMap<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>observer<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ObserverWrapper<span style="color:#f92672">(</span>observer<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">observeForever</span><span style="color:#f92672">(</span>observerMap<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>observer<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@Override</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeObserver</span>(<span style="color:#66d9ef">@NonNull</span> <span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">observer</span>) {
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Observer</span> <span style="color:#a6e22e">realObserver</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">observerMap</span>.<span style="color:#a6e22e">containsKey</span>(<span style="color:#a6e22e">observer</span>)) {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">realObserver</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observerMap</span>.<span style="color:#a6e22e">remove</span>(<span style="color:#a6e22e">observer</span>);
-</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">realObserver</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">observer</span>;
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">removeObserver</span>(<span style="color:#a6e22e">realObserver</span>);
-</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeObserver</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@NonNull</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            Observer realObserver <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>observerMap<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>observer<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                realObserver <span style="color:#f92672">=</span> observerMap<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>observer<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                realObserver <span style="color:#f92672">=</span> observer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">removeObserver</span><span style="color:#f92672">(</span>realObserver<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hook</span>(<span style="color:#66d9ef">@NonNull</span> <span style="color:#a6e22e">Observer</span>&lt;<span style="color:#f92672">T</span>&gt; <span style="color:#a6e22e">observer</span>) <span style="color:#a6e22e">throws</span> <span style="color:#a6e22e">Exception</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hook</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@NonNull</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">//get wrapper&#39;s version
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">Class</span>&lt;<span style="color:#f92672">LiveData</span>&gt; <span style="color:#a6e22e">classLiveData</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">LiveData</span>.<span style="color:#66d9ef">class</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Field</span> <span style="color:#a6e22e">fieldObservers</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">classLiveData</span>.<span style="color:#a6e22e">getDeclaredField</span>(<span style="color:#e6db74">&#34;mObservers&#34;</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">fieldObservers</span>.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">true</span>);
-</span></span><span style="display:flex;"><span>            Object <span style="color:#a6e22e">objectObservers</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">fieldObservers</span>.<span style="color:#66d9ef">get</span>(<span style="color:#66d9ef">this</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Class</span><span style="color:#f92672">&lt;?&gt;</span> <span style="color:#a6e22e">classObservers</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">objectObservers</span>.<span style="color:#a6e22e">getClass</span>();
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Method</span> <span style="color:#a6e22e">methodGet</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">classObservers</span>.<span style="color:#a6e22e">getDeclaredMethod</span>(<span style="color:#e6db74">&#34;get&#34;</span>, Object.<span style="color:#66d9ef">class</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">methodGet</span>.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">true</span>);
-</span></span><span style="display:flex;"><span>            Object <span style="color:#a6e22e">objectWrapperEntry</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">methodGet</span>.<span style="color:#a6e22e">invoke</span>(<span style="color:#a6e22e">objectObservers</span>, <span style="color:#a6e22e">observer</span>);
-</span></span><span style="display:flex;"><span>            Object <span style="color:#a6e22e">objectWrapper</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">objectWrapperEntry</span> <span style="color:#66d9ef">instanceof</span> <span style="color:#a6e22e">Map</span>.<span style="color:#a6e22e">Entry</span>) {
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">objectWrapper</span> <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">Map</span>.<span style="color:#a6e22e">Entry</span>) <span style="color:#a6e22e">objectWrapperEntry</span>).<span style="color:#a6e22e">getValue</span>();
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">objectWrapper</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">NullPointerException</span>(<span style="color:#e6db74">&#34;Wrapper can not be bull!&#34;</span>);
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Class</span><span style="color:#f92672">&lt;?&gt;</span> <span style="color:#a6e22e">classObserverWrapper</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">objectWrapper</span>.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getSuperclass</span>();
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">Field</span> <span style="color:#a6e22e">fieldLastVersion</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">classObserverWrapper</span>.<span style="color:#a6e22e">getDeclaredField</span>(<span style="color:#e6db74">&#34;mLastVersion&#34;</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">fieldLastVersion</span>.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">true</span>);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            Class<span style="color:#f92672">&lt;</span>LiveData<span style="color:#f92672">&gt;</span> classLiveData <span style="color:#f92672">=</span> LiveData<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            Field fieldObservers <span style="color:#f92672">=</span> classLiveData<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mObservers&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            fieldObservers<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            Object objectObservers <span style="color:#f92672">=</span> fieldObservers<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            Class<span style="color:#f92672">&lt;?&gt;</span> classObservers <span style="color:#f92672">=</span> objectObservers<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            Method methodGet <span style="color:#f92672">=</span> classObservers<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;get&#34;</span><span style="color:#f92672">,</span> Object<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            methodGet<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            Object objectWrapperEntry <span style="color:#f92672">=</span> methodGet<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>objectObservers<span style="color:#f92672">,</span> observer<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            Object objectWrapper <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>objectWrapperEntry <span style="color:#66d9ef">instanceof</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                objectWrapper <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">)</span> objectWrapperEntry<span style="color:#f92672">).</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>objectWrapper <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Wrapper can not be bull!&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            Class<span style="color:#f92672">&lt;?&gt;</span> classObserverWrapper <span style="color:#f92672">=</span> objectWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getSuperclass</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            Field fieldLastVersion <span style="color:#f92672">=</span> classObserverWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mLastVersion&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            fieldLastVersion<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">//get livedata&#39;s version
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">Field</span> <span style="color:#a6e22e">fieldVersion</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">classLiveData</span>.<span style="color:#a6e22e">getDeclaredField</span>(<span style="color:#e6db74">&#34;mVersion&#34;</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">fieldVersion</span>.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">true</span>);
-</span></span><span style="display:flex;"><span>            Object <span style="color:#a6e22e">objectVersion</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">fieldVersion</span>.<span style="color:#66d9ef">get</span>(<span style="color:#66d9ef">this</span>);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            Field fieldVersion <span style="color:#f92672">=</span> classLiveData<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mVersion&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            fieldVersion<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            Object objectVersion <span style="color:#f92672">=</span> fieldVersion<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">//set wrapper&#39;s version
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">fieldLastVersion</span>.<span style="color:#66d9ef">set</span>(<span style="color:#a6e22e">objectWrapper</span>, <span style="color:#a6e22e">objectVersion</span>);
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">复制代码</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            fieldLastVersion<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>objectWrapper<span style="color:#f92672">,</span> objectVersion<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="注册订阅">注册订阅</h4>
@@ -805,39 +801,131 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>LiveDataBus.get()
-</span></span><span style="display:flex;"><span>        .with(&#34;key_test&#34;, String.class)
-</span></span><span style="display:flex;"><span>        .observe(this, new Observer&lt;String&gt;() {
-</span></span><span style="display:flex;"><span>            @Override
-</span></span><span style="display:flex;"><span>            public void onChanged(@Nullable String s) {
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>        });
-</span></span><span style="display:flex;"><span>复制代码
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>LiveDataBus<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">.</span><span style="color:#a6e22e">with</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;key_test&#34;</span><span style="color:#f92672">,</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">.</span><span style="color:#a6e22e">observe</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Observer<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onChanged</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">});</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="发送消息">发送消息：</h4>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>LiveDataBus.<span style="color:#66d9ef">get</span>().with(<span style="color:#e6db74">&#34;key_test&#34;</span>).setValue(s);
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">复制代码</span>
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>LiveDataBus<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">().</span><span style="color:#a6e22e">with</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;key_test&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">setValue</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="源码说明">源码说明</h3>
-<p>LiveDataBus的源码可以直接拷贝使用，也可以前往作者的GitHub仓库查看下载： <a href="https://github.com/JeremyLiao/LiveDataBus" target="_blank" rel="noopener noreffer ">https://github.com/JeremyLiao/LiveDataBus</a></p>
+<p>LiveDataBus的源码来源： <a href="https://github.com/JeremyLiao/LiveDataBus" target="_blank" rel="noopener noreffer ">https://github.com/JeremyLiao/LiveDataBus</a></p>
 <h1 id="总结">总结</h1>
 <p>本文提供了一个新的消息总线框架——LiveDataBus。订阅者可以订阅某个消息通道的消息，发布者可以把消息发布到消息通道上。利用LiveDataBus，不仅可以实现消息总线功能，而且对于订阅者，他们不需要关心何时取消订阅，极大减少了因为忘记取消订阅造成的内存泄漏风险。</p>
+<h1 id="update">Update</h1>
+<p>在项目使用的过程中，发现直接全编译打包出来的apk总会出现在执行hook中“getDeclaredMethod(&ldquo;get&rdquo;, Object.class)”时出现 NoSuchMethodException 问题，有可能是因为项目的特殊性导致混淆导致，同时使用反射的方式也不是Google所推荐的，下面尝试采用重写BusMutableLiveData的方式来重构：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BusMutableLiveData</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> MutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> mCurrentVersion<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * 是否需要更新数据,当主动调用setValue或者postValue的时候才触发
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setValue</span><span style="color:#f92672">(</span>T value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mCurrentVersion<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setValue</span><span style="color:#f92672">(</span>value<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">postValue</span><span style="color:#f92672">(</span>T value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mCurrentVersion<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">postValue</span><span style="color:#f92672">(</span>value<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">observe</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@NonNull</span> LifecycleOwner owner<span style="color:#f92672">,</span> <span style="color:#a6e22e">@NonNull</span> Observer<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">observe</span><span style="color:#f92672">(</span>owner<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ObserverWrapper<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;(</span>observer<span style="color:#f92672">,</span>mCurrentVersion<span style="color:#f92672">,</span><span style="color:#66d9ef">this</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ObserverWrapper</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Observer<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> Observer<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;</span> mObserver<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mVersion<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> BusMutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> mLiveData<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ObserverWrapper</span><span style="color:#f92672">(</span>Observer<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;</span> observer<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> version<span style="color:#f92672">,</span>BusMutableLiveData<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> liveData<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mObserver <span style="color:#f92672">=</span> observer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            mVersion <span style="color:#f92672">=</span> version<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            mLiveData <span style="color:#f92672">=</span> liveData<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onChanged</span><span style="color:#f92672">(</span>T t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>mLiveData<span style="color:#f92672">.</span><span style="color:#a6e22e">mCurrentVersion</span><span style="color:#f92672">&gt;</span>mVersion<span style="color:#f92672">&amp;&amp;</span>mObserver<span style="color:#f92672">!=</span><span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                mObserver<span style="color:#f92672">.</span><span style="color:#a6e22e">onChanged</span><span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这个方法中，我们不通过反射去获取系统的version信息，而是仿照系统自己弄一个mCurrentVersion，在新的观察者来的时候，吧当前mCurrentVersion传给他，setValue或者postValue的时候给通道的mCurrentVersion加一。</p>
+<p>然后自定义一个观察者的包装类，ObserverWrapper，在其onChanged方法中判断通道的version大于自己的version的时候才更新数据。用法不变效果跟前面那个一样。</p>
+<h3 id="源码说明-1">源码说明</h3>
+<p>更新的LiveDataBus的源码来源： <a href="https://blog.csdn.net/mingyunxiaohai/article/details/89605994" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/mingyunxiaohai/article/details/89605994</a></p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-05-01</span>
+                <span>Updated on 2023-05-11</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
