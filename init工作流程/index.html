@@ -4,20 +4,20 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>init 工作流程简述 - Runnlin&#39;s Blog</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="init 工作流程简述" />
+        <title>init 工作流程简述 - Runnlin&#39;s Whisper</title><meta name="Description" content="just my #$@%"><meta property="og:title" content="init 工作流程简述" />
 <meta property="og:description" content="Init 工作流程简述 init的工作流程可以精简为以下四点： 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/" /><meta property="og:image" content="https://runnlin.github.io/images/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-28T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-04-28T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Blog" />
+<meta property="article:modified_time" content="2022-04-28T00:00:00+00:00" /><meta property="og:site_name" content="Runnlin&#39;s Whisper" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://runnlin.github.io/images/logo.png"/>
 
 <meta name="twitter:title" content="init 工作流程简述"/>
 <meta name="twitter:description" content="Init 工作流程简述 init的工作流程可以精简为以下四点： 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作"/>
-<meta name="application-name" content="Runnlin&#39;s Blog">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="application-name" content="Runnlin&#39;s Whisper">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/" /><link rel="prev" href="https://runnlin.github.io/android-vold%E5%88%86%E6%9E%90/" /><link rel="next" href="https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -44,10 +44,10 @@
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
+            <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/about/" title="about"> About </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                     <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
                 </a></div>
         </div>
@@ -56,13 +56,13 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="Runnlin&#39;s Blog">Runnlin&#39;s Blog<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
+                <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/about/" title="about">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                 <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
             </a></div>
     </div>
@@ -152,7 +152,7 @@
 </div>
 </article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="runnlin.github.io" target="_blank">Runnlin</a></span></div>
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span></div>
         </div>
     </footer></div>
 

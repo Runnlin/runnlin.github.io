@@ -5,7 +5,8 @@
 ### Me as human
 
 * :(far fa-face-smile fa-fw): Full healthy body && mind
-* :(fab fa-google fa-fw): Good at find answeres
+* :(far fa-face-smile fa-fw): Android两年半练习生
+* :(fab fa-google fa-fw): Android Framework路线学习中
 * :(far fa-chart-bar fa-fw): **[Fathom Analytics](https://usefathom.com/)** supported
 * :(fas fa-chart-column fa-fw): **[Plausible Analytics](https://plausible.io/)** supported
 * :(fab fa-yandex-international fa-fw): **[Yandex Metrica](https://metrica.yandex.com/)** supported
@@ -44,7 +45,7 @@
 
 ### Extended Features
 
-* :(fas fa-search fa-fw): **Search** supported by [Lunr.js](https://lunrjs.com/) or [algolia](https://www.algolia.com/)
+* :(fas fa-search fa-fw): **Search** good at find answer by [Google](https://google.com/)
 * :(far fa-grin-tongue-wink fa-fw): **Twemoji** supported
 * :(fas fa-code fa-fw): Automatically **highlighting** code
 * :(far fa-copy fa-fw): **Copy code** to clipboard with one click

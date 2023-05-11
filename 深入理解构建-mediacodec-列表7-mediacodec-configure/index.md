@@ -2,16 +2,16 @@
 
 
 
-使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。
+> 使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。
 
-![](content/assets/images/configure流程.jpg)
+![](/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg)
 
-configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。
+#### configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。
 
 1. 遍历从 MediaFormat 返回的 map，构造为 key 和 value 数组；
 2. 调用 native_configure(…) 交给 native 层处理。
 
-frameworks/base/media/java/android/media/MediaCodec.java
+> frameworks/base/media/java/android/media/MediaCodec.java
 
 ```java
     public void configure(
@@ -64,14 +64,16 @@ frameworks/base/media/java/android/media/MediaCodec.java
     }
 ```
 
-native_configure(…) jni 实现具体为 android_media_MediaCodec.cpp android_media_MediaCodec_native_configure(…) 。
+#### native_configure(…) jni 具体实现
+
+native_configure(…) jni 实现具体为 android_media_MediaCodec.cpp::android_media_MediaCodec_native_configure(…) 
 
 1. 调用 getMediaCodec(…) 获取 JMediaCodec；
 2. 调用 ConvertKeyValueArraysToMessage(…) 将 key 和 value 数组转化为 AMessage；
 3. 将 java surface 对象转化为 native Surface，并调用 native Surface getIGraphicBufferProducer() 获取 IGraphicBufferProducer；
 4. 调用 JMediaCodec configure(…) 方法。
 
-frameworks/base/media/jni/android_media_MediaCodec.cpp
+> frameworks/base/media/jni/android_media_MediaCodec.cpp
 
 ```cpp
 static void android_media_MediaCodec_native_configure(
@@ -129,7 +131,7 @@ static void android_media_MediaCodec_native_configure(
 
 这里只是简单的调用 gFields.lockAndGetContextID 指向的 java 方法（lockAndGetContext()），并将返回值强转为 JMediaCodec * 指针。此方法是 setMediaCodec(…) 的逆操作。
 
-frameworks/base/media/jni/android_media_MediaCodec.cpp
+> frameworks/base/media/jni/android_media_MediaCodec.cpp
 
 ```cpp
 static sp<JMediaCodec> getMediaCodec(JNIEnv *env, jobject thiz) {
@@ -141,7 +143,7 @@ static sp<JMediaCodec> getMediaCodec(JNIEnv *env, jobject thiz) {
 
 方法代码有点长，实际上核心逻辑很简单：[遍历](https://so.csdn.net/so/search?q=%E9%81%8D%E5%8E%86&spm=1001.2101.3001.7020)所有的 key 和 value 数组从其 java 对象中获取值用来构建 AMessage。
 
-frameworks/base/media/jni/android_media_Streams.cpp
+> frameworks/base/media/jni/android_media_Streams.cpp
 
 ```cpp
 status_t ConvertKeyValueArraysToMessage(
@@ -286,7 +288,7 @@ status_t ConvertKeyValueArraysToMessage(
 
 此方法在主流程上实际调用了 [native](https://so.csdn.net/so/search?q=native&spm=1001.2101.3001.7020) MediaCodec configure(…) 方法。由于下面分析会用到 Surface 的创建，这里重点再去看下 Surface 的构造函数。
 
-frameworks/base/media/jni/android_media_MediaCodec.cpp
+> frameworks/base/media/jni/android_media_MediaCodec.cpp
 
 ```cpp
 status_t JMediaCodec::configure(
@@ -310,7 +312,7 @@ status_t JMediaCodec::configure(
 
 请把目光聚集到初始化 ANativeWindow 函数指针这块代码，不难知道 ANativeWindow::perform 指向了 Surface 中的方法 hook_perform(…)。
 
-frameworks/native/libs/gui/Surface.cpp
+> frameworks/native/libs/gui/Surface.cpp
 
 ```cpp
 Surface::Surface(const sp<IGraphicBufferProducer>& bufferProducer, bool controlledByApp)
@@ -365,7 +367,7 @@ Surface::Surface(const sp<IGraphicBufferProducer>& bufferProducer, bool controll
 
 首先新建 AMessage，消息 what ID 为 kWhatConfigure，然后从 format 中检出各种字段用来设置 MediaAnalyticsItem 中适当的值。将入参 format、nativeWindow 和 flags 设置到 AMessage。最后调用 ResourceManagerService reclaimResource(…) 进行资源回收，并调用 PostAndAwaitResponse(…) 等待消息处理。
 
-frameworks/av/media/libstagefright/MediaCodec.cpp
+> frameworks/av/media/libstagefright/MediaCodec.cpp
 
 ```cpp
 status_t MediaCodec::configure(
@@ -491,7 +493,7 @@ status_t MediaCodec::configure(
 
 此处需要注意一下 mAllowFrameDroppingBySurface 的值，由于 surface 不为空，因此就会查找 allow-[frame](https://so.csdn.net/so/search?q=frame&spm=1001.2101.3001.7020)-drop 为 key 的 value，但这个 key-value 对并未设置，所以 mAllowFrameDroppingBySurface 会被默认赋值为 true。
 
-frameworks/av/media/libstagefright/MediaCodec.cpp
+> frameworks/av/media/libstagefright/MediaCodec.cpp
 
 ```cpp
 void MediaCodec::onMessageReceived(const sp<AMessage> &msg) {
@@ -582,7 +584,7 @@ void MediaCodec::onMessageReceived(const sp<AMessage> &msg) {
 
 由于第一次调用 mSurface 必然为空，所以此处就会转向 connectToSurface(…) 调用。
 
-frameworks/av/media/libstagefright/MediaCodec.cpp
+> frameworks/av/media/libstagefright/MediaCodec.cpp
 
 ```cpp
 status_t MediaCodec::handleSetSurface(const sp<Surface> &surface) {
@@ -656,7 +658,7 @@ status_t MediaCodec::connectToSurface(const sp<Surface> &surface) {
 
 nativeWindowConnect(…) 内部调用了 native_window_api_connect(…) 处理，而 nativeWindowDisconnect(…) 则是调用 native_window_api_disconnect(…) 处理。调用时 api 入参均为 NATIVE_WINDOW_API_MEDIA，它表示缓冲将由 Stagefright 在视频解码器填充后进行排队，视频解码器可以是一个软件或硬件解码器。
 
-frameworks/av/media/libstagefright/SurfaceUtils.cpp
+> frameworks/av/media/libstagefright/SurfaceUtils.cpp
 
 ```cpp
 status_t nativeWindowConnect(ANativeWindow *surface, const char *reason) {

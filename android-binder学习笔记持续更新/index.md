@@ -1,8 +1,6 @@
 # Android-Binder学习笔记
 
 
-# **Android-AIDL学习笔记(持续更新)**
-
 通过对Android中的Proxy设计模式的学习，可以发现AIDL就是Proxy模式的很好的实现
 
 用户通过AIDL定义一系列接口，编译时AIDL会自动生成相应的源码，随后我们可以分别在Service和Client中调用
@@ -22,20 +20,17 @@
 
 以下以 Android 2.3.5 的 MediaPlayerService 为例
 
-mian：
 
 ```  java
 int main(int argc, char** argv)
-
 {
 
     sp<ProcessState> proc(ProcessState::self());
 
-    sp<IServiceManager> sm = defaultServiceManager();   
+    sp<IServiceManager> sm = defaultServiceManager();  
 
-MediaPlayerService::instantiate();
-
----》该函数内部调用 addService，把 MediaPlayerService 信息 add 到 ServiceManager 中
+    // 该函数内部调用 addService，把 MediaPlayerService 信息 add 到 ServiceManager 中
+    MediaPlayerService::instantiate();
 
     ProcessState::self()->startThreadPool();
 
@@ -69,7 +64,7 @@ BnMediaPlayerService 从 BBinder 中派生，所以会调用到它的 onTransact
 
 在 startThreadPool 和 joinThreadPool 结束后会有两个线程，分别是主线程和工作线程，而且都在做消息循环。
 
-### MediaPlayerClietn
+### MediaPlayerClient
 
 关于 MediaPlayerClient[Client] 和 MediaPlayerService[Service]的交互
 

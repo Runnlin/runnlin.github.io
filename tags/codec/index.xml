@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Codec - Tag - Runnlin&#39;s Blog</title>
+        <title>Codec - Tag - Runnlin&#39;s Whisper</title>
         <link>https://runnlin.github.io/tags/codec/</link>
-        <description>Codec - Tag - Runnlin&#39;s Blog</description>
+        <description>Codec - Tag - Runnlin&#39;s Whisper</description>
         <generator>Hugo -- gohugo.io</generator><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
             <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/codec/" rel="self" type="application/rss+xml" /><item>
     <title>深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化</title>
@@ -10829,14 +10829,18 @@
     <pubDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/</guid>
-    <description><![CDATA[<p>使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。</p>
+    <description><![CDATA[<blockquote>
+<p>使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。</p>
+</blockquote>
 <p></p>
-<p>configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。</p>
+<h4 id="configure-提供给外部调用的-public-方法内部调用了同名重载版本的方法">configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。</h4>
 <ol>
 <li>遍历从 MediaFormat 返回的 map，构造为 key 和 value 数组；</li>
 <li>调用 native_configure(…) 交给 native 层处理。</li>
 </ol>
+<blockquote>
 <p>frameworks/base/media/java/android/media/MediaCodec.java</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -10939,14 +10943,17 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>native_configure(…) jni 实现具体为 android_media_MediaCodec.cpp android_media_MediaCodec_native_configure(…) 。</p>
+</div><h4 id="native_configure-jni-具体实现">native_configure(…) jni 具体实现</h4>
+<p>native_configure(…) jni 实现具体为 android_media_MediaCodec.cpp::android_media_MediaCodec_native_configure(…)</p>
 <ol>
 <li>调用 getMediaCodec(…) 获取 JMediaCodec；</li>
 <li>调用 ConvertKeyValueArraysToMessage(…) 将 key 和 value 数组转化为 AMessage；</li>
 <li>将 java surface 对象转化为 native Surface，并调用 native Surface getIGraphicBufferProducer() 获取 IGraphicBufferProducer；</li>
 <li>调用 JMediaCodec configure(…) 方法。</li>
 </ol>
+<blockquote>
 <p>frameworks/base/media/jni/android_media_MediaCodec.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -11056,7 +11063,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里只是简单的调用 gFields.lockAndGetContextID 指向的 java 方法（lockAndGetContext()），并将返回值强转为 JMediaCodec * 指针。此方法是 setMediaCodec(…) 的逆操作。</p>
+<blockquote>
 <p>frameworks/base/media/jni/android_media_MediaCodec.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -11074,7 +11083,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>方法代码有点长，实际上核心逻辑很简单：<a href="https://so.csdn.net/so/search?q=%E9%81%8D%E5%8E%86&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">遍历</a>所有的 key 和 value 数组从其 java 对象中获取值用来构建 AMessage。</p>
+<blockquote>
 <p>frameworks/base/media/jni/android_media_Streams.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
@@ -11358,7 +11369,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>此方法在主流程上实际调用了 <a href="https://so.csdn.net/so/search?q=native&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">native</a> MediaCodec configure(…) 方法。由于下面分析会用到 Surface 的创建，这里重点再去看下 Surface 的构造函数。</p>
+<blockquote>
 <p>frameworks/base/media/jni/android_media_MediaCodec.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -11400,7 +11413,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>请把目光聚集到初始化 ANativeWindow 函数指针这块代码，不难知道 ANativeWindow::perform 指向了 Surface 中的方法 hook_perform(…)。</p>
+<blockquote>
 <p>frameworks/native/libs/gui/Surface.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -11504,7 +11519,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>首先新建 AMessage，消息 what ID 为 kWhatConfigure，然后从 format 中检出各种字段用来设置 MediaAnalyticsItem 中适当的值。将入参 format、nativeWindow 和 flags 设置到 AMessage。最后调用 ResourceManagerService reclaimResource(…) 进行资源回收，并调用 PostAndAwaitResponse(…) 等待消息处理。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/MediaCodec.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
@@ -11746,7 +11763,9 @@
 <li>调用 initiateConfigureComponent(…) 初始化组件。</li>
 </ol>
 <p>此处需要注意一下 mAllowFrameDroppingBySurface 的值，由于 surface 不为空，因此就会查找 allow-<a href="https://so.csdn.net/so/search?q=frame&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">frame</a>-drop 为 key 的 value，但这个 key-value 对并未设置，所以 mAllowFrameDroppingBySurface 会被默认赋值为 true。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/MediaCodec.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -11922,7 +11941,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>由于第一次调用 mSurface 必然为空，所以此处就会转向 connectToSurface(…) 调用。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/MediaCodec.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -12054,7 +12075,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>nativeWindowConnect(…) 内部调用了 native_window_api_connect(…) 处理，而 nativeWindowDisconnect(…) 则是调用 native_window_api_disconnect(…) 处理。调用时 api 入参均为 NATIVE_WINDOW_API_MEDIA，它表示缓冲将由 Stagefright 在视频解码器填充后进行排队，视频解码器可以是一个软件或硬件解码器。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/SurfaceUtils.cpp</p>
+</blockquote>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1

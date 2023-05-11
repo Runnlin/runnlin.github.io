@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Media - Tag - Runnlin&#39;s Blog</title>
+        <title>Media - Tag - Runnlin&#39;s Whisper</title>
         <link>https://runnlin.github.io/tags/media/</link>
-        <description>Media - Tag - Runnlin&#39;s Blog</description>
+        <description>Media - Tag - Runnlin&#39;s Whisper</description>
         <generator>Hugo -- gohugo.io</generator><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
             <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 24 Aug 2022 20:38:30 &#43;0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/media/" rel="self" type="application/rss+xml" /><item>
     <title>Android 音频硬编解码知多少</title>
