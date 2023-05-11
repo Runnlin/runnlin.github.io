@@ -427,7 +427,7 @@ LiveDataBus的源码来源： https://github.com/JeremyLiao/LiveDataBus
 
 本文提供了一个新的消息总线框架——LiveDataBus。订阅者可以订阅某个消息通道的消息，发布者可以把消息发布到消息通道上。利用LiveDataBus，不仅可以实现消息总线功能，而且对于订阅者，他们不需要关心何时取消订阅，极大减少了因为忘记取消订阅造成的内存泄漏风险。
 
-# Update
+### Update
 
 在项目使用的过程中，发现直接全编译打包出来的apk总会出现在执行hook中“getDeclaredMethod("get", Object.class)”时出现 NoSuchMethodException 问题，有可能是因为项目的特殊性导致混淆导致，同时使用反射的方式也不是Google所推荐的，下面尝试采用重写BusMutableLiveData的方式来重构：
 
@@ -480,6 +480,6 @@ private class BusMutableLiveData<T> extends MutableLiveData<T>{
 
 然后自定义一个观察者的包装类，ObserverWrapper，在其onChanged方法中判断通道的version大于自己的version的时候才更新数据。用法不变效果跟前面那个一样。
 
-### 源码说明
+### 源码说明2
 
 更新的LiveDataBus的源码来源： https://blog.csdn.net/mingyunxiaohai/article/details/89605994
