@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <title>深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化" />
-<meta property="og:description" content="Android 中调用硬解码 API 是使用 MediaCodec 一步一步调用硬件实现的，通常需要最终调用 VPU 进行解码工作，现在先来分析其初始化过程。 硬解码初始化 下面是一段典型的硬解码" />
+<meta property="og:description" content="Android 中调用硬解码 API 是使用 MediaCodec 一步一步调用硬件实现的，通常需要最终调用 VPU 进行解码工作，现在先来分析其初始化过程。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-02-09T00:00:00+00:00" />
@@ -14,7 +14,7 @@
 <meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
 
 <meta name="twitter:title" content="深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化"/>
-<meta name="twitter:description" content="Android 中调用硬解码 API 是使用 MediaCodec 一步一步调用硬件实现的，通常需要最终调用 VPU 进行解码工作，现在先来分析其初始化过程。 硬解码初始化 下面是一段典型的硬解码"/>
+<meta name="twitter:description" content="Android 中调用硬解码 API 是使用 MediaCodec 一步一步调用硬件实现的，通常需要最终调用 VPU 进行解码工作，现在先来分析其初始化过程。"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
 <meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96\/"
-        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  6784 ,
+        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  6769 ,
         "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -103,7 +103,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6784 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6769 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -366,6 +366,11 @@
 </span><span class="lnt">37
 </span><span class="lnt">38
 </span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">final</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MediaCodec</span> <span class="o">{</span>
@@ -379,7 +384,9 @@
 </span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">MediaCodec</span><span class="o">(</span>
 </span></span><span class="line"><span class="cl">            <span class="nd">@NonNull</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">nameIsType</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">encoder</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1">// 1. 获取 Looper 对象，如果是在普通线程中调用那么 `Looper.myLooper()` 必然不为 null，则用这个 Looper 对象构造 `EventHandler`。否则使用 `Looper.getMainLooper()` 获取主线程 Looper 对象并构造 `EventHandler`；
+</span></span><span class="line"><span class="cl">        <span class="c1">// 1. 获取 Looper 对象，如果是在普通线程中调用
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 那么 `Looper.myLooper()` 必然不为 null，则用这个 Looper 对象构造 `EventHandler`
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 否则使用 `Looper.getMainLooper()` 获取主线程 Looper 对象并构造 `EventHandler`
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Looper</span> <span class="n">looper</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">((</span><span class="n">looper</span> <span class="o">=</span> <span class="n">Looper</span><span class="o">.</span><span class="na">myLooper</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">            <span class="n">mEventHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EventHandler</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">looper</span><span class="o">);</span>
@@ -389,7 +396,9 @@
 </span></span><span class="line"><span class="cl">            <span class="n">mEventHandler</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">        <span class="o">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1">// 2. 接着将 `mCallbackHandler`（回调“句柄”） 和 `mOnFrameRenderedHandler`（帧渲染“句柄”） 均赋值为刚才创建的 `EventHandler` 对象，这个 `EventHandler` 是用来处理事件的，后面用到再去分析其处理的具体事件；
+</span></span><span class="line"><span class="cl">        <span class="c1">// 2. 接着将 `mCallbackHandler`（回调“句柄”） 和 `mOnFrameRenderedHandler`（帧渲染“句柄”） 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 均赋值为刚才创建的 `EventHandler` 对象，这个 `EventHandler` 是用来处理事件的，
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 后面用到再去分析其处理的具体事件
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">mCallbackHandler</span> <span class="o">=</span> <span class="n">mEventHandler</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">mOnFrameRenderedHandler</span> <span class="o">=</span> <span class="n">mEventHandler</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">
@@ -397,7 +406,8 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">mBufferLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="c1">// save name used at creation
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 4. `mNameAtCreation` 则表示是否保存创建时使用的名称，此处传入的是 ture，所以并不需要，因为我们已经知道名称了；
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 4. `mNameAtCreation` 则表示是否保存创建时使用的名称，此处传入的是 ture，
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 所以并不需要，因为我们已经知道名称了；
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">mNameAtCreation</span> <span class="o">=</span> <span class="n">nameIsType</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">name</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="c1">// 5. 最后调用 `native_setup` 进行 jni 调用进行进一步初始化。
@@ -641,6 +651,7 @@
 </span><span class="lnt">30
 </span><span class="lnt">31
 </span><span class="lnt">32
+</span><span class="lnt">33
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">sp</span><span class="o">&lt;</span><span class="n">MediaCodec</span><span class="o">&gt;</span> <span class="n">MediaCodec</span><span class="o">::</span><span class="n">CreateByType</span><span class="p">(</span>
@@ -658,7 +669,8 @@
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="o">*</span><span class="n">err</span> <span class="o">=</span> <span class="n">NAME_NOT_FOUND</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 2. 遍历上一步返回的容器 Vector 中的组件名称，创建 MediaCodec cpp 对象，并根据组件名称调用其 init(…) 函数；
+</span></span><span class="line"><span class="cl">    <span class="c1">// 2. 遍历上一步返回的容器 Vector 中的组件名称，创建 MediaCodec cpp 对象，
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 并根据组件名称调用其 init(…) 函数；
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">matchingCodecs</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">sp</span><span class="o">&lt;</span><span class="n">MediaCodec</span><span class="o">&gt;</span> <span class="n">codec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MediaCodec</span><span class="p">(</span><span class="n">looper</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">uid</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="n">AString</span> <span class="n">componentName</span> <span class="o">=</span> <span class="n">matchingCodecs</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
@@ -726,6 +738,7 @@
 </span><span class="lnt">42
 </span><span class="lnt">43
 </span><span class="lnt">44
+</span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">MediaCodecList</span><span class="o">::</span><span class="n">findMatchingCodecs</span><span class="p">(</span>
@@ -741,7 +754,8 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(;;)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// 2. 调用 BpMediaCodecList 的 findCodecByType(…) 方法，实际由 MediaCodecList::findCodecByType(…) 处理返回匹配的 index，当 matchIndex 小于 0 退出循环；
+</span></span><span class="line"><span class="cl">        <span class="c1">// 2. 调用 BpMediaCodecList 的 findCodecByType(…) 方法，
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 实际由 MediaCodecList::findCodecByType(…) 处理返回匹配的 index，当 matchIndex 小于 0 退出循环；
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ssize_t</span> <span class="n">matchIndex</span> <span class="o">=</span>
 </span></span><span class="line"><span class="cl">            <span class="n">list</span><span class="o">-&gt;</span><span class="n">findCodecByType</span><span class="p">(</span><span class="n">mime</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">index</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">

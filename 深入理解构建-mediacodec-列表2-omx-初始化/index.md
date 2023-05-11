@@ -2,36 +2,45 @@
 
 
 
-Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)芯片级支持。
+Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)芯片级支持
 
-![](content/assets/images/加载so.png)
+![[加载so.png]]
+
+{{< admonition tip >}}
+
+在Android系统中,libstagefrighthw是用于管理音视频编解码器的硬件抽象层(HAL)组件
+
+OMX是一套音视频编解码标准,定义了编解码器和应用程序通过的接口,以调用编解码器驱动进行编解码处理
+
+{{< /admonition >}}
+
+### 构造函数
 
 Omx 初始化主要从其[构造函数](https://so.csdn.net/so/search?q=%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0&spm=1001.2101.3001.7020)开始分析。
 
-1. 创建 OMXMaster 对象，并初始化 mMaster 变量；
-2. 初始化 MediaCodecsXmlParser 对象；
-3. 调用 parseXmlFilesInSearchDirs() 方法从一组搜索目录解析顶级 XML 文件；
-4. 调用 parseXmlPath(…) 方法解析顶级 XML 文件。
+1. 创建 OMXMaster 对象，并初始化 mMaster 变量
+2. 初始化 MediaCodecsXmlParser 对象
+3. 调用 parseXmlFilesInSearchDirs() 方法从一组搜索目录解析顶级 XML 文件
+4. 调用 parseXmlPath(…) 方法解析顶级 XML 文件
 
-frameworks/av/media/libstagefright/omx/1.0/Omx.cpp
+> frameworks/av/media/libstagefright/omx/1.0/Omx.cpp
 
-```
+```cpp
 Omx::Omx() :
     mMaster(new OMXMaster()),
     mParser() {
     (void)mParser.parseXmlFilesInSearchDirs();
     (void)mParser.parseXmlPath(mParser.defaultProfilingResultsXmlPath);
 }
-
 ```
 
-1. 打开 /proc/**pid**/comm 路径获取进程名称；
-2. 调用 addVendorPlugin() 添加供应商插件；
-3. 调用 addPlatformPlugin() 添加平台插件。
+1. 打开 /proc/**pid**/comm 路径获取进程名称
+2. 调用 addVendorPlugin() 添加供应商插件
+3. 调用 addPlatformPlugin() 添加平台插件
 
-frameworks/av/media/libstagefright/omx/OMXMaster.cpp
+> frameworks/av/media/libstagefright/omx/OMXMaster.cpp
 
-```
+```cpp
 OMXMaster::OMXMaster() {
 
     pid_t pid = getpid();
@@ -56,10 +65,13 @@ OMXMaster::OMXMaster() {
     addVendorPlugin();
     addPlatformPlugin();
 }
-123456789101112131415161718192021222324
 ```
 
+{{< admonition tip >}}
 addVendorPlugin() 和 addPlatformPlugin() 内部实际都是调用了 addPlugin(const char *libname)，只是传递的实参不一样，前一个为 libstagefrighthw.so，后一个为 libstagefright_softomx_plugin.so 字符串。第一个 so 是硬件厂家实现的，第二个是软件实现的。
+{{< /admonition >}}
+
+#### addPlugin
 
 addPlugin(const char *libname) 方法主要步骤如下：
 
@@ -73,11 +85,11 @@ addPlugin(OMXPluginBase *plugin) 方法主要步骤如下：
 1. while 循环调用 OMXPluginBase 子类具体实现 enumerateComponents(…) 方法枚举组件，如果组件已存在就跳过，不存在就添加到容器 KeyedVector<String8, OMXPluginBase *> 中；
 2. 如果遍历期间发生错误则打印 Log：
 
-OMX plugin failed w/ error 0x%08x after registering %zu components
+**OMX plugin failed w/ error 0x%08x after registering %zu components**
 
-frameworks/av/media/libstagefright/omx/OMXMaster.cpp
+> frameworks/av/media/libstagefright/omx/OMXMaster.cpp
 
-```
+```cpp
 void OMXMaster::addVendorPlugin() {
     addPlugin("libstagefrighthw.so");
 }
@@ -140,16 +152,20 @@ void OMXMaster::addPlugin(OMXPluginBase *plugin) {
              "components", err, mPluginByComponentName.size());
     }
 }
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162
 ```
 
+#### createOMXPlugin
 我们以瑞芯微 rk3399 android 10 [源码](https://so.csdn.net/so/search?q=%E6%BA%90%E7%A0%81&spm=1001.2101.3001.7020)为例进行分析，当加载的是 libstagefrighthw.so，调用其 createOMXPlugin 函数。
 
 createOMXPlugin() 函数内内部仅仅创建了 RKOMXPlugin 对象，RKOMXPlugin 构造函数内根据不同的宏定义进行分支。USE_ROCKCHIP_OMX 在 mk 文件中指定为 true，所以实际会调用 AddCore(“libOMX_Core.so”) 这行代码。
 
-hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp
+{{< admonition tip >}}
+ROCKCHIP OMX是Rockchip公司为其SoC设计的OMX组件,用于操作Rockchip平台视频编解码IP Core,以完成H.264、H.265、VP8、VP9等视频格式的硬件加速编解码
+{{< /admonition >}}
 
-```
+> hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp
+
+```cpp
 OMXPluginBase *createOMXPlugin() {
     return new RKOMXPlugin;
 }
@@ -163,14 +179,13 @@ RKOMXPlugin::RKOMXPlugin()
    AddCore("libmdp_omx_core.so");
 #endif
 }
-12345678910111213
 ```
 
 libstagefrighthw 在 rk3399 android 10 源码中编译脚本 mk 内容如下。可以看到在 USE_ROCKCHIP_OMX 为 true 时候会在编译 CFLAGS 上增加 -DUSE_ROCKCHIP_OMX 参数，代表使用 ROCKCHIP OMX。
 
-hardware/rockchip/librkvpu/libstagefrighthw/Android.mk
+> hardware/rockchip/librkvpu/libstagefrighthw/Android.mk
 
-```
+```mk
 ......
 USE_ROCKCHIP_OMX:=true
 
@@ -186,7 +201,6 @@ endif
 ......
 LOCAL_MODULE := libstagefrighthw
 ......
-123456789101112131415
 ```
 
 1. 判断入参是否为 libOMX_Core.so 这个字符串，如果是则置位 isRKCore；
@@ -197,9 +211,9 @@ LOCAL_MODULE := libstagefrighthw
 6. 计算在给定 OMX 核心内注册的组件数量；
 7. 向容器 Vector<RKOMXCore*> 中添加插件（RKOMXCore* 指针）。
 
-hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp
+> hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp
 
-```
+```cpp
 OMX_ERRORTYPE RKOMXPlugin::AddCore(const char* coreName)
 {
    bool isRKCore = false;
@@ -268,10 +282,11 @@ OMX_ERRORTYPE RKOMXPlugin::AddCore(const char* coreName)
     }
     return OMX_ErrorNone;
 }
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768
 ```
 
-libOMX_Core.so 源码位于 /hardware/rockchip/omx_il/core 路径下。重点来看 RKOMX_Init 和 RKOMX_ComponentNameEnum 函数实现。
+libOMX_Core.so 源码位于 /hardware/rockchip/omx_il/core 路径下。重点来看 `RKOMX_Init` 和 `RKOMX_ComponentNameEnum` 函数实现。
+
+##### RKOMX_Init
 
 RKOMX_Init 函数实现主要步骤：
 
@@ -279,11 +294,12 @@ RKOMX_Init 函数实现主要步骤：
 2. 调用 Rockchip_OMX_ResourceManager_Init(…) 进行资源管理初始化；
 3. 调用 Rockchip_OSAL_MutexCreate(…) 创建 OSAL 互斥锁。
 
-RKOMX_ComponentNameEnum 函数实现简单地多，在 gComponentList 全局组件列表中根据 index 返回组件名称。
+##### RKOMX_ComponentNameEnum
+`RKOMX_ComponentNameEnum` 函数实现简单地多，在 `gComponentList` 全局组件列表中根据 index 返回组件名称。
 
-/hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c
+> /hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c
 
-```
+```c
 OMX_API OMX_ERRORTYPE OMX_APIENTRY RKOMX_Init(void)
 {
     OMX_ERRORTYPE ret = OMX_ErrorNone;
@@ -344,14 +360,13 @@ EXIT:
 
     return ret;
 }
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960
 ```
 
-打开 libomxvpu_dec.so 和 libomxvpu_enc.so，获取符号 Rockchip_OMX_COMPONENT_Library_Register，调用 Rockchip_OMX_COMPONENT_Library_Register 函数获取 so 内部的组件数量和详细信息（包括组件名称、角色、角色数量和 lib 名称），最后将组件 list 和组件数量通过函数入参返回给调用者。
+打开`libomxvpu_dec.so` 和 `libomxvpu_enc.so`，获取符号`Rockchip_OMX_COMPONENT_Library_Register`，调用 `Rockchip_OMX_COMPONENT_Library_Register` 函数获取 so 内部的组件数量和详细信息（包括组件名称、角色、角色数量和 lib 名称），最后将组件 list 和组件数量通过函数入参返回给调用者。
 
-/hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c
+> /hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c
 
-```
+```c
 static const ROCKCHIP_COMPONENT_INFO kCompInfo[] = {
     { "rk.omx_dec", "libomxvpu_dec.so" },
     { "rk.omx_enc", "libomxvpu_enc.so" },
@@ -426,16 +441,16 @@ OMX_ERRORTYPE Rockchip_OMX_Component_Register(ROCKCHIP_OMX_COMPONENT_REGLIST **c
 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071
 ```
 
-Rockchip_OMX_Component_Register(…) 方法中进行了两次调用 Rockchip_OMX_COMPONENT_Library_Register(…) 方法，一次入参为 NULL，另一次入参是 RockchipRegisterComponentType 数组。
+`Rockchip_OMX_Component_Register(…) `方法中进行了两次调用 `Rockchip_OMX_COMPONENT_Library_Register(…)` 方法，一次入参为 NULL，另一次入参是 `RockchipRegisterComponentType` 数组。
 
-Rockchip_OMX_Component_Register(…) 方法中首先打开的是 libomxvpu_dec.so，因此先分析它的 Rockchip_OMX_COMPONENT_Library_Register(…) 函数。
+`Rockchip_OMX_Component_Register(…)` 方法中首先打开的是 `libomxvpu_dec.so`，因此先分析它的 `Rockchip_OMX_COMPONENT_Library_Register(…)` 函数。
 
-1. 不难看出当入参为 NULL 时，直接 goto 到了 EXIT 标签处，也就是直接返回 SIZE_OF_DEC_CORE。这个值定义在 RkOMX_Core.h 中；
-2. 当入参不为 NULL 时，for 循环遍历 dec_core 数组，对 RockchipRegisterComponentType 具体项进行 copy 赋值。dec_core 数组也定义在 RkOMX_Core.h 中 ；
+1. 不难看出当入参为 NULL 时，直接 goto 到了 EXIT 标签处，也就是直接返回 `SIZE_OF_DEC_CORE`。这个值定义在 `RkOMX_Core.h` 中；
+2. 当入参不为 NULL 时，for 循环遍历 `dec_core` 数组，对 `RockchipRegisterComponentType` 具体项进行 copy 赋值。`dec_core` 数组也定义在 `RkOMX_Core.h` 中 ；
 
-hardware/rockchip/omx_il/[component](https://so.csdn.net/so/search?q=component&spm=1001.2101.3001.7020)/video/dec/library_register.c
+> hardware/rockchip/omx_il/[component](https://so.csdn.net/so/search?q=component&spm=1001.2101.3001.7020)/video/dec/library_register.c
 
-```
+```c
 OSCL_EXPORT_REF int Rockchip_OMX_COMPONENT_Library_Register(RockchipRegisterComponentType **rockchipComponents)
 {
     FunctionIn();
@@ -456,14 +471,13 @@ EXIT:
 
     return SIZE_OF_DEC_CORE;
 }
-1234567891011121314151617181920
 ```
 
-dec_core 数组非常直观直接进行了定义，但是有些项条件编译进行了结合。确切地说，在 rk3399 android 10 平台上有些项就会被排除在外。现在再来看 SIZE_OF_DEC_CORE 的值就非常明确了。
+dec_core 数组非常直观直接进行了定义，但是有些项条件编译进行了结合。确切地说，在 rk3399 android 10 平台上有些项就会被排除在外。现在再来看 `SIZE_OF_DEC_CORE` 的值就非常明确了。
 
-hardware/rockchip/omx_il/component/video/dec/RkOMX_Core.h
+> hardware/rockchip/omx_il/component/video/dec/RkOMX_Core.h
 
-```
+```c
 static const omx_core_cb_type dec_core[] = {
     {
         "OMX.rk.video_decoder.avc",
@@ -567,14 +581,13 @@ static const omx_core_cb_type dec_core[] = {
 };
 
 const unsigned int SIZE_OF_DEC_CORE = sizeof(dec_core) / sizeof(dec_core[0]);
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103
 ```
 
-具体哪些项没有开启需要结合 mk 脚本去分析。当 PLATFORM_SDK_VERSION >= 26 时，编译选项会添加 AVS80，android 10 为 29，所以 AVS80 被定义了，也就是说 AVS80 预编译这一项不再包含在内。BOARD_WIDEVINE_OEMCRYPTO_LEVEL、BOARD_SUPPORT_HEVC、BOARD_SUPPORT_VP6 和 BOARD_SUPPORT_VP9 从这个脚本不能看出，需进一步分析，实际上它们被定义在 device/rockchip/rk3399/BoardConfig.mk。
+具体哪些项没有开启需要结合 mk 脚本去分析。当 PLATFORM_SDK_VERSION >= 26 时，编译选项会添加 AVS80，android 10 为 29，所以 AVS80 被定义了，也就是说 AVS80 预编译这一项不再包含在内。`BOARD_WIDEVINE_OEMCRYPTO_LEVEL`、`BOARD_SUPPORT_HEVC`、`BOARD_SUPPORT_VP6` 和 `BOARD_SUPPORT_VP9` , 从这个脚本不能看出，需进一步分析，实际上它们被定义在 device/rockchip/rk3399/BoardConfig.mk。
 
-hardware/rockchip/omx_il/component/video/dec/Android.mk
+> hardware/rockchip/omx_il/component/video/dec/Android.mk
 
-```
+```mk
 ......
 ifeq (1,$(strip $(shell expr $(PLATFORM_SDK_VERSION) \>= 26)))
 LOCAL_CFLAGS += -DAVS80
@@ -607,18 +620,17 @@ ifeq ($(filter %false, $(BOARD_SUPPORT_VP9)), )
 LOCAL_CFLAGS += -DSUPPORT_VP9=1
 endif
 ......
-1234567891011121314151617181920212223242526272829303132
 ```
 
-对于 rk3399 android 10 平台 BOARD_WIDEVINE_OEMCRYPTO_LEVEL 等于 3，3 不等于 1 也就是不满足上面的 ifeq 语句，编译选项不再添加 -DHAVE_L1_SVP_MODE=ON。BOARD_SUPPORT_VP9 等于 true，表示支持 VP9。但不支持 VP6，BOARD_SUPPORT_HEVC 没有定义，但经过 ifeq 语句 filter 函数的过滤就会打开添加 -DSUPPORT_HEVC=1 编译选项。
+对于 rk3399 android 10 平台 `BOARD_WIDEVINE_OEMCRYPTO_LEVEL` 等于 3，3 不等于 1 也就是不满足上面的 ifeq 语句，编译选项不再添加 `-DHAVE_L1_SVP_MODE=ON`。`BOARD_SUPPORT_VP9` 等于 true，表示支持 VP9。但不支持 VP6，`BOARD_SUPPORT_HEVC` 没有定义，但经过 ifeq 语句 filter 函数的过滤就会打开添加 `-DSUPPORT_HEVC=1` 编译选项。
 
 filter：过滤语句，过滤掉不符合指定的模式的内容，仅保留符合指定模式的内容。
 
 个人猜测这里之所以这样写，就是为了在不定义某个变量时，默认其开启。
 
-device/rockchip/rk3399/BoardConfig.mk
+> device/rockchip/rk3399/BoardConfig.mk
 
-```
+```mk
 ......
 # Add widevine L3 support
 BOARD_WIDEVINE_OEMCRYPTO_LEVEL := 3
@@ -626,17 +638,16 @@ BOARD_WIDEVINE_OEMCRYPTO_LEVEL := 3
 #Config omx to support codec type.
 BOARD_SUPPORT_VP9 := true
 BOARD_SUPPORT_VP6 := false
-
 ```
 
-再来看打开 libomxvpu_enc.so。
+再来看打开 `libomxvpu_enc.so`。
 
-1. 同样当入参为 NULL 时，直接 goto 到了 EXIT 标签处，也就是直接返回 SIZE_OF_ENC_CORE。这个值定义在 RkOMX_Core.h 中；
-2. 当入参不为 NULL 时，for 循环遍历 enc_core 数组，对 RockchipRegisterComponentType 具体项进行 copy 赋值。enc_core 数组也定义在 RkOMX_Core.h 中 ；
+1. 同样当入参为 NULL 时，直接 goto 到了 EXIT 标签处，也就是直接返回 `SIZE_OF_ENC_CORE`。这个值定义在` RkOMX_Core.h` 中；
+2. 当入参不为 NULL 时，for 循环遍历 enc_core 数组，对 `RockchipRegisterComponentType` 具体项进行 copy 赋值。`enc_core` 数组也定义在 `RkOMX_Core.h` 中 ；
 
-hardware/rockchip/omx_il/component/video/enc/library_register.c
+> hardware/rockchip/omx_il/component/video/enc/library_register.c
 
-```
+```c
 OSCL_EXPORT_REF int Rockchip_OMX_COMPONENT_Library_Register(RockchipRegisterComponentType **rockchipComponents)
 {
     FunctionIn();
@@ -656,14 +667,13 @@ EXIT:
 
     return SIZE_OF_ENC_CORE;
 }
-123456789101112131415161718
 ```
 
-SUPPORT_HEVC_ENC 和 SUPPORT_VP8_ENC 都没有被定义，因此编译时不支持它们，也就是 rk3399 只支持两种编码器 OMX.rk.video_encoder.avc 和 OMX.IMG.rk_encoder.avc。
+`SUPPORT_HEVC_ENC` 和 `SUPPORT_VP8_ENC` 都没有被定义，因此编译时不支持它们，也就是 rk3399 只支持两种编码器 `OMX.rk.video_encoder.avc` 和 `OMX.IMG.rk_encoder.avc`。
 
-hardware/rockchip/omx_il/component/video/enc/RkOMX_Core.h
+> hardware/rockchip/omx_il/component/video/enc/RkOMX_Core.h
 
-```
+```c
 static const omx_core_cb_type enc_core[] = {
     {
         "OMX.rk.video_encoder.avc",
@@ -690,14 +700,13 @@ static const omx_core_cb_type enc_core[] = {
 };
 
 const unsigned int SIZE_OF_ENC_CORE = sizeof(enc_core) / sizeof(enc_core[0]);
-12345678910111213141516171819202122232425
 ```
 
-BOARD_SUPPORT_HEVC_ENC 和 BOARD_SUPPORT_VP8_ENC 没有定义，filter 过滤 true 就会过滤不到，ifneq 此时就不满足条件，所以 -DSUPPORT_HEVC_ENC=1 和 -DSUPPORT_VP8_ENC=1 编译选项不再添加到编译过程。
+`BOARD_SUPPORT_HEVC_ENC` 和 `BOARD_SUPPORT_VP8_ENC` 没有定义，filter 过滤 true 就会过滤不到，ifneq 此时就不满足条件，所以` -DSUPPORT_HEVC_ENC=1` 和` -DSUPPORT_VP8_ENC=1` 编译选项不再添加到编译过程。
 
-hardware/rockchip/omx_il/component/video/enc/Android.mk
+> hardware/rockchip/omx_il/component/video/enc/Android.mk
 
-```
+```mk
 ......
 ifneq ($(filter %true, $(BOARD_SUPPORT_HEVC_ENC)), )
 LOCAL_CFLAGS += -DSUPPORT_HEVC_ENC=1
@@ -707,14 +716,13 @@ ifneq ($(filter %true, $(BOARD_SUPPORT_VP8_ENC)), )
 LOCAL_CFLAGS += -DSUPPORT_VP8_ENC=1
 endif
 ......
-12345678
 ```
 
-现在继续分析 RKOMX_Init(void) 函数中的 Rockchip_OMX_ResourceManager_Init() 方法具体调用做了些什么？我们看到只是创建了一把互斥锁 ghVideoRMComponentListMutex。
+现在继续分析 `RKOMX_Init(void)` 函数中的 `Rockchip_OMX_ResourceManager_Init()` 方法具体调用做了些什么？我们看到只是创建了一把互斥锁 `ghVideoRMComponentListMutex`。
 
-hardware/rockchip/omx_il/component/common/Rockchip_OMX_Resourcemanager.c
+> hardware/rockchip/omx_il/component/common/Rockchip_OMX_Resourcemanager.c
 
-```
+```c
 OMX_ERRORTYPE Rockchip_OMX_ResourceManager_Init()
 {
     OMX_ERRORTYPE ret = OMX_ErrorNone;
@@ -726,14 +734,13 @@ OMX_ERRORTYPE Rockchip_OMX_ResourceManager_Init()
 
     return ret;
 }
-12345678910
 ```
 
-Rockchip_OSAL_MutexCreate(…) 函数实现非常简单，内部有 pthread 函数进行支持。首先给 mutex 指针变量分配内存，然后调用 pthread_mutex_init(…) 进行初始化。
+`Rockchip_OSAL_MutexCreate(…)` 函数实现非常简单，内部有 `pthread` 函数进行支持。首先给 `mutex` 指针变量分配内存，然后调用 `pthread_mutex_init(…)` 进行初始化。
 
-hardware/rockchip/omx_il/osal/Rockchip_OSAL_Mutex.c
+> hardware/rockchip/omx_il/osal/Rockchip_OSAL_Mutex.c
 
-```
+```c
 OMX_ERRORTYPE Rockchip_OSAL_MutexCreate(OMX_HANDLETYPE *mutexHandle)
 {
     pthread_mutex_t *mutex;
@@ -750,16 +757,16 @@ OMX_ERRORTYPE Rockchip_OSAL_MutexCreate(OMX_HANDLETYPE *mutexHandle)
     *mutexHandle = (OMX_HANDLETYPE)mutex;
     return OMX_ErrorNone;
 }
-123456789101112131415
 ```
 
-OMXMaster() 构造函数中最后一行调用了 addPlatformPlugin()，也就是添加软编码插件库。软编码插件库编译 bp 定义在 frameworks/av/media/libstagefright/omx/Android.bp 中，编译源文件只使用到了 SoftOMXPlugin.cpp。OMXMaster::addPlugin(const char *libname) 方法中对 createOMXPlugin 函数指针的调用实际上会调用到 frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp 类中的 createOMXPlugin() 函数。
+`OMXMaster()` 构造函数中最后一行调用了 `addPlatformPlugin()`，也就是添加软编码插件库。软编码插件库编译 bp 定义在 `frameworks/av/media/libstagefright/omx/Android.bp` 中，编译源文件只使用到了` SoftOMXPlugin.cpp`。
+`OMXMaster::addPlugin(const char *libname`) 方法中对 `createOMXPlugin` 函数指针的调用实际上会调用到` frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp `类中的 `createOMXPlugin()` 函数。
+![[addPlatformPlugin.jpg]]
 
-![addPlatformPlugin.jpg](content/assets/images/addPlatformPlugin.jpg)
 
-frameworks/av/media/libstagefright/omx/Android.bp
+> frameworks/av/media/libstagefright/omx/Android.bp
 
-```
+```bp
 cc_library_shared {
     name: "libstagefright_softomx_plugin",
     vendor_available: true,
@@ -802,14 +809,13 @@ cc_library_shared {
         cfi: true,
     },
 }
-11011121314151617181920212223242526272829303132333435363738394041
 ```
 
-此方法中仅仅新建了一个 SoftOMXPlugin 对象，并返回。SoftOMXPlugin 构造函数啥也没干。
+此方法中仅仅新建了一个 `SoftOMXPlugin` 对象，并返回。`SoftOMXPlugin` 构造函数啥也没干。
 
-frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp
+> frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp
 
-```
+```cpp
 extern "C" OMXPluginBase* createOMXPlugin() {
     ALOGI("createOMXPlugin");
     return new SoftOMXPlugin();
@@ -817,14 +823,13 @@ extern "C" OMXPluginBase* createOMXPlugin() {
 ......
 SoftOMXPlugin::SoftOMXPlugin() {
 }
-
 ```
 
-再来分析 SoftOMXPlugin::enumerateComponents(…) 函数。实现也非常简单，仅仅将 index 处的 kComponents 数组具体项中的 name 拷贝给入参 name。
+再来分析 `SoftOMXPlugin::enumerateComponents(…)` 函数。实现也非常简单，仅仅将 index 处的 `kComponents` 数组具体项中的 name 拷贝给入参 name。
 
-frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp
+> frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp
 
-```
+```cpp
 OMX_ERRORTYPE SoftOMXPlugin::enumerateComponents(
         OMX_STRING name,
         size_t /* size */,
@@ -837,14 +842,13 @@ OMX_ERRORTYPE SoftOMXPlugin::enumerateComponents(
 
     return OMX_ErrorNone;
 }
-11011
 ```
 
-现在看看 kComponents 变量，它的每一项是一个结构体（包含组件名称、库前缀名称和角色）。
+现在看看 `kComponents` 变量，它的每一项是一个结构体（包含组件名称、库前缀名称和角色）。
 
-frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp
+> frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp
 
-```
+```cpp
 static const struct {
     const char *mName;
     const char *mLibNameSuffix;
@@ -884,18 +888,17 @@ static const struct {
     { "OMX.google.flac.encoder", "flacenc", "audio_encoder.flac" },
     { "OMX.google.gsm.decoder", "gsmdec", "audio_decoder.gsm" },
 };
-167891011121314151617181920212223242526272829303132333435363738
 ```
 
 Omx 构造函数中，还初始化了 mParser 变量，mParser 指向 MediaCodecsXmlParser 对象。MediaCodecsXmlParser 构造器中新建了 Impl 对象，并将其用来初始化 mImpl 变量。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-Impl 无参构造函数中初始化了 mState 和 mParsingStatus（NO_INIT 未初始化）变量，和解析 [xml](https://so.csdn.net/so/search?q=xml&spm=1001.2101.3001.7020) 有关。
+Impl 无参构造函数中初始化了 `mState` 和 `mParsingStatus`（NO_INIT 未初始化）变量，和解析 [xml](https://so.csdn.net/so/search?q=xml&spm=1001.2101.3001.7020) 有关。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 struct MediaCodecsXmlParser::Impl {
     ......
     // Parsed data
@@ -918,18 +921,17 @@ struct MediaCodecsXmlParser::Impl {
     }
     ......
 }
-123456789101112131415161718192021
 ```
 
-接下来执行代码 Omx 构造函数中的 (void)mParser.parseXmlFilesInSearchDirs()。MediaCodecsXmlParser::parseXmlFilesInSearchDirs(…) 仅仅将任务委托给 Impl 具体实现去处理。我们看到这个函数有两个入参，但调用确是无参的，实际上使用了默认值，MediaCodecsXmlParser.h 文件中给出了答案。
+接下来执行代码 Omx 构造函数中的 `(void)mParser.parseXmlFilesInSearchDirs()`。`MediaCodecsXmlParser::parseXmlFilesInSearchDirs(…)` 仅仅将任务委托给 Impl 具体实现去处理。我们看到这个函数有两个入参，但调用确是无参的，实际上使用了默认值，`MediaCodecsXmlParser.h` 文件中给出了答案。
 
-![parseXmlFilesInSearchDirsSequenceDiagram.jpg](content/assets/images/parseXmlFilesInSearchDirsSequenceDiagram.jpg)
+![[parseXmlFilesInSearchDirsSequenceDiagram.jpg]]
 
-MediaCodecsXmlParser::Impl::parseXmlFilesInSearchDirs(…) 具体实现中，首先遍历所有文件名，然后调用 findFileInDirs(…) 在给定的目录中开始查找，找到后调用 parseXmlPath(…) 进行解析，最后调用 combineStatus(…) 确定最终返回值（返回状态）。
+`MediaCodecsXmlParser::Impl::parseXmlFilesInSearchDirs(…)` 具体实现中，首先遍历所有文件名，然后调用` findFileInDirs(…)` 在给定的目录中开始查找，找到后调用 `parseXmlPath(…)` 进行解析，最后调用 `combineStatus(…)` 确定最终返回值（返回状态）。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 status_t MediaCodecsXmlParser::parseXmlFilesInSearchDirs(
         const std::vector<std::string> &fileNames,
         const std::vector<std::string> &searchDirs) {
@@ -952,14 +954,13 @@ status_t MediaCodecsXmlParser::Impl::parseXmlFilesInSearchDirs(
     }
     return res;
 }
-123456789101112131415161718192021
 ```
 
 搜索路径在 “/odm/etc”、 “/vendor/etc” 和 “/etc” 中进行查找，文件名称是 “media_codecs.xml” 和 “media_codecs_performance.xml”。
 
-frameworks/av/media/libstagefright/xmlparser/include/media/stagefright/xmlparser/MediaCodecsXmlParser.h
+>frameworks/av/media/libstagefright/xmlparser/include/media/stagefright/xmlparser/MediaCodecsXmlParser.h
 
-```
+```c
 namespace android {
 
 class MediaCodecsXmlParser {
@@ -977,24 +978,28 @@ public:
             const std::vector<std::string> &searchDirs = getDefaultSearchDirs());
     ......
 } // namespace android
-12345678910111213141516
 ```
 
 在搜索目录列表中搜索文件。对于’ searchDirs ‘中的每个字符串’ searchDir '， ’ searchDir/fileName ‘将被测试是否它是一个有效的文件名。如果它是一个有效的文件名，’ searchDir/fileName '将存储在输出变量’outPath ‘中，函数将返回’ true ‘。否则，继续搜索，直到到达’ searchDirs ‘中的’ nullptr ‘元素，此时函数返回’ false '。
 
-findFileInDirs(…) 内部调用了 fileExists(…) 用于判断文件是否存在。
+`findFileInDirs(…)` 内部调用了` fileExists(…)` 用于判断文件是否存在。
 
-> 
-> 
-> 
-> stat 用来判断没有打开的文件，而 fstat 用来判断打开的文件。我们使用最多的属性是 st_mode。通过这个属性我们可以判断给定的文件是一个普通文件还是一个目录、连接等等。可以使用下面几个宏来判断：
-> 
-> **S_ISREG(st_mode) 是否是一个常规文件**
-> 
+{{< admonition tip >}}
+stat 用来判断没有打开的文件，而 fstat 用来判断打开的文件。我们使用最多的属性是 st_mode。通过这个属性我们可以判断给定的文件是一个普通文件还是一个目录、连接等等。可以使用下面几个宏来判断：
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+- S_ISREG(st_mode):是否为普通文件  
+- S_ISDIR(st_mode):是否为目录  
+- S_ISCHR(st_mode):是否为字符设备文件  
+- S_ISBLK(st_mode):是否为块设备文件  
+- S_ISFIFO(st_mode):是否为先进先出(FIFO)队列  
+- S_ISLNK(st_mode):是否为符号链接  
+- S_ISSOCK(st_mode):是否为套接字
 
-```
+{{< /admonition >}}
+
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+
+```cpp
 bool fileExists(const std::string &path) {
     struct stat fileStat;
     return stat(path.c_str(), &fileStat) == 0 && S_ISREG(fileStat.st_mode);
@@ -1013,16 +1018,15 @@ bool findFileInDirs(
     }
     return false;
 }
-1234567891011121314151617
 ```
 
-MediaCodecsXmlParser::parseXmlPath(…) 实际直接委托其实现 Impl 进行处理。
+`MediaCodecsXmlParser::parseXmlPath(…)` 实际直接委托其实现 Impl 进行处理。
 
-MediaCodecsXmlParser::Impl::parseXmlPath(…) 具体实现中再次判断文件是否存在，不存在直接返回。然后初始化 Parser 结构体，调用其 parseXmlFile() 方法进行 xml 文件解析。最后调用 combineStatus(…) 处理最终状态返回。
+`MediaCodecsXmlParser::Impl::parseXmlPath(…) `具体实现中再次判断文件是否存在，不存在直接返回。然后初始化 Parser 结构体，调用其 `parseXmlFile()` 方法进行 xml 文件解析。最后调用 `combineStatus(…)` 处理最终状态返回。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 status_t MediaCodecsXmlParser::parseXmlPath(const std::string &path) {
     return mImpl->parseXmlPath(path);
 }
@@ -1047,28 +1051,27 @@ status_t MediaCodecsXmlParser::Impl::parseXmlPath(const std::string &path) {
     mParsingStatus = combineStatus(mParsingStatus, parser.getStatus());
     return parser.getStatus();
 }
-1234567891011121314151617181920212223
 ```
 
 MediaCodecsXmlParser::Impl::Parser::parseXmlFile() 方法中打开了 xml 文件，调用 XML Parser expat 库进行实际的 xml 解析。
 
-> 
-> 
-> 
-> expat 是使用 C 所写的 XML 解释器，采用流的方式来解析 XML 文件，并且基于事件通知型来调用分析到的数据，并不需要把所有 XML 文件全部加载到内存里，这样可以分析非常大的 XML 文件。由于 expat 库是由 XML 的主要负责人 James Clark 来实现的，因此它是符合 W3C 的 XML 标准的。
-> 
-> **XML_ParserCreate**(const XML_Char *encodingName) 参数一般为 NULL，函数返回一个 XML_Parser 类型指针
-> 
-> **XML_SetElementHandler**(XML_Parser parser, XML_StartElementHandler start, XML_EndElementHandler end) 第一个参数是 Parser 句柄，第二个和第三个参数则是整个 Parser 的核心，类型为 CallBack 的函数
-> 
-> typedef void (XMLCALL ***XML_StartElementHandler**) (void *userData, const XML_Char *name, const XML_Char **atts); 处理 xml 标签开始。 其中第一个参数 userData, 可以由函数 XML_SetUserData(XML_Parser parser, void *p) 设置
-> 
-> typedef void (XMLCALL *XML_EndElementHandler) (void *userData, const XML_Char *name); 处理 xml 标签结束。
-> 
+{{< admonition tip >}}
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+expat 是使用 C 所写的 XML 解释器，采用流的方式来解析 XML 文件，并且基于事件通知型来调用分析到的数据，并不需要把所有 XML 文件全部加载到内存里，这样可以分析非常大的 XML 文件。由于 expat 库是由 XML 的主要负责人 James Clark 来实现的，因此它是符合 W3C 的 XML 标准的。
+  
+- **XML_ParserCreate**(const XML_Char *encodingName) 参数一般为 NULL，函数返回一个 XML_Parser 类型指针
 
-```
+- **XML_SetElementHandler**(XML_Parser parser, XML_StartElementHandler start, XML_EndElementHandler end) 第一个参数是 Parser 句柄，第二个和第三个参数则是整个 Parser 的核心，类型为 CallBack 的函数
+
+- typedef void (XMLCALL ***XML_StartElementHandler**) (void *userData, const XML_Char *name, const XML_Char **atts); 处理 xml 标签开始。 其中第一个参数 userData, 可以由函数 XML_SetUserData(XML_Parser parser, void *p) 设置
+
+- typedef void (XMLCALL *XML_EndElementHandler) (void *userData, const XML_Char *name); 处理 xml 标签结束。
+
+{{< /admonition >}}
+
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+
+```cpp
 void MediaCodecsXmlParser::Impl::Parser::parseXmlFile() {
     const char *path = mPath.c_str();
     ALOGD("parsing %s...", path);
@@ -1125,14 +1128,13 @@ void MediaCodecsXmlParser::Impl::Parser::parseXmlFile() {
     fclose(file);
     file = nullptr;
 }
-12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455
 ```
 
-StartElementHandlerWrapper(…) 和 EndElementHandlerWrapper(…) 回调函数在上一步进行了设置，我们知道其内部实际最终调用 Parser 的 startElementHandler(…) 和 endElementHandler(…) 方法。
+`StartElementHandlerWrapper(…)` 和 `EndElementHandlerWrapper(…)` 回调函数在上一步进行了设置，我们知道其内部实际最终调用 Parser 的 `startElementHandler(…)` 和 `endElementHandler(…)` 方法。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 // static
 void MediaCodecsXmlParser::Impl::Parser::StartElementHandlerWrapper(
         void *me, const char *name, const char **attrs) {
@@ -1143,14 +1145,13 @@ void MediaCodecsXmlParser::Impl::Parser::StartElementHandlerWrapper(
 void MediaCodecsXmlParser::Impl::Parser::EndElementHandlerWrapper(void *me, const char *name) {
     static_cast<MediaCodecsXmlParser::Impl::Parser*>(me)->endElementHandler(name);
 }
-123456789
 ```
 
-解析完成后我们就获得了 CodecMap、RoleMap 和 AttributeMap。
+解析完成后我们就获得了 `CodecMap`、`RoleMap` 和 `AttributeMap`。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 void MediaCodecsXmlParser::Impl::Parser::startElementHandler(
         const char *name, const char **attrs) {
     bool inType = true;
@@ -1357,5 +1358,5 @@ void MediaCodecsXmlParser::Impl::Parser::endElementHandler(const char *name) {
 }
 ```
 
-最后再来看执行代码 Omx 构造函数中的 (void)mParser.parseXmlPath(mParser.defaultProfilingResultsXmlPath) 这段代码，defaultProfilingResultsXmlPath 路径等于 “/data/misc/media/media_codecs_profiling_results.xml”，也就是直接解析这个 xml 文件。
+最后再来看执行代码 Omx 构造函数中的 `(void)mParser.parseXmlPath(mParser.defaultProfilingResultsXmlPath)` 这段代码，`defaultProfilingResultsXmlPath` 路径等于 `“/data/misc/media/media_codecs_profiling_results.xml”`，也就是直接解析这个 xml 文件。
 

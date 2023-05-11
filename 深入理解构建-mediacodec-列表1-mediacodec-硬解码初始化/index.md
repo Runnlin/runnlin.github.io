@@ -129,7 +129,9 @@ final public class MediaCodec {
     private MediaCodec(
             @NonNull String name, boolean nameIsType, boolean encoder) {
 
-        // 1. 获取 Looper 对象，如果是在普通线程中调用那么 `Looper.myLooper()` 必然不为 null，则用这个 Looper 对象构造 `EventHandler`。否则使用 `Looper.getMainLooper()` 获取主线程 Looper 对象并构造 `EventHandler`；
+        // 1. 获取 Looper 对象，如果是在普通线程中调用
+        // 那么 `Looper.myLooper()` 必然不为 null，则用这个 Looper 对象构造 `EventHandler`
+        // 否则使用 `Looper.getMainLooper()` 获取主线程 Looper 对象并构造 `EventHandler`
         Looper looper;
         if ((looper = Looper.myLooper()) != null) {
             mEventHandler = new EventHandler(this, looper);
@@ -139,7 +141,9 @@ final public class MediaCodec {
             mEventHandler = null;
         }
 
-        // 2. 接着将 `mCallbackHandler`（回调“句柄”） 和 `mOnFrameRenderedHandler`（帧渲染“句柄”） 均赋值为刚才创建的 `EventHandler` 对象，这个 `EventHandler` 是用来处理事件的，后面用到再去分析其处理的具体事件；
+        // 2. 接着将 `mCallbackHandler`（回调“句柄”） 和 `mOnFrameRenderedHandler`（帧渲染“句柄”） 
+        // 均赋值为刚才创建的 `EventHandler` 对象，这个 `EventHandler` 是用来处理事件的，
+        // 后面用到再去分析其处理的具体事件
         mCallbackHandler = mEventHandler;
         mOnFrameRenderedHandler = mEventHandler;
 
@@ -147,7 +151,8 @@ final public class MediaCodec {
         mBufferLock = new Object();
 
         // save name used at creation
-        // 4. `mNameAtCreation` 则表示是否保存创建时使用的名称，此处传入的是 ture，所以并不需要，因为我们已经知道名称了；
+        // 4. `mNameAtCreation` 则表示是否保存创建时使用的名称，此处传入的是 ture，
+        // 所以并不需要，因为我们已经知道名称了；
         mNameAtCreation = nameIsType ? null : name;
 
         // 5. 最后调用 `native_setup` 进行 jni 调用进行进一步初始化。
@@ -279,7 +284,8 @@ sp<MediaCodec> MediaCodec::CreateByType(
     if (err != NULL) {
         *err = NAME_NOT_FOUND;
     }
-    // 2. 遍历上一步返回的容器 Vector 中的组件名称，创建 MediaCodec cpp 对象，并根据组件名称调用其 init(…) 函数；
+    // 2. 遍历上一步返回的容器 Vector 中的组件名称，创建 MediaCodec cpp 对象，
+    // 并根据组件名称调用其 init(…) 函数；
     for (size_t i = 0; i < matchingCodecs.size(); ++i) {
         sp<MediaCodec> codec = new MediaCodec(looper, pid, uid);
         AString componentName = matchingCodecs[i];
@@ -314,7 +320,8 @@ void MediaCodecList::findMatchingCodecs(
 
     size_t index = 0;
     for (;;) {
-        // 2. 调用 BpMediaCodecList 的 findCodecByType(…) 方法，实际由 MediaCodecList::findCodecByType(…) 处理返回匹配的 index，当 matchIndex 小于 0 退出循环；
+        // 2. 调用 BpMediaCodecList 的 findCodecByType(…) 方法，
+        // 实际由 MediaCodecList::findCodecByType(…) 处理返回匹配的 index，当 matchIndex 小于 0 退出循环；
         ssize_t matchIndex =
             list->findCodecByType(mime, encoder, index);
 
