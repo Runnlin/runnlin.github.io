@@ -58,7 +58,7 @@
     <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/</guid>
-    <description><![CDATA[MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。 MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） MediaScannerService 是 Android 平台]]></description>
+    <description><![CDATA[MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service Note 本文以 Android 5.1 为准 MediaScannerService 研究 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service, 它并不是系]]></description>
 </item>
 </channel>
 </rss>
