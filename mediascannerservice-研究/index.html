@@ -614,8 +614,10 @@
 </div>
 </div><h5 id="212-用-mediascannerconnection-来发起扫描动作">2.1.2 用 MediaScannerConnection 来发起扫描动作</h5>
 <p>除了利用类似 ACTION_MEDIA_SCANNER_SCAN_FILE 这样的广播，系统中还有一种办法可以发起扫描动作，那就是先利用 bindService 机制得到的 IMediaScannerService 代理接口，而后再通过调用该接口的 requestScanFile() 或 scanFile()，同样可以向 MediaScannerService 发出扫描语义。</p>
-<p>不过，我们一般并不直白地去 bindService，而是通过一种封装好的辅助类：MediaScannerConnection。该类的定义截选如下：<br>
-frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
+<p>不过，我们一般并不直白地去 bindService，而是通过一种封装好的辅助类：MediaScannerConnection。该类的定义截选如下：</p>
+<blockquote>
+<p>frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -628,20 +630,20 @@ frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public class MediaScannerConnection implements ServiceConnection {
-</span></span><span class="line"><span class="cl">    private static final String TAG = &#34;MediaScannerConnection&#34;;
-</span></span><span class="line"><span class="cl">    private Context mContext;
-</span></span><span class="line"><span class="cl">    private MediaScannerConnectionClient mClient;
-</span></span><span class="line"><span class="cl">    private IMediaScannerService mService;
-</span></span><span class="line"><span class="cl">    private boolean mConnected; // true if connect() has been called since last disconnect()
-</span></span><span class="line"><span class="cl">    private final IMediaScannerListener.Stub mListener = new IMediaScannerListener.Stub()
-</span></span><span class="line"><span class="cl">    . . . . . .
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MediaScannerConnection</span> <span class="kd">implements</span> <span class="n">ServiceConnection</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl"><span class="err"> </span> <span class="err"> </span> <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TAG</span> <span class="o">=</span> <span class="s">&#34;MediaScannerConnection&#34;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="err"> </span> <span class="err"> </span> <span class="kd">private</span> <span class="n">Context</span> <span class="n">mContext</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="err"> </span> <span class="err"> </span> <span class="kd">private</span> <span class="n">MediaScannerConnectionClient</span> <span class="n">mClient</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="err"> </span> <span class="err"> </span> <span class="kd">private</span> <span class="n">IMediaScannerService</span> <span class="n">mService</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="err"> </span> <span class="err"> </span> <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">mConnected</span><span class="o">;</span> <span class="c1">// true if connect() has been called since last disconnect()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="err"> </span> <span class="err"> </span> <span class="kd">private</span> <span class="kd">final</span> <span class="n">IMediaScannerListener</span><span class="o">.</span><span class="na">Stub</span> <span class="n">mListener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IMediaScannerListener</span><span class="o">.</span><span class="na">Stub</span><span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="err"> </span> <span class="err"> </span> <span class="o">.</span> <span class="o">.</span> <span class="o">.</span> <span class="o">.</span> <span class="o">.</span> <span class="o">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>请注意那个 mService 成员，它就是为了绑定 service 而设计的。</p>
 <p>MediaScannerConnection 里设计了两个 scanFile() 函数，一个动态的，一个静态的。大家不要搞混了。</p>
 <h6 id="2121-动态形式-scanfile">2.1.2.1 动态形式 scanFile()</h6>
-<p>动态形式 scanFile() 的代码截选：</p>
+<p>动态形式 <code>scanFile()</code> 的代码截选：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

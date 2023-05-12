@@ -282,10 +282,11 @@ public ParcelFileDescriptor openDocument(String documentId, String mode, 
 
 除了利用类似 ACTION_MEDIA_SCANNER_SCAN_FILE 这样的广播，系统中还有一种办法可以发起扫描动作，那就是先利用 bindService 机制得到的 IMediaScannerService 代理接口，而后再通过调用该接口的 requestScanFile() 或 scanFile()，同样可以向 MediaScannerService 发出扫描语义。
 
-不过，我们一般并不直白地去 bindService，而是通过一种封装好的辅助类：MediaScannerConnection。该类的定义截选如下：  
- frameworks/base/media/java/android/media/MediaScannerConnection.java
+不过，我们一般并不直白地去 bindService，而是通过一种封装好的辅助类：MediaScannerConnection。该类的定义截选如下： 
 
-```
+> frameworks/base/media/java/android/media/MediaScannerConnection.java
+
+```java
 public class MediaScannerConnection implements ServiceConnection {
     private static final String TAG = "MediaScannerConnection";
     private Context mContext;
@@ -303,7 +304,7 @@ MediaScannerConnection 里设计了两个 scanFile() 函数，一个动态的，
 
 ###### 2.1.2.1 动态形式 scanFile()
 
-动态形式 scanFile() 的代码截选：
+动态形式 `scanFile()` 的代码截选：
 
 ```java
 public void scanFile(String path, String mimeType) {
