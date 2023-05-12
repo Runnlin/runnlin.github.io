@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/mediascannerservice-%E7%A0%94%E7%A9%B6\/"
-        },"genre": "posts","keywords": "Android, Media","wordcount":  13688 ,
+        },"genre": "posts","keywords": "Android, Media","wordcount":  11160 ,
         "url": "https:\/\/runnlin.github.io\/mediascannerservice-%E7%A0%94%E7%A9%B6\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -103,8 +103,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android MediaScannerService</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;13688 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;28 minutes&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;11160 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;23 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
@@ -174,7 +174,7 @@
 <h3 id="1-初步了解mediascannerservice">1 初步了解MediaScannerService</h3>
 <p>我们先来初步了解一下 MediaScannerService，它在 AndroidManifest.xml 文件里的相关信息如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/AndroidManifest.xml】</p>
+<p>packages/providers/mediaprovider/AndroidManifest.xml</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -194,7 +194,7 @@
 </div>
 </div><p>MediaScannerService 本身继承于 Service，而且还实现了 Runnable 接口。其定义截选如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -232,7 +232,7 @@
 <hr>
 <p>MediaScannerService 的 onCreate() 函数如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -302,7 +302,7 @@
 <p>比较常见的向消息泵发送 Message 的做法是调用 <code>startService()</code>，并在 MediaScannerService 的 <code>onStartCommand()</code> 函数里 <code>sendMessage()</code>。</p>
 <p>比如，和 MediaScannerService 配套提供的 MediaScannerReceiver，当它收到类似 ACTION_BOOT_COMPLETED 这样的系统广播时，就会调用自己的 <code>scan()</code> 或 <code>scanFile()</code> 函数。而 <code>scan()</code> 函数的代码如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerReceiver.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerReceiver.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -363,7 +363,7 @@
 </ul>
 <p>处理这两种请求的实体是服务内部的 mBinder 对象，参考代码如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -579,7 +579,7 @@
 <p>当用户插入了扩展介质（一般指 SD 卡），并且该介质已经被系统正确识别、安装，系统就会发出 ACTION_MEDIA_MOUNTED 广播。从 Android 4.4 开始，ACTION_MEDIA_MOUNTED 广播只能由系统（系统服务 MountService）发出，普通用户是无权发送的。</p>
 <p>另外，我们可以通过发送 ACTION_MEDIA_SCANNER_SCAN_FILE 广播，要求 MediaScannerService 扫描一下具体的文件。比如说在 ExternalStorageProvider 的 <code>openDocument()</code> 函数里，就会设置监听器监听用户是不是在读写模式下 close 了某个文件，因为 close 一般表示写入动作已经完成了，那么此时就需要 “踢一下”MediaScannerService，提醒它更新一下自己的数据。这段代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/packages/externalstorageprovider/src/com/android/externalstorage/ExternalStorageProvider.java】</p>
+<p>frameworks/base/packages/externalstorageprovider/src/com/android/externalstorage/ExternalStorageProvider.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -626,7 +626,7 @@
 </div><h5 id="212-用-mediascannerconnection-来发起扫描动作">2.1.2 用 MediaScannerConnection 来发起扫描动作</h5>
 <p>除了利用类似 ACTION_MEDIA_SCANNER_SCAN_FILE 这样的广播，系统中还有一种办法可以发起扫描动作，那就是先利用 bindService 机制得到的 IMediaScannerService 代理接口，而后再通过调用该接口的 requestScanFile() 或 scanFile()，同样可以向 MediaScannerService 发出扫描语义。</p>
 <p>不过，我们一般并不直白地去 bindService，而是通过一种封装好的辅助类：MediaScannerConnection。该类的定义截选如下：<br>
-【frameworks/base/media/java/android/media/MediaScannerConnection.java】</p>
+frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -722,7 +722,7 @@
 2）MediaScannerService 中扫描某文件的动作是否执行完了；</p>
 <p>MediaScannerConnectionClient 接口的定义如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScannerConnection.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -740,7 +740,7 @@
 </div>
 </div><p>在静态形式的 <code>scanFile()</code> 中，实现 MediaScannerConnectionClient 接口的类是 ClientProxy，它是这样实现 <code>onMediaScannerConnected()</code> 和 <code>onScanCompleted()</code> 的：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScannerConnection.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -795,7 +795,7 @@
 </div>
 </div><p>实际上，MediaScannerConnection 的 <code>connect()</code> 动作就是在 <code>bindService()</code>，它的代码如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScannerConnection.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScannerConnection.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -866,7 +866,7 @@
 2）其 mClient 指向 ClientProxy 对象；</p>
 <p>当然，在看懂上图后，我们也可以不使用默认的 ClientProxy，而添加我们自定义的 client 对象，只要这个 client 对象实现了 MediaScannerConnectionClient 接口即可。比如在 MediaProvider 中，就定义了另一个类 ScannerClient 类，代码截选如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaProvider.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaProvider.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -936,7 +936,7 @@
 <h5 id="222-saveattachment-中的示例代码">2.2.2 saveAttachment() 中的示例代码</h5>
 <p>我们举一个实际的例子。在 Email 模块中，如果附件存入了外部存储器，那么就有必要扫描一次媒体文件了，这样才能够立即将相关文件体现到 Gallery、Music 中。所以在 saveAttachment() 函数里，就会调用 <code>MediaScannerConnection.scanFile()</code>：</p>
 <blockquote>
-<p>【packages/apps/email/emailcommon/src/com/android/emailcommon/utility/AttachmentUtilities.java】</p>
+<p>packages/apps/email/emailcommon/src/com/android/emailcommon/utility/AttachmentUtilities.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1014,7 +1014,7 @@
 <h4 id="231-scanfile-动作">2.3.1 scanFile() 动作</h4>
 <p>MediaScannerService 的 scanFile() 定义如下：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1048,7 +1048,7 @@
 </div>
 </div><p>可以看到，<code>scanFile()</code> 函数内部借助了辅助类 MediaScanner，调用了该类的 <code>scanSingleFile()</code>。这个 MediaScanner 才是重头戏，它的 <code>scanSingleFile()</code> 代码截选如下： </p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1090,7 +1090,7 @@
 </div>
 </div><p>MyMediaScannerClient 类的 doScanFile() 的代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1163,7 +1163,7 @@
 <h5 id="232-scan-动作">2.3.2 scan() 动作</h5>
 <p>与 scanFile() 动作类似，MediaScannerService 中扫描目录的动作是 <code>scan()</code>：</p>
 <blockquote>
-<p>【packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java】</p>
+<p>packages/providers/mediaprovider/src/com/android/providers/media/MediaScannerService.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1196,7 +1196,7 @@
 </div><p>同样是借助了辅助类 MediaScanner，调用了该类的 <code>scanDirectories()</code>。</p>
 <p>scanDirectories() 的代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1231,7 +1231,7 @@
 <p>顾名思义，MediaScanner 就是个 “媒体文件扫描器”。它必须打通 java 层次和 C++ 层次。请大家注意它的两个 native 函数：<code>native_init()</code> 和 <code>native_setup()</code>，以及两个重要成员变量：一个是上文刚刚提到的 mClient 成员，另一个是 mNativeContext。</p>
 <p>MediaScanner 的相关代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1278,7 +1278,7 @@
 </div><p>MediaScanner 类加载之时，就会同时加载动态链接库 “media_jni”，并调用 native_init() 将 java 层和 c++ 层联系起来。而且 MediaScanner 对象一开始就具有明确的 mClient 对象，类型为 MyMediaScannerClient。</p>
 <p>经过分析代码，我们发现在 C++ 层会有个与 MediaScanner 相对应的类，叫作 StagefrightMediaScanner。当 java 层创建 MediaScanner 对象时，MediaScanner 的构造函数就调用了 native_setup()，该函数对应到 C++ 层就是 <code>android_media_MediaScanner_native_setup()</code>，其代码如下：</p>
 <blockquote>
-<p>【frameworks/base/media/jni/android_media_MediaScanner.cpp】</p>
+<p>frameworks/base/media/jni/android_media_MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1321,7 +1321,7 @@
 <h5 id="234-调用到-c-层次">2.3.4 调用到 C++ 层次</h5>
 <p>不管是扫描文件，还是扫描目录，总之 MediaScannerService 已经把工作委托给 MediaScanner 的 <code>scanSingleFile()</code> 和 <code>scanDirectories()</code> 了，而这两个函数到头来都是调用 MediaScanner 自己的 native 函数，即 <code>processFile()</code> 和 <code>processDirectory()</code>。其声明如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1335,7 +1335,7 @@
 </div>
 </div><p>MediaScanner 中调用的 <code>processFile()</code> 对应于 C++ 层的 <code>android_media_MediaScanner_processFile()</code>。代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/jni/android_media_MediaScanner.cpp】</p>
+<p>frameworks/base/media/jni/android_media_MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1390,7 +1390,7 @@
 </div><p>注意这里构造了一个局部的（C++ 层次）MyMediaScannerClient 对象，构造 myClient 时传入的 client 参数来自于 Java 层调用 processFile() 时传入的那个（Java 层次）MyMediaScannerClient 对象。这个对象会记录在 C++ 层 MyMediaScannerClient 的 mClient 域中，这个在前面的示意图中已有表示。</p>
 <p>相应的，<code>processDirectory()</code> 对应于 C++ 层的 <code>android_media_MediaScanner_processDirectory()</code>。代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/jni/android_media_MediaScanner.cpp】</p>
+<p>frameworks/base/media/jni/android_media_MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1430,7 +1430,7 @@
 </div>
 </div><p>它指向的其实就是 StagefrightMediaScanner，所以这里调用的 processFile 就是：</p>
 <blockquote>
-<p>【frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp】</p>
+<p>frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1462,7 +1462,7 @@
 </div>
 </div><p>主要行为在 <code>processFileInternal()</code> 里：</p>
 <blockquote>
-<p>【frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp】</p>
+<p>frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1576,7 +1576,7 @@
 <p><code>processFileInternal()</code> 里的主要细节有：</p>
 <p>1）调用 FileHasAcceptableExtension() 函数，看看文件的扩展名是不是属于多媒体文件扩展名，合适的扩展名有：</p>
 <blockquote>
-<p>【frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp】</p>
+<p>frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1607,7 +1607,7 @@
 </div><p>如果扩展名不合适，则直接 return MEDIA_SCAN_RESULT_SKIPPED。</p>
 <p>2）看看文件是不是 midi 文件，如果是 midi 文件，则以 HandleMIDI() 来处理。</p>
 <blockquote>
-<p>【frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp】</p>
+<p>frameworks/av/media/libstagefright/StagefrightMediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1642,7 +1642,7 @@
 其实 MediaMetadataRetriever 内部是利用系统服务 “media.player” 来解析多媒体文件的，这个系统服务对应的代理接口是 IMediaPlayerService，它有个成员函数 <code>createMetadataRetriever()</code>可以用于获取 IMediaMetadataRetriever 接口，而后就可以调用该接口的 <code>setDataSource()</code>和 <code>extractMetadata()</code>了。</p>
 <p><code>processFileInternal()</code> 里主要通过两个函数，向 Java 层的 MyMediaScannerClient 传递数据，一个是 <code>setMimeType()</code>，另一个是 <code>addStringTag()</code>。以 C++ 层的 <code>setMimeType()</code> 为例，其代码如下：</p>
 <blockquote>
-<p>【frameworks/base/media/jni/android_media_MediaScanner.cpp】</p>
+<p>frameworks/base/media/jni/android_media_MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1689,7 +1689,7 @@
 <h6 id="2342-processdirectory">2.3.4.2 processDirectory()</h6>
 <p>按理说，和 <code>processFile()</code> 类似，<code>processDirectory()</code> 最终对应的代码也应该在 StagefrightMediaScanner 里，但是 StagefrightMediaScanner 并没有编写这个函数，又因为 StagefrightMediaScanner 继承于 MediaScanner（C++ 层次），所以实际上使用的是 MediaScanner 的 <code>ProcessDirectory()</code></p>
 <blockquote>
-<p>【frameworks/av/media/libmedia/MediaScanner.cpp】</p>
+<p>frameworks/av/media/libmedia/MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1724,7 +1724,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><blockquote>
-<p>【frameworks/av/media/libmedia/MediaScanner.cpp】</p>
+<p>frameworks/av/media/libmedia/MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1800,7 +1800,7 @@
 </div>
 </div><p><code>doProcessDirectory()</code>先判断需要扫描的目录是不是应该 “跳过” 的目录，如果是的话，则直接 <code>return MEDIA_SCAN_RESULT_OK</code>。判断函数 <code>shouldSkipDirectory()</code>的代码如下：</p>
 <blockquote>
-<p>【frameworks/av/media/libmedia/MediaScanner.cpp】</p>
+<p>frameworks/av/media/libmedia/MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1844,7 +1844,7 @@
 <p>接着<code>doProcessDirectory()</code>用一个 while 循环多次调用 <code>doProcessDirectoryEntry()</code>，其内部在必要时候，会再次调用 <code>doProcessDirectory()</code> 分析子目录。while 语句的循环判断部分用到了 <code>readdir()</code> 函数，<code>readdir()</code> 是 linux 上返回所指目录中 “下一个进入点”（next entry）的函数，我们常常在一个 while 循环中调用它，以便遍历出目录中的所有内容。</p>
 <p>doProcessDirectoryEntry() 函数的定义截选如下：</p>
 <blockquote>
-<p>【frameworks/av/media/libmedia/MediaScanner.cpp】</p>
+<p>frameworks/av/media/libmedia/MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1915,7 +1915,7 @@
 </div><p>不管当前处理的入口类型是 “目录” 还是 “文件”，最终都是依靠 client 的 scanFile() 来处理，只不过前者倒数第二个参数（isDirectory）为 true，后者为 false 而已。</p>
 <p><code>client.scanFile()</code> 最终也是要调回到 Java 层的，MyMediaScannerClient 的 scanFile() 代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/jni/android_media_MediaScanner.cpp】</p>
+<p>frameworks/base/media/jni/android_media_MediaScanner.cpp</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1952,7 +1952,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1983,7 +1983,7 @@
 <h6 id="2343-doscanfile-和-mediaprovider">2.3.4.3 doScanFile() 和 MediaProvider</h6>
 <p>站在 Java 层次来看，不管是扫描具体的文件，还是扫描一个目录，最终都会走到 Java 层 MyMediaScannerClient 的 <code>doScanFile()</code>。在前文我们已经列出过这个函数的代码，为了说明问题，这里再列一下其中的重要句子：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2026,7 +2026,7 @@
 </div><p>本小节着重看一下其中和 MediaProvider 相关的 <code>beginFile()</code> 和 <code>endFile()</code>。</p>
 <p><code>beginFile()</code> 是为了后续和 MediaProvider 打交道，准备一个 FileEntry。FileEntry 的定义如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2069,7 +2069,7 @@
 </div><p>FileEntry 的几个成员变量，其实体现了查表时的若干列的值。</p>
 <p><code>beginFile()</code> 的代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2213,7 +2213,7 @@
 </div><p>这就是改变 MediaProvider 中相关信息的最核心句子啦。</p>
 <p>endFile() 的代码截选如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaScanner.java】</p>
+<p>frameworks/base/media/java/android/media/MediaScanner.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2322,7 +2322,7 @@
 </div><p>除了直接调用 <code>mMediaProvider.insert()</code> 向 MediaProvider 中写入数据，函数中还有一种方式是经由 inserter 对象，其类型为 MediaInserter。</p>
 <p>MediaInserter 也是向 MediaProvider 中写入数据，最终大体上会走到其 flush() 函数，该函数的代码如下：</p>
 <blockquote>
-<p>【frameworks/base/media/java/android/media/MediaInserter.java】</p>
+<p>frameworks/base/media/java/android/media/MediaInserter.java</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
