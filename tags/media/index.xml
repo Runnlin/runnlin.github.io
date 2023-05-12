@@ -13,12 +13,36 @@
     <description><![CDATA[一、使用 AAC 音频硬解码的背景因为各种原因，在日常的开发中开发者或多或少都要接触一些音视频编解码相关的功能，所以有时候选择编解码工具就变得尤为重]]></description>
 </item>
 <item>
+    <title>Android MediaPlayer</title>
+    <link>https://runnlin.github.io/androidmediaplayer/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/androidmediaplayer/</guid>
+    <description><![CDATA[Android 播放器相关知识 译自 MediaPlayer官方文档 https://developer.android.com/reference/android/media/MediaPlayer MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该]]></description>
+</item>
+<item>
     <title>Ipod 学习笔记</title>
     <link>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
     <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
     <description><![CDATA[需要在Android系统中加入iPod连接功能，实现iPod设备的歌曲、列表、ID3信息的传输和媒体控制]]></description>
+</item>
+<item>
+    <title>MediaPlayer 错误收集及指北</title>
+    <link>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
+    <description><![CDATA[项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &hellip; LOG： 1 2 3 4 5 6 7 8 9 10 05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517)]]></description>
+</item>
+<item>
+    <title>MediaProvider</title>
+    <link>https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/</guid>
+    <description><![CDATA[android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多]]></description>
 </item>
 <item>
     <title>Android MediaMetadataRetriever 用法介绍</title>

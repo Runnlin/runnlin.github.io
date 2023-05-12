@@ -29,6 +29,30 @@
     <description><![CDATA[一、 Boradcast 前题概要 1、广播分为前台广播和后台广播 发送前台广播 (Intent.FLAG_RECEIVER_FOREGROUND 标志) 1 2 3 val intent = Intent(Intent.ACTION_SHUTDOWN) intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND) sendBroadcast(intent) 默认发送的是后台广播 1 2 val intent = Intent(Intent.ACTION_SHUTDOWN) sendBroadcast(intent) 在 ActivityManagerService 中，前台广播和后台广]]></description>
 </item>
 <item>
+    <title>Android MediaPlayer</title>
+    <link>https://runnlin.github.io/androidmediaplayer/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/androidmediaplayer/</guid>
+    <description><![CDATA[Android 播放器相关知识 译自 MediaPlayer官方文档 https://developer.android.com/reference/android/media/MediaPlayer MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该]]></description>
+</item>
+<item>
+    <title>Android UEvent分析</title>
+    <link>https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[Android UEvent分析 在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0]]></description>
+</item>
+<item>
+    <title>Android 源码编译学习笔记</title>
+    <link>https://runnlin.github.io/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[Android 源码编译学习笔记 一、目录结构 目录 解析 abi 应用程序二进制接口，生成libgabi++.so相关库文件 vendor 各个厂商定制的相关文件，如驱动等 boinic And]]></description>
+</item>
+<item>
     <title>Ipod 学习笔记</title>
     <link>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
     <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
@@ -37,52 +61,28 @@
     <description><![CDATA[需要在Android系统中加入iPod连接功能，实现iPod设备的歌曲、列表、ID3信息的传输和媒体控制]]></description>
 </item>
 <item>
-    <title>Android MediaMetadataRetriever 用法介绍</title>
-    <link>https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
-    <pubDate>Mon, 16 May 2022 00:00:00 &#43;0000</pubDate>
+    <title>Kotlin判断String编码</title>
+    <link>https://runnlin.github.io/kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
     <author>Runnlin</author>
-    <guid>https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</guid>
-    <description><![CDATA[Android MedataRetriever介绍 MediaMetadataRetriever功能很强大，除了常规的ID3信息比如标题歌手流派之类的，还能]]></description>
+    <guid>https://runnlin.github.io/kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</guid>
+    <description><![CDATA[Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码 判断方法： 1 2]]></description>
 </item>
 <item>
-    <title>init 工作流程简述</title>
-    <link>https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
-    <pubDate>Thu, 28 Apr 2022 00:00:00 &#43;0000</pubDate>
+    <title>MediaPlayer 错误收集及指北</title>
+    <link>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
     <author>Runnlin</author>
-    <guid>https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</guid>
-    <description><![CDATA[Init 工作流程简述 init的工作流程可以精简为以下四点： 解析两个配置文件，下文分析其中对init.rc 文件的解析 执行各个阶段的动作，创建 zygote 的工作]]></description>
+    <guid>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
+    <description><![CDATA[项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &hellip; LOG： 1 2 3 4 5 6 7 8 9 10 05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517)]]></description>
 </item>
 <item>
-    <title>Android Vold分析</title>
-    <link>https://runnlin.github.io/android-vold%E5%88%86%E6%9E%90/</link>
-    <pubDate>Mon, 25 Apr 2022 20:38:30 &#43;0800</pubDate>
+    <title>MediaProvider</title>
+    <link>https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
     <author>Runnlin</author>
-    <guid>https://runnlin.github.io/android-vold%E5%88%86%E6%9E%90/</guid>
-    <description><![CDATA[Android Vold分析 当接收到UEvent消息后，除了APP层可能会进行额外的逻辑以外，其中一个很重要的组件Vold会进行重要的挂载操作，可以说没有]]></description>
-</item>
-<item>
-    <title>Android MediaScannerService</title>
-    <link>https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/</link>
-    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
-    <author>Runnlin</author>
-    <guid>https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/</guid>
-    <description><![CDATA[MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） 1 概述 MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service。 MediaScannerService 研究 侯 亮 （本文以 Android 5.1 为准） MediaScannerService 是 Android 平台]]></description>
-</item>
-<item>
-    <title>Android 四大组件综述</title>
-    <link>https://runnlin.github.io/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/</link>
-    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
-    <author>Runnlin</author>
-    <guid>https://runnlin.github.io/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/</guid>
-    <description><![CDATA[四大组件综述 frameworks/base/services/core/java/com/android/server/am/ - ActivityManagerService.java - ProcessRecord - ActivityStackSupervisor.java - ActivityStack.java - ActiveServices - BroadcastQueue 1. 进程管理 描述进程的数据结构：ProcessRecord 管理进程的核心模块：AMS 四大组件在Andro]]></description>
-</item>
-<item>
-    <title>Android 大型项目LocalMedia-USB模块学习笔记</title>
-    <link>https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
-    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
-    <author>Runnlin</author>
-    <guid>https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
-    <description><![CDATA[整体架构 Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供]]></description>
+    <guid>https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/</guid>
+    <description><![CDATA[android MediaProvider The document base on Android 9.0 Android 系统提供了对多媒体的统一处理机制，通过一套良好的框架实现了多媒体信息的扫描、存储、读取。用户可以给予这套框架非常方便地对多]]></description>
 </item>
 </channel>
 </rss>

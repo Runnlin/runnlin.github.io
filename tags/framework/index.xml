@@ -13,6 +13,30 @@
     <description><![CDATA[一、使用 AAC 音频硬解码的背景因为各种原因，在日常的开发中开发者或多或少都要接触一些音视频编解码相关的功能，所以有时候选择编解码工具就变得尤为重]]></description>
 </item>
 <item>
+    <title>Android MediaPlayer</title>
+    <link>https://runnlin.github.io/androidmediaplayer/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/androidmediaplayer/</guid>
+    <description><![CDATA[Android 播放器相关知识 译自 MediaPlayer官方文档 https://developer.android.com/reference/android/media/MediaPlayer MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该]]></description>
+</item>
+<item>
+    <title>Android UEvent分析</title>
+    <link>https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[Android UEvent分析 在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0]]></description>
+</item>
+<item>
+    <title>MediaPlayer 错误收集及指北</title>
+    <link>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
+    <description><![CDATA[项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &hellip; LOG： 1 2 3 4 5 6 7 8 9 10 05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517)]]></description>
+</item>
+<item>
     <title>init 工作流程简述</title>
     <link>https://runnlin.github.io/init%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</link>
     <pubDate>Thu, 28 Apr 2022 00:00:00 &#43;0000</pubDate>

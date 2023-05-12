@@ -1,22 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Kotlin on run blog</title>
-    <link>https://runnlin.github.io/tags/kotlin/</link>
-    <description>Recent content in Kotlin on run blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jul 2022 20:38:30 +0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/kotlin/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Kotlin判断String编码</title>
-      <link>https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</link>
-      <pubDate>Mon, 18 Jul 2022 20:38:30 +0800</pubDate>
-      
-      <guid>https://runnlin.github.io/posts/2022-05-10-kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</guid>
-      <description>Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码
-判断方法：
-/* 转换特殊编码String */ private fun String.toUTF8String(): String { // 内联函数 val ins = intern().byteInputStream() val head = ByteArray(3) ins.read(head) Log.i(TAG, &amp;#34;code:${head[0]},${head[1]}&amp;#34;) return when { // 这是UTF16,转换后会产生两个字节的乱码字符，需要进行裁剪 head[0].toInt() == -28 &amp;amp;&amp;amp; head[1].toInt() == -92 -&amp;gt; String( intern().toByteArray(Charsets.UTF_16), Charset.defaultCharset() ).substring(2) // unicode head[0].toInt() == -2 &amp;amp;&amp;amp; head[1].toInt() == -1 -&amp;gt; intern() // UTF8 head[0].toInt() == -17 &amp;amp;&amp;amp; head[1].toInt() == -69 &amp;amp;&amp;amp; head[2].toInt() == -65 -&amp;gt; intern() else -&amp;gt; intern() } } </description>
-    </item>
-    
-  </channel>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Kotlin - Tag - Runnlin&#39;s Whisper</title>
+        <link>https://runnlin.github.io/tags/kotlin/</link>
+        <description>Kotlin - Tag - Runnlin&#39;s Whisper</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN, en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
+            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><lastBuildDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/kotlin/" rel="self" type="application/rss+xml" /><item>
+    <title>Kotlin判断String编码</title>
+    <link>https://runnlin.github.io/kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/kotlin%E5%88%A4%E6%96%ADstring%E7%BC%96%E7%A0%81/</guid>
+    <description><![CDATA[Koting String 编码判断 在项目中，需要支持UTF16或其他编码格式的显示String，如果直接按照默认的UTF8来输出的话，会导致显示乱码 判断方法： 1 2]]></description>
+</item>
+</channel>
 </rss>
