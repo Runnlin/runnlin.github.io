@@ -33,10 +33,6 @@ RxBus不是一个库，而是一个文件，实现只有短短30行代码。RxBu
 
 最后就是取消订阅的操作了，RxJava中，订阅操作会返回一个Subscription对象，以便在合适的时机取消订阅，防止内存泄漏，如果一个类产生多个Subscription对象，我们可以用一个CompositeSubscription存储起来，以进行批量的取消订阅。
 
-{{< admonition >}}
-请注意, 本文档其他部分将详细解释其中一些参数.
-{{< /admonition >}}
-
 {{< admonition tip >}}
 RxBus有很多实现，如：
 

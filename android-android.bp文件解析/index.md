@@ -5,7 +5,18 @@
 
 ## Android.bp文件是什么？
 
-Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！
+Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。
+
+{{< admonition tip >}}
+在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。
+
+在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。
+
+Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。
+
+相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！
+{{< /admonition >}}
+
 
 ## Android.bp文件配置规则
 
@@ -13,7 +24,7 @@ Android.bp文件首先是Android系统的一种编译配置文件，是用来代
 
 Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：
 
-```  
+```bp
 cc_binary {
         name: ”avbctl”,
         defaults: [“avb_defaults”],
@@ -27,21 +38,22 @@ cc_binary {
 ```
 
 上面例子中的cc_binary就是模块类型，表示该模块目标为二进制可执行文件。
-如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在android/build/soong/androidmk/cmd/androidmk/android.go 中可以查到，有以下：
+如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在`android/build/soong/androidmk/cmd/androidmk/android.go` 中可以查到，有以下：
 
 ● 模块类型后面用大括号“{}”将模块的所有属性包裹起来。
 
 ● 每个属性的名字和值用中间用冒号连接起来,属性值要用双引号””包裹起来(如果属性值是变量，变量不需要加双引号)：
 
 name: ”avbctl”表示模块name属性的值为avbctl，就是类比Android.mk中的LOCAL_MODULE := avbctl。
-
+{{< admonition>}}
 模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。
+{{< /admonition >}}
 
 ● 查看全部支持的模块和各个模块支持的属性定义，请查看这个网址：<https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html>。
 
 ● cc_defaults模块比较特殊，它表示该模块的属性可以被其他模块重复引用，类似于我们的头文件被其他cpp文件引用，举例：
 
-```
+```bp
 cc_defaults {
    name: "gzip_defaults",
    shared_libs: ["libz"],
@@ -58,13 +70,16 @@ cc_binary {
 }
 ```
 
-● 属性可以使用列表数组的形式，也可以使用unix通配符，例如：”*.java”
+● 属性可以使用列表数组的形式，也可以使用unix通配符，例如：`*.java`
 
-● 每一条完整的属性定义语句加上逗号“，”表示结束
+● 每一条完整的属性定义语句加上逗号 `，` 表示结束
 
-● 注释包括单行注释//和多行注释/**/
+● 注释包括单行注释` //` 和多行注释 `/**/ `
 
-● 最重要的一点：目前android编译系统同时支持mk和bp两种，但是这两种是彼此单独运行的，所以bp中依赖的目标，例如动态库静态库目标，如果库是源代码的形式存在的，那么库的编译脚本必须也是通过bp文件编译才能被找到，否则用mk文件编译库，bp会提示找不到依赖的库目标。（paxdroid代码中因为要将framework相关内容编译到android的framework中，而android已经全部转还成bp，所以这一部分paxdroid也是使用的bp来编写的，不然会提示找不到）
+{{< admonition tip 最重要的一点>}}
+目前android编译系统同时支持mk和bp两种，但是这两种是彼此单独运行的，所以bp中依赖的目标，例如动态库静态库目标，如果库是源代码的形式存在的，那么库的编译脚本必须也是通过bp文件编译才能被找到，否则用mk文件编译库，bp会提示找不到依赖的库目标。（paxdroid代码中因为要将framework相关内容编译到android的framework中，而android已经全部转还成bp，所以这一部分paxdroid也是使用的bp来编写的，不然会提示找不到）
+{{< /admonition >}}
+
 
 更多的说明可以在android/build/soong/README.md文件中查找。
 如果找不到想要的，可以在官网找：<https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html>
@@ -115,7 +130,7 @@ include $(BUILD_EXECUTABLE)
 
 我们先分析下上面两个条件的意思，如果变量ENABLE_USER2ENG的值为true，那么追加这两个编译参数，否则不追加。第二个条件是说如果存在paxdroid/external/libethtool这个目录，那么就添加libethtool这个动态库，否则不添加。
 
-要转换为bp写法，就需要我们通过go语言写一个新文件，新建一个自定义类型的模块，来判断这些条件，比如我的修改是在system/core/fs_mgr/Android.bp,那么要在添加 system/core/fs_mgr/fs_mgr.go，
+要转换为bp写法，就需要我们通过go语言写一个新文件，新建一个自定义类型的模块，来判断这些条件，比如我的修改是在`system/core/fs_mgr/Android.bp`,那么要在添加 `system/core/fs_mgr/fs_mgr.go`，
 
 ``` go
 //这是申明当前的包名，就是你在哪个文件夹下，就写啥

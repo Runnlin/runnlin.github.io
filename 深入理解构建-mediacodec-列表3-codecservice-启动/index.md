@@ -86,6 +86,8 @@ int main(int argc __unused, char** argv)
 
 新建 implementation::Omx 对象详细情况可参考《[Android 10 源码 Omx 初始化](https://blog.csdn.net/tyyj90/article/details/120912668?spm=1001.2014.3001.5501)》。
 
+
+
 接下来重点看新建 implementation::OmxStore 对象，从 OmxStore 头文件不难看出其构造函数里面很多参数存在默认值，这也就是为什么上一步只传入一个指向 IOmx 指针。
 
 1. 检索 omx 节点列表，最终通过调用 Omx listNodes(…) 完成，获取 node 名称 Set，listNodes(…) 函数形参是一个匿名函数；
@@ -178,6 +180,8 @@ OmxStore::OmxStore(
     mPrefix = parser.getCommonPrefix();
 }
 ```
+
+
 
 为了进一步确认解析 xml 使用的参数，我们需要查看 OmxStore.h 文件来确认。从 OmxStore 构造函数声明中不难发现，其所有参数都存在默认值，也就是在只传入指向 IOmx 的指针时，其他参数都已确定。
 

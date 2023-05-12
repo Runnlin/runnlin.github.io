@@ -13,6 +13,14 @@
     <description><![CDATA[一、使用 AAC 音频硬解码的背景因为各种原因，在日常的开发中开发者或多或少都要接触一些音视频编解码相关的功能，所以有时候选择编解码工具就变得尤为重]]></description>
 </item>
 <item>
+    <title>Ipod 学习笔记</title>
+    <link>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[需要在Android系统中加入iPod连接功能，实现iPod设备的歌曲、列表、ID3信息的传输和媒体控制]]></description>
+</item>
+<item>
     <title>Android MediaMetadataRetriever 用法介绍</title>
     <link>https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
     <pubDate>Mon, 16 May 2022 00:00:00 &#43;0000</pubDate>

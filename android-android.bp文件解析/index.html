@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/"
-        },"genre": "posts","keywords": "Android","wordcount":  3433 ,
+        },"genre": "posts","keywords": "Android","wordcount":  3425 ,
         "url": "https:\/\/runnlin.github.io\/android-android.bp%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -103,7 +103,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android.bp 文件解析</h1><h2 class="single-subtitle">bp 文件解析</h2><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3433 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3425 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;7 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
@@ -125,7 +125,19 @@
 </nav></div>
             </div><div class="content" id="content"><h1 id="androidbp-文件解析"><strong>Android.bp 文件解析</strong></h1>
 <h2 id="androidbp文件是什么">Android.bp文件是什么？</h2>
-<p>Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！</p>
+<p>Android.bp文件首先是Android系统的一种编译配置文件，是用来代替原来的Android.mk文件的。</p>
+<div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>在Android7.0以前，Android都是使用make来组织各模块的编译，对应的编译配置文件就是Android.mk。</p>
+<p>在Android7.0开始，Google引入了ninja和kati来编译，为啥引入ninja？因为随着Android越来越庞大，module越来越多，编译时间也越来越久，而使用ninja在编译的并发处理上较make有很大的提升。</p>
+<p>Ninja的配置文件就是Android.bp，Android系统使用Blueprint和Soong工具来解析Android.bp转换生成ninja文件。为了兼容老的mk配置文件，Android当初也开发了Kati 工具来转换mk文件生成ninja，目前Android Q里边，还是支持Android.mk方式的。</p>
+<p>相信在将来的版本中，会彻底让mk文件废弃，同时Kati也就淘汰了，只保留bp配置方式，所以我们要提前学习bp。Blueprint和Soong工具的源码在Android/build/目录下，我们可以通过查阅相关代码来学习！</p>
+</div>
+        </div>
+    </div>
 <h2 id="androidbp文件配置规则">Android.bp文件配置规则</h2>
 <h3 id="模块和属性">【模块和属性】</h3>
 <p>Android.bp描述的编译对象都是以模块为组织单位的，定义一个模块从模块的类型开始，模块有不同的类型，模块包含一些属性，下面举一个例子来具体说明：</p>
@@ -156,11 +168,18 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>上面例子中的cc_binary就是模块类型，表示该模块目标为二进制可执行文件。
-如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在android/build/soong/androidmk/cmd/androidmk/android.go 中可以查到，有以下：</p>
+如果要编译一个APP，那么就使用android_app模块，要编译一个动态库，那么就使用cc_library_shared.soong工具支持的模块类型在<code>android/build/soong/androidmk/cmd/androidmk/android.go</code> 中可以查到，有以下：</p>
 <p>● 模块类型后面用大括号“{}”将模块的所有属性包裹起来。</p>
 <p>● 每个属性的名字和值用中间用冒号连接起来,属性值要用双引号””包裹起来(如果属性值是变量，变量不需要加双引号)：</p>
-<p>name: ”avbctl”表示模块name属性的值为avbctl，就是类比Android.mk中的LOCAL_MODULE := avbctl。</p>
-<p>模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。</p>
+<p>name: ”avbctl”表示模块name属性的值为avbctl，就是类比Android.mk中的LOCAL_MODULE := avbctl。
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">模块的name属性是必须的，内容必须是独一无二的。如果属性被定义为数组，需要用中括号“[]”将数组的各元素包裹起来，每个元素中间用逗号“,”连接，一般常用的属性有name,srcs,cflags, cppflags, shared_libs,static_libs。</div>
+        </div>
+    </div></p>
 <p>● 查看全部支持的模块和各个模块支持的属性定义，请查看这个网址：<a href="https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html" target="_blank" rel="noopener noreffer ">https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html</a>。</p>
 <p>● cc_defaults模块比较特殊，它表示该模块的属性可以被其他模块重复引用，类似于我们的头文件被其他cpp文件引用，举例：</p>
 <div class="highlight"><div class="chroma">
@@ -197,10 +216,17 @@
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>● 属性可以使用列表数组的形式，也可以使用unix通配符，例如：”*.java”</p>
-<p>● 每一条完整的属性定义语句加上逗号“，”表示结束</p>
-<p>● 注释包括单行注释//和多行注释/**/</p>
-<p>● 最重要的一点：目前android编译系统同时支持mk和bp两种，但是这两种是彼此单独运行的，所以bp中依赖的目标，例如动态库静态库目标，如果库是源代码的形式存在的，那么库的编译脚本必须也是通过bp文件编译才能被找到，否则用mk文件编译库，bp会提示找不到依赖的库目标。（paxdroid代码中因为要将framework相关内容编译到android的framework中，而android已经全部转还成bp，所以这一部分paxdroid也是使用的bp来编写的，不然会提示找不到）</p>
+</div><p>● 属性可以使用列表数组的形式，也可以使用unix通配符，例如：<code>*.java</code></p>
+<p>● 每一条完整的属性定义语句加上逗号 <code>，</code> 表示结束</p>
+<p>● 注释包括单行注释<code> //</code> 和多行注释 <code>/**/ </code></p>
+<div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>最重要的一点<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">目前android编译系统同时支持mk和bp两种，但是这两种是彼此单独运行的，所以bp中依赖的目标，例如动态库静态库目标，如果库是源代码的形式存在的，那么库的编译脚本必须也是通过bp文件编译才能被找到，否则用mk文件编译库，bp会提示找不到依赖的库目标。（paxdroid代码中因为要将framework相关内容编译到android的framework中，而android已经全部转还成bp，所以这一部分paxdroid也是使用的bp来编写的，不然会提示找不到）</div>
+        </div>
+    </div>
 <p>更多的说明可以在android/build/soong/README.md文件中查找。
 如果找不到想要的，可以在官网找：<a href="https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html" target="_blank" rel="noopener noreffer ">https://ci.android.com/builds/submitted/6504066/linux/latest/view/soong_build.html</a></p>
 <h3 id="变量">【变量】</h3>
@@ -280,7 +306,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们先分析下上面两个条件的意思，如果变量ENABLE_USER2ENG的值为true，那么追加这两个编译参数，否则不追加。第二个条件是说如果存在paxdroid/external/libethtool这个目录，那么就添加libethtool这个动态库，否则不添加。</p>
-<p>要转换为bp写法，就需要我们通过go语言写一个新文件，新建一个自定义类型的模块，来判断这些条件，比如我的修改是在system/core/fs_mgr/Android.bp,那么要在添加 system/core/fs_mgr/fs_mgr.go，</p>
+<p>要转换为bp写法，就需要我们通过go语言写一个新文件，新建一个自定义类型的模块，来判断这些条件，比如我的修改是在<code>system/core/fs_mgr/Android.bp</code>,那么要在添加 <code>system/core/fs_mgr/fs_mgr.go</code>，</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1

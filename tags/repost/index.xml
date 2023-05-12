@@ -26,9 +26,9 @@
     <pubDate>Wed, 27 Jul 2022 16:32:50 &#43;0800</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/h264_is_magic/</guid>
-    <description><![CDATA[A high level walkthrough of the basics of video compression techniques used in MPEG, AVC/H.264, codec&hellip;&hellip;
-H.264 is a video compression codec standard. It is ubiquitous - internet video, Blu-ray, phones, security cameras, drones, everything. Everything uses H.264 now.
-H.264 is a remarkable piece of technology. It is the result of 30+ years of work with one single goal: To reduce the bandwidth required for transmission of full-motion video.]]></description>
+    <description><![CDATA[H.264 is a video compression codec standard. It is ubiquitous - internet video, Blu-ray, phones, security cameras, drones, everything. Everything uses H.264 now.
+H.264 is a remarkable piece of technology. It is the result of 30+ years of work with one single goal: To reduce the bandwidth required for transmission of full-motion video.
+Technically, it is very interesting. This post will give insight into some of the details at a high level - I hope to not bore you too much with the intricacies.]]></description>
 </item>
 </channel>
 </rss>

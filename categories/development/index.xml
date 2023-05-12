@@ -29,6 +29,14 @@
     <description><![CDATA[一、 Boradcast 前题概要 1、广播分为前台广播和后台广播 发送前台广播 (Intent.FLAG_RECEIVER_FOREGROUND 标志) 1 2 3 val intent = Intent(Intent.ACTION_SHUTDOWN) intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND) sendBroadcast(intent) 默认发送的是后台广播 1 2 val intent = Intent(Intent.ACTION_SHUTDOWN) sendBroadcast(intent) 在 ActivityManagerService 中，前台广播和后台广]]></description>
 </item>
 <item>
+    <title>Ipod 学习笔记</title>
+    <link>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate>
+    <author>Runnlin</author>
+    <guid>https://runnlin.github.io/android-ipod%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[需要在Android系统中加入iPod连接功能，实现iPod设备的歌曲、列表、ID3信息的传输和媒体控制]]></description>
+</item>
+<item>
     <title>Android MediaMetadataRetriever 用法介绍</title>
     <link>https://runnlin.github.io/android-mediametadataretriever%E4%BB%8B%E7%BB%8D/</link>
     <pubDate>Mon, 16 May 2022 00:00:00 &#43;0000</pubDate>
@@ -75,14 +83,6 @@
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
     <description><![CDATA[整体架构 Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供]]></description>
-</item>
-<item>
-    <title>Android 深入浅出之 Binder 机制（转载）</title>
-    <link>https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/</link>
-    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate>
-    <author>Runnlin</author>
-    <guid>https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/</guid>
-    <description><![CDATA[Android 深入浅出之 Binder 机制 一 说明 Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder 的话，在很大]]></description>
 </item>
 </channel>
 </rss>
