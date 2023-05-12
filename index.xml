@@ -44,7 +44,7 @@
     <pubDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</pubDate>
     <author>Runnlin</author>
     <guid>https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/</guid>
-    <description><![CDATA[Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编[解码]接口。它的入口是 main_codecservice.cpp。]]></description>
+    <description><![CDATA[Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编解码接口。它的入口是 main_codecservice.cpp。]]></description>
 </item>
 <item>
     <title>深入理解构建 MediaCodec 列表：4-software Codec2 服务启动</title>

@@ -2,11 +2,11 @@
 
 
 
-Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)接口。它的入口是 main_codecservice.cpp。
+Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编[解码](https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&spm=1001.2101.3001.7020)接口。它的入口是 `main_codecservice.cpp`。
 
 首先我们来看下启动它的配置 rc 脚本。可以看到它放在 vendor 目录下，说明和供应商有关。
 
-frameworks/av/services/mediacodec/android.hardware.media.omx@1.0-service.rc
+> frameworks/av/services/mediacodec/android.hardware.media.omx@1.0-service.rc
 
 ```rc
 service vendor.media.omx /vendor/bin/hw/android.hardware.media.omx@1.0-service
@@ -17,10 +17,38 @@ service vendor.media.omx /vendor/bin/hw/android.hardware.media.omx@1.0-service
     writepid /dev/cpuset/foreground/tasks
 ```
 
+{{< admonition tip AI>}}
+这段信息定义了Android系统中的omx医疗服务。
+我们可以解析出:
+1. 服务名:vendor.media.omx
+2. 服务二进制文件路径:/vendor/bin/hw/android.hardware.media.omx@1.0-service
+3. 服务运行用户:mediacodec
+4. 服务所属组:camera、drmrpc、mediadrm
+5. 调度优先级与优先类别:ioprio rt 4,即实时调度类,优先级为4
+6. 写入pid的路径:/dev/cpuset/foreground/tasks,将服务pid写入该文件
+
+这个omx服务主要用于管理OpenMAXDL(Open Media Acceleration Development Layer) 编解码器,完成媒体内容的编解码与处理。
+OpenMAXDL是用于多媒体加速的应用层接口标准,其下omx组件用于驱动各平台的硬件编解码IP核。所以,这个vendor.media.omx服务主要负责:
+1. 加载与管理各平台编解码器的omx组件,如ROCKCHIP OMX、INTEL OMX等。
+2. 创建omx组件实例,以完成特定格式的硬件编解码操作。
+3. 调度omx组件使用cpu、gpu等资源进行视频编解码。
+4. 管理omx组件间的数据流动,连接各组件的input与output。
+5. 监控omx组件资源使用情况,协调资源分配与调度。
+
+要正常运行这个服务,需要:
+1. 设备支持OpenMAX标准,提供omx组件来驱动硬件编解码IP核。
+2. 建立mediacodec用户与组,赋予相应的权限。
+3. 确保服务二进制文件android.hardware.media.omx@1.0-service存在于/vendor/bin/hw路径下。
+4. 设置相应的ioprio与cpuset策略,用于服务进程的优先级调度与cpuaffinity管理。
+5. selinux和mac相关策略要允许此服务与编解码资源的访问。
+
+{{< /admonition >}}
+
+
 1. 新建 implementation::Omx 对象并启动 Omx 服务；
 2. 新建 implementation::OmxStore 对象并启动 OmxStore 服务。  frameworks/av/services/mediacodec/main_codecservice.cpp
 
-    ![启动流程.png](content/assets/images/启动流程.png)
+    ![启动流程.png](../assets/images/启动流程.png)
 
 ```cpp
 int main(int argc __unused, char** argv)
@@ -66,9 +94,9 @@ int main(int argc __unused, char** argv)
 4. 从 MediaCodecsXmlParser 中获取 RoleMap 填充 Role List（mRoleList），其中构造 RoleInfo，获取 NodeInfo List，这里第二次 resize NodeInfo List 是因为可能存在不匹配第一步中 node 名称 Set 中的情况，这样 List 就需要缩小；
 5. 调用 MediaCodecsXmlParser getCommonPrefix() 获取 Codec Map key 中都存在的前缀。
 
-frameworks/av/media/libstagefright/omx/1.0/OmxStore.cpp
+> frameworks/av/media/libstagefright/omx/1.0/OmxStore.cpp
 
-```
+```cpp
 OmxStore::OmxStore(
         const sp<IOmx> &omx,
         const char* owner,
@@ -153,19 +181,19 @@ OmxStore::OmxStore(
 
 为了进一步确认解析 xml 使用的参数，我们需要查看 OmxStore.h 文件来确认。从 OmxStore 构造函数声明中不难发现，其所有参数都存在默认值，也就是在只传入指向 IOmx 的指针时，其他参数都已确定。
 
-owner = “default”
+- owner = “default”
 
-searchDirs = MediaCodecsXmlParser::getDefaultSearchDirs()
+- searchDirs = MediaCodecsXmlParser::getDefaultSearchDirs()
 
-xmlFiles = MediaCodecsXmlParser::getDefaultXmlNames()
+- xmlFiles = MediaCodecsXmlParser::getDefaultXmlNames()
 
-xmlProfilingResultsPath = MediaCodecsXmlParser::defaultProfilingResultsXmlPath)
+- xmlProfilingResultsPath = MediaCodecsXmlParser::defaultProfilingResultsXmlPath)
 
 以上的三个 xml 解析的相关参数和 Omx 构造函数中解析 xml 流程入参是一样的。
 
-frameworks/av/media/libstagefright/omx/include/media/stagefright/omx/1.0/OmxStore.h
+> frameworks/av/media/libstagefright/omx/include/media/stagefright/omx/1.0/OmxStore.h
 
-```
+```c
 namespace implementation {
 
 using ::android::hardware::media::omx::V1_0::IOmxStore;
@@ -213,11 +241,11 @@ protected:
 }  // namespace android
 ```
 
-listNodes(…) 内部主要调用 OMXMaster enumerateComponents(…) 函数进行枚举组件，具体可以查看 Omx 初始化一节关于 OMXMaster 构造函数的过程。枚举组件名称后，构建 ::android::IOMX::ComponentInfo 并将其推入 list 中，然后给其进行必要的字段初始化，这里会调到 OMXMaster getRolesOfComponent(…) 函数获取角色。最后将 std::list<::android::IOMX::ComponentInfo> 转化为 hidl_vec，接着调用 _hidl_cb(…) 回调前面提到的匿名函数。
+`listNodes(…) `内部主要调用` OMXMaster enumerateComponents(…)` 函数进行枚举组件，具体可以查看 Omx 初始化一节关于 OMXMaster 构造函数的过程。枚举组件名称后，构建 `::android::IOMX::ComponentInfo` 并将其推入 list 中，然后给其进行必要的字段初始化，这里会调到 OMXMaster getRolesOfComponent(…) 函数获取角色。最后将 `std::list<::android::IOMX::ComponentInfo>` 转化为 `hidl_vec`，接着调用 `_hidl_cb(…)` 回调前面提到的匿名函数。
 
-frameworks/av/media/libstagefright/omx/1.0/Omx.cpp
+> frameworks/av/media/libstagefright/omx/1.0/Omx.cpp
 
-```
+```CPP
 Return<void> Omx::listNodes(listNodes_cb _hidl_cb) {
     std::list<::android::IOMX::ComponentInfo> list;
     char componentName[256];
@@ -253,9 +281,9 @@ Return<void> Omx::listNodes(listNodes_cb _hidl_cb) {
 2. 根据 index 查到对应项，然后获取 plugin；
 3. 根据 name 调用 plugin OMXPluginBase 具体实现 getRolesOfComponent(…) 获取所有角色。
 
-frameworks/av/media/libstagefright/omx/OMXMaster.cpp
+> frameworks/av/media/libstagefright/omx/OMXMaster.cpp
 
-```
+```CPP
 OMX_ERRORTYPE OMXMaster::getRolesOfComponent(
         const char *name,
         Vector<String8> *roles) {
@@ -274,15 +302,15 @@ OMX_ERRORTYPE OMXMaster::getRolesOfComponent(
 }
 ```
 
-假设我们查找的角色是 rk3399 android 10 实现的，比如角色是 video_decoder.avc 时。这就会调用到 libstagefrighthw so 内的 getRolesOfComponent(…) 具体实现。
+假设我们查找的角色是 rk3399 android 10 实现的，比如角色是 `video_decoder.avc` 时。这就会调用到 `libstagefrighthw so` 内的 `getRolesOfComponent(…) `具体实现。
 
 1. 调用 RKOMX_GetComponentsOfRole(…) 获取角色数量；
 2. 调用 RKOMX_GetComponentsOfRole(…) 获取具体角色数组；
 3. 转换角色数组到容器 Vector。
 
-hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp
+> hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp
 
-```
+```CPP
 OMX_ERRORTYPE RKOMXPlugin::getRolesOfComponent(
         const char *name,
         Vector<String8> *roles) {
@@ -332,9 +360,9 @@ OMX_ERRORTYPE RKOMXPlugin::getRolesOfComponent(
 
 RKOMX_GetComponentsOfRole(…) 主要遍历所有组件，然后从全局组件列表 gComponentList 中查找角色（role）匹配项，如果入参 compNames 不为 NULL 则将查找到的组件名称写回，否则只返回匹配的组件个数。
 
-hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c
+> hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c
 
-```
+```C
 OMX_API OMX_ERRORTYPE RKOMX_GetComponentsOfRole (
     OMX_IN    OMX_STRING role,
     OMX_INOUT OMX_U32 *pNumComps,
@@ -375,9 +403,9 @@ EXIT:
 
 再来看 MediaCodecsXmlParser 的 getServiceAttributeMap() 具体实现，其内部调用实现 Impl 同名函数，此函数内部只是简单返回 Data 结构体 mServiceAttributeMap 字段，此字段的填充发生在解析 xml 期间。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```CPP
 struct MediaCodecsXmlParser::Impl {
     ......
     // Parsed data
@@ -403,11 +431,11 @@ MediaCodecsXmlParser::getServiceAttributeMap() const {
 
 MediaCodecsXmlParser 的 getRoleMap() 具体实现中委托给 Impl getRoleMap() 方法的 ，如果 mRoleMap 为空，就调用 generateRoleMap() 先生成，不为空直接返回。
 
-generateRoleMap() 实现并不复杂，主要遍历 mData.mCodecMap，然后在每轮迭代中构建 std::string — RoleProperties 对，如果 mRoleMap 中不存在对应项就插入。中间调用了 GetComponentRole(…) 根据 isEncoder 和 mime 类型字符串作为入参去查找角色名。
+`generateRoleMap()` 实现并不复杂，主要遍历 `mData.mCodecMap`，然后在每轮迭代中构建 std::string — `RoleProperties` 对，如果 `mRoleMap` 中不存在对应项就插入。中间调用了 `GetComponentRole(…)` 根据 `isEncoder` 和 `mime` 类型字符串作为入参去查找角色名。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 const MediaCodecsXmlParser::RoleMap&
 MediaCodecsXmlParser::getRoleMap() const {
     return mImpl->getRoleMap();
@@ -498,9 +526,9 @@ void MediaCodecsXmlParser::Impl::generateRoleMap() const {
 
 GetComponentRole(…) 内部遍历定义好的静态常量 MimeToRole 数组，调用 strcasecmp(…) 忽略大小写去比较入参 mime 和 MimeToRole 项 mime 字段是否匹配，匹配后 break 出循环，再根据 isEncoder 入参返回角色名，是那个编码器或解码器就被唯一确定了，也就是角色名查到了。
 
-frameworks/av/media/libstagefright/omx/OMXUtils.cpp
+> frameworks/av/media/libstagefright/omx/OMXUtils.cpp
 
-```
+```cpp
 const char *GetComponentRole(bool isEncoder, const char *mime) {
     struct MimeToRole {
         const char *mime;
@@ -586,15 +614,15 @@ const char *GetComponentRole(bool isEncoder, const char *mime) {
 
 再来看一个常量 MEDIA_MIMETYPE_VIDEO_AVC。回顾一下我们使用 MediaCodec 的时候是不是会传入这个 mime 类型呢？
 
-frameworks/av/media/libstagefright/foundation/MediaDefs.cpp
+> frameworks/av/media/libstagefright/foundation/MediaDefs.cpp
 
-最后再来看 MediaCodecsXmlParser::Impl::getCommonPrefix() 中调用 generateCommonPrefix() 生成前缀，然后获取指向前缀的 char* 指针后返回。
+最后再来看 `MediaCodecsXmlParser::Impl::getCommonPrefix()` 中调用` generateCommonPrefix()` 生成前缀，然后获取指向前缀的 char* 指针后返回。
 
-这里用到了 std::mismatch(…) 标准库的函数，在这里就是找出 CodecMap 中所有元素 key 中共同的前缀部分字符串，然后更新到 mCommonPrefix 这个变量上。
+这里用到了 `std::mismatch(…)` 标准库的函数，在这里就是找出 CodecMap 中所有元素 key 中共同的前缀部分字符串，然后更新到 `mCommonPrefix` 这个变量上。
 
-frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
+> frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp
 
-```
+```cpp
 const char* MediaCodecsXmlParser::Impl::getCommonPrefix() const {
     std::lock_guard<std::mutex> guard(mLock);
     if (mCommonPrefix.empty()) {

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <title>深入理解构建 MediaCodec 列表：3-Codecservice 启动 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="深入理解构建 MediaCodec 列表：3-Codecservice 启动" />
-<meta property="og:description" content="Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编[解码]接口。它的入口是 main_codecservice.cpp。" />
+<meta property="og:description" content="Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编解码接口。它的入口是 main_codecservice.cpp。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-02-09T00:00:00+00:00" />
@@ -14,7 +14,7 @@
 <meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
 
 <meta name="twitter:title" content="深入理解构建 MediaCodec 列表：3-Codecservice 启动"/>
-<meta name="twitter:description" content="Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编[解码]接口。它的入口是 main_codecservice.cpp。"/>
+<meta name="twitter:description" content="Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编解码接口。它的入口是 main_codecservice.cpp。"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
 <meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8\/"
-        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  3495 ,
+        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  4237 ,
         "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -103,17 +103,19 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：3-Codecservice 启动</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;3495 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;7 minutes&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;4237 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;9 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
-            </div><div class="content" id="content"><p>Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>接口。它的入口是 main_codecservice.cpp。</p>
+            </div><div class="content" id="content"><p>Codecservice 主要负责 HAL 层给 framework 层提供调用音视频编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>接口。它的入口是 <code>main_codecservice.cpp</code>。</p>
 <p>首先我们来看下启动它的配置 rc 脚本。可以看到它放在 vendor 目录下，说明和供应商有关。</p>
+<blockquote>
 <p><a href="mailto:frameworks/av/services/mediacodec/android.hardware.media.omx@1.0-service.rc" rel="">frameworks/av/services/mediacodec/android.hardware.media.omx@1.0-service.rc</a></p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -132,7 +134,42 @@
 </span></span><span class="line"><span class="cl">    writepid /dev/cpuset/foreground/tasks
 </span></span></code></pre></td></tr></table>
 </div>
-</div><ol>
+</div><div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>AI<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>这段信息定义了Android系统中的omx医疗服务。
+我们可以解析出:</p>
+<ol>
+<li>服务名:vendor.media.omx</li>
+<li>服务二进制文件路径:/vendor/bin/hw/android.hardware.media.omx@1.0-service</li>
+<li>服务运行用户:mediacodec</li>
+<li>服务所属组:camera、drmrpc、mediadrm</li>
+<li>调度优先级与优先类别:ioprio rt 4,即实时调度类,优先级为4</li>
+<li>写入pid的路径:/dev/cpuset/foreground/tasks,将服务pid写入该文件</li>
+</ol>
+<p>这个omx服务主要用于管理OpenMAXDL(Open Media Acceleration Development Layer) 编解码器,完成媒体内容的编解码与处理。
+OpenMAXDL是用于多媒体加速的应用层接口标准,其下omx组件用于驱动各平台的硬件编解码IP核。所以,这个vendor.media.omx服务主要负责:</p>
+<ol>
+<li>加载与管理各平台编解码器的omx组件,如ROCKCHIP OMX、INTEL OMX等。</li>
+<li>创建omx组件实例,以完成特定格式的硬件编解码操作。</li>
+<li>调度omx组件使用cpu、gpu等资源进行视频编解码。</li>
+<li>管理omx组件间的数据流动,连接各组件的input与output。</li>
+<li>监控omx组件资源使用情况,协调资源分配与调度。</li>
+</ol>
+<p>要正常运行这个服务,需要:</p>
+<ol>
+<li>设备支持OpenMAX标准,提供omx组件来驱动硬件编解码IP核。</li>
+<li>建立mediacodec用户与组,赋予相应的权限。</li>
+<li>确保服务二进制文件android.hardware.media.omx@1.0-service存在于/vendor/bin/hw路径下。</li>
+<li>设置相应的ioprio与cpuset策略,用于服务进程的优先级调度与cpuaffinity管理。</li>
+<li>selinux和mac相关策略要允许此服务与编解码资源的访问。</li>
+</ol>
+</div>
+        </div>
+    </div>
+<ol>
 <li>
 <p>新建 implementation::Omx 对象并启动 Omx 服务；</p>
 </li>
@@ -141,10 +178,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="content/assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png"
-        data-srcset="content/assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png, content/assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png 1.5x, content/assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png 2x"
+        data-src="../assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png"
+        data-srcset="../assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png, ../assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png 1.5x, ../assets/images/%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b.png 2x"
         data-sizes="auto"
-        alt="content/assets/images/启动流程.png"
+        alt="../assets/images/启动流程.png"
         title="启动流程.png" /></p>
 </li>
 </ol>
@@ -225,7 +262,9 @@
 <li>从 MediaCodecsXmlParser 中获取 RoleMap 填充 Role List（mRoleList），其中构造 RoleInfo，获取 NodeInfo List，这里第二次 resize NodeInfo List 是因为可能存在不匹配第一步中 node 名称 Set 中的情况，这样 List 就需要缩小；</li>
 <li>调用 MediaCodecsXmlParser getCommonPrefix() 获取 Codec Map key 中都存在的前缀。</li>
 </ol>
+<blockquote>
 <p>frameworks/av/media/libstagefright/omx/1.0/OmxStore.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -310,95 +349,107 @@
 </span><span class="lnt">80
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">OmxStore::OmxStore(
-</span></span><span class="line"><span class="cl">        const sp&lt;IOmx&gt; &amp;omx,
-</span></span><span class="line"><span class="cl">        const char* owner,
-</span></span><span class="line"><span class="cl">        const std::vector&lt;std::string&gt; &amp;searchDirs,
-</span></span><span class="line"><span class="cl">        const std::vector&lt;std::string&gt; &amp;xmlNames,
-</span></span><span class="line"><span class="cl">        const char* profilingResultsXmlPath) {
-</span></span><span class="line"><span class="cl">    // retrieve list of omx nodes
-</span></span><span class="line"><span class="cl">    std::set&lt;std::string&gt; nodes;
-</span></span><span class="line"><span class="cl">    if (omx != nullptr) {
-</span></span><span class="line"><span class="cl">        omx-&gt;listNodes([&amp;nodes](const Status &amp;status,
-</span></span><span class="line"><span class="cl">                                const hidl_vec&lt;IOmx::ComponentInfo&gt; &amp;nodeList) {
-</span></span><span class="line"><span class="cl">            if (status == Status::OK) {
-</span></span><span class="line"><span class="cl">                for (const IOmx::ComponentInfo&amp; info : nodeList) {
-</span></span><span class="line"><span class="cl">                    nodes.emplace(info.mName.c_str());
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">        });
-</span></span><span class="line"><span class="cl">    }
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">OmxStore</span><span class="o">::</span><span class="n">OmxStore</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">IOmx</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">omx</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">owner</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">searchDirs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">xmlNames</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">profilingResultsXmlPath</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// retrieve list of omx nodes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">nodes</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">omx</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">omx</span><span class="o">-&gt;</span><span class="n">listNodes</span><span class="p">([</span><span class="o">&amp;</span><span class="n">nodes</span><span class="p">](</span><span class="k">const</span> <span class="n">Status</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">const</span> <span class="n">hidl_vec</span><span class="o">&lt;</span><span class="n">IOmx</span><span class="o">::</span><span class="n">ComponentInfo</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nodeList</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">Status</span><span class="o">::</span><span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">IOmx</span><span class="o">::</span><span class="n">ComponentInfo</span><span class="o">&amp;</span> <span class="nl">info</span> <span class="p">:</span> <span class="n">nodeList</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">nodes</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">mName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    MediaCodecsXmlParser parser;
-</span></span><span class="line"><span class="cl">    parser.parseXmlFilesInSearchDirs(xmlNames, searchDirs);
-</span></span><span class="line"><span class="cl">    if (profilingResultsXmlPath != nullptr) {
-</span></span><span class="line"><span class="cl">        parser.parseXmlPath(profilingResultsXmlPath);
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    mParsingStatus = toStatus(parser.getParsingStatus());
+</span></span><span class="line"><span class="cl">    <span class="n">MediaCodecsXmlParser</span> <span class="n">parser</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span><span class="p">.</span><span class="n">parseXmlFilesInSearchDirs</span><span class="p">(</span><span class="n">xmlNames</span><span class="p">,</span> <span class="n">searchDirs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">profilingResultsXmlPath</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">parser</span><span class="p">.</span><span class="n">parseXmlPath</span><span class="p">(</span><span class="n">profilingResultsXmlPath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mParsingStatus</span> <span class="o">=</span> <span class="n">toStatus</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">getParsingStatus</span><span class="p">());</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    const auto&amp; serviceAttributeMap = parser.getServiceAttributeMap();
-</span></span><span class="line"><span class="cl">    mServiceAttributeList.resize(serviceAttributeMap.size());
-</span></span><span class="line"><span class="cl">    size_t i = 0;
-</span></span><span class="line"><span class="cl">    for (const auto&amp; attributePair : serviceAttributeMap) {
-</span></span><span class="line"><span class="cl">        ServiceAttribute attribute;
-</span></span><span class="line"><span class="cl">        attribute.key = attributePair.first;
-</span></span><span class="line"><span class="cl">        attribute.value = attributePair.second;
-</span></span><span class="line"><span class="cl">        mServiceAttributeList[i] = std::move(attribute);
-</span></span><span class="line"><span class="cl">        ++i;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">serviceAttributeMap</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">getServiceAttributeMap</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mServiceAttributeList</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">serviceAttributeMap</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">attributePair</span> <span class="p">:</span> <span class="n">serviceAttributeMap</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ServiceAttribute</span> <span class="n">attribute</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">attribute</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">attributePair</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">attribute</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">attributePair</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mServiceAttributeList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">attribute</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    const auto&amp; roleMap = parser.getRoleMap();
-</span></span><span class="line"><span class="cl">    mRoleList.resize(roleMap.size());
-</span></span><span class="line"><span class="cl">    i = 0;
-</span></span><span class="line"><span class="cl">    for (const auto&amp; rolePair : roleMap) {
-</span></span><span class="line"><span class="cl">        RoleInfo role;
-</span></span><span class="line"><span class="cl">        role.role = rolePair.first;
-</span></span><span class="line"><span class="cl">        role.type = rolePair.second.type;
-</span></span><span class="line"><span class="cl">        role.isEncoder = rolePair.second.isEncoder;
-</span></span><span class="line"><span class="cl">        role.preferPlatformNodes = false; // deprecated and ignored, using rank instead
-</span></span><span class="line"><span class="cl">        hidl_vec&lt;NodeInfo&gt;&amp; nodeList = role.nodes;
-</span></span><span class="line"><span class="cl">        nodeList.resize(rolePair.second.nodeList.size());
-</span></span><span class="line"><span class="cl">        size_t j = 0;
-</span></span><span class="line"><span class="cl">        for (const auto&amp; nodePair : rolePair.second.nodeList) {
-</span></span><span class="line"><span class="cl">            if (!nodes.count(nodePair.second.name)) {
-</span></span><span class="line"><span class="cl">                // not supported by this OMX instance
-</span></span><span class="line"><span class="cl">                if (!strncasecmp(nodePair.second.name.c_str(), &#34;omx.&#34;, 4)) {
-</span></span><span class="line"><span class="cl">                    LOG(INFO) &lt;&lt; &#34;node [&#34; &lt;&lt; nodePair.second.name.c_str() &lt;&lt; &#34;] not found in IOmx&#34;;
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">                continue;
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            NodeInfo node;
-</span></span><span class="line"><span class="cl">            node.name = nodePair.second.name;
-</span></span><span class="line"><span class="cl">            node.owner = owner;
-</span></span><span class="line"><span class="cl">            hidl_vec&lt;NodeAttribute&gt;&amp; attributeList = node.attributes;
-</span></span><span class="line"><span class="cl">            attributeList.resize(nodePair.second.attributeList.size());
-</span></span><span class="line"><span class="cl">            size_t k = 0;
-</span></span><span class="line"><span class="cl">            for (const auto&amp; attributePair : nodePair.second.attributeList) {
-</span></span><span class="line"><span class="cl">                NodeAttribute attribute;
-</span></span><span class="line"><span class="cl">                attribute.key = attributePair.first;
-</span></span><span class="line"><span class="cl">                attribute.value = attributePair.second;
-</span></span><span class="line"><span class="cl">                attributeList[k] = std::move(attribute);
-</span></span><span class="line"><span class="cl">                ++k;
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            nodeList[j] = std::move(node);
-</span></span><span class="line"><span class="cl">            ++j;
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">        nodeList.resize(j);
-</span></span><span class="line"><span class="cl">        mRoleList[i] = std::move(role);
-</span></span><span class="line"><span class="cl">        ++i;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">roleMap</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">getRoleMap</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mRoleList</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">roleMap</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">rolePair</span> <span class="p">:</span> <span class="n">roleMap</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">RoleInfo</span> <span class="n">role</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">role</span><span class="p">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">rolePair</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">role</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">rolePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">type</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">role</span><span class="p">.</span><span class="n">isEncoder</span> <span class="o">=</span> <span class="n">rolePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">isEncoder</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">role</span><span class="p">.</span><span class="n">preferPlatformNodes</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// deprecated and ignored, using rank instead
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">hidl_vec</span><span class="o">&lt;</span><span class="n">NodeInfo</span><span class="o">&gt;&amp;</span> <span class="n">nodeList</span> <span class="o">=</span> <span class="n">role</span><span class="p">.</span><span class="n">nodes</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nodeList</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">rolePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">nodeList</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">nodePair</span> <span class="p">:</span> <span class="n">rolePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">nodeList</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nodes</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">nodePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">name</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// not supported by this OMX instance
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strncasecmp</span><span class="p">(</span><span class="n">nodePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="s">&#34;omx.&#34;</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">LOG</span><span class="p">(</span><span class="n">INFO</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;node [&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">nodePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;] not found in IOmx&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">NodeInfo</span> <span class="n">node</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">node</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nodePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">node</span><span class="p">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">hidl_vec</span><span class="o">&lt;</span><span class="n">NodeAttribute</span><span class="o">&gt;&amp;</span> <span class="n">attributeList</span> <span class="o">=</span> <span class="n">node</span><span class="p">.</span><span class="n">attributes</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">attributeList</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nodePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">attributeList</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">attributePair</span> <span class="p">:</span> <span class="n">nodePair</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">attributeList</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">NodeAttribute</span> <span class="n">attribute</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">attribute</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">attributePair</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">attribute</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">attributePair</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">attributeList</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">attribute</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="o">++</span><span class="n">k</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nodeList</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">j</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nodeList</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mRoleList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">role</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    mPrefix = parser.getCommonPrefix();
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">    <span class="n">mPrefix</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">getCommonPrefix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>为了进一步确认解析 xml 使用的参数，我们需要查看 OmxStore.h 文件来确认。从 OmxStore 构造函数声明中不难发现，其所有参数都存在默认值，也就是在只传入指向 IOmx 的指针时，其他参数都已确定。</p>
+<ul>
+<li>
 <p>owner = “default”</p>
+</li>
+<li>
 <p>searchDirs = MediaCodecsXmlParser::getDefaultSearchDirs()</p>
+</li>
+<li>
 <p>xmlFiles = MediaCodecsXmlParser::getDefaultXmlNames()</p>
+</li>
+<li>
 <p>xmlProfilingResultsPath = MediaCodecsXmlParser::defaultProfilingResultsXmlPath)</p>
+</li>
+</ul>
 <p>以上的三个 xml 解析的相关参数和 Omx 构造函数中解析 xml 流程入参是一样的。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/omx/include/media/stagefright/omx/1.0/OmxStore.h</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -448,55 +499,57 @@
 </span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">namespace implementation {
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">namespace</span> <span class="n">implementation</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">using ::android::hardware::media::omx::V1_0::IOmxStore;
-</span></span><span class="line"><span class="cl">using ::android::hardware::media::omx::V1_0::IOmx;
-</span></span><span class="line"><span class="cl">using ::android::hardware::media::omx::V1_0::Status;
-</span></span><span class="line"><span class="cl">using ::android::hidl::base::V1_0::IBase;
-</span></span><span class="line"><span class="cl">using ::android::hardware::hidl_string;
-</span></span><span class="line"><span class="cl">using ::android::hardware::hidl_vec;
-</span></span><span class="line"><span class="cl">using ::android::hardware::Return;
-</span></span><span class="line"><span class="cl">using ::android::hardware::Void;
-</span></span><span class="line"><span class="cl">using ::android::sp;
-</span></span><span class="line"><span class="cl">using ::android::wp;
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">media</span><span class="o">::</span><span class="n">omx</span><span class="o">::</span><span class="n">V1_0</span><span class="o">::</span><span class="n">IOmxStore</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">media</span><span class="o">::</span><span class="n">omx</span><span class="o">::</span><span class="n">V1_0</span><span class="o">::</span><span class="n">IOmx</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">media</span><span class="o">::</span><span class="n">omx</span><span class="o">::</span><span class="n">V1_0</span><span class="o">::</span><span class="n">Status</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hidl</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">V1_0</span><span class="o">::</span><span class="n">IBase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">hidl_string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">hidl_vec</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">Return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">Void</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">using</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">wp</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">struct OmxStore : public IOmxStore {
-</span></span><span class="line"><span class="cl">    OmxStore(
-</span></span><span class="line"><span class="cl">            const sp&lt;IOmx&gt; &amp;omx = nullptr,
-</span></span><span class="line"><span class="cl">            const char* owner = &#34;default&#34;,
-</span></span><span class="line"><span class="cl">            const std::vector&lt;std::string&gt; &amp;searchDirs =
-</span></span><span class="line"><span class="cl">                MediaCodecsXmlParser::getDefaultSearchDirs(),
-</span></span><span class="line"><span class="cl">            const std::vector&lt;std::string&gt; &amp;xmlFiles =
-</span></span><span class="line"><span class="cl">                MediaCodecsXmlParser::getDefaultXmlNames(),
-</span></span><span class="line"><span class="cl">            const char *xmlProfilingResultsPath =
-</span></span><span class="line"><span class="cl">                MediaCodecsXmlParser::defaultProfilingResultsXmlPath);
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nl">OmxStore</span> <span class="p">:</span> <span class="n">public</span> <span class="n">IOmxStore</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">OmxStore</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">IOmx</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">omx</span> <span class="o">=</span> <span class="n">nullptr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">owner</span> <span class="o">=</span> <span class="s">&#34;default&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">searchDirs</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">                <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="nf">getDefaultSearchDirs</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">xmlFiles</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">                <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="nf">getDefaultXmlNames</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">xmlProfilingResultsPath</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">                <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">defaultProfilingResultsXmlPath</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    virtual ~OmxStore();
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="o">~</span><span class="nf">OmxStore</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // Methods from IOmxStore
-</span></span><span class="line"><span class="cl">    Return&lt;void&gt; listServiceAttributes(listServiceAttributes_cb) override;
-</span></span><span class="line"><span class="cl">    Return&lt;void&gt; getNodePrefix(getNodePrefix_cb) override;
-</span></span><span class="line"><span class="cl">    Return&lt;void&gt; listRoles(listRoles_cb) override;
-</span></span><span class="line"><span class="cl">    Return&lt;sp&lt;IOmx&gt;&gt; getOmx(hidl_string const&amp;) override;
+</span></span><span class="line"><span class="cl">    <span class="c1">// Methods from IOmxStore
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Return</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="nf">listServiceAttributes</span><span class="p">(</span><span class="n">listServiceAttributes_cb</span><span class="p">)</span> <span class="n">override</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Return</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="nf">getNodePrefix</span><span class="p">(</span><span class="n">getNodePrefix_cb</span><span class="p">)</span> <span class="n">override</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Return</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="nf">listRoles</span><span class="p">(</span><span class="n">listRoles_cb</span><span class="p">)</span> <span class="n">override</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Return</span><span class="o">&lt;</span><span class="n">sp</span><span class="o">&lt;</span><span class="n">IOmx</span><span class="o">&gt;&gt;</span> <span class="nf">getOmx</span><span class="p">(</span><span class="n">hidl_string</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="n">override</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">protected:
-</span></span><span class="line"><span class="cl">    Status mParsingStatus;
-</span></span><span class="line"><span class="cl">    hidl_string mPrefix;
-</span></span><span class="line"><span class="cl">    hidl_vec&lt;ServiceAttribute&gt; mServiceAttributeList;
-</span></span><span class="line"><span class="cl">    hidl_vec&lt;RoleInfo&gt; mRoleList;
-</span></span><span class="line"><span class="cl">};
+</span></span><span class="line"><span class="cl"><span class="nl">protected</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Status</span> <span class="n">mParsingStatus</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hidl_string</span> <span class="n">mPrefix</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hidl_vec</span><span class="o">&lt;</span><span class="n">ServiceAttribute</span><span class="o">&gt;</span> <span class="n">mServiceAttributeList</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hidl_vec</span><span class="o">&lt;</span><span class="n">RoleInfo</span><span class="o">&gt;</span> <span class="n">mRoleList</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">}  // namespace implementation
-</span></span><span class="line"><span class="cl">}  // namespace V1_0
-</span></span><span class="line"><span class="cl">}  // namespace omx
-</span></span><span class="line"><span class="cl">}  // namespace media
-</span></span><span class="line"><span class="cl">}  // namespace hardware
-</span></span><span class="line"><span class="cl">}  // namespace android
-</span></span></code></pre></td></tr></table>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>  <span class="c1">// namespace implementation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>  <span class="c1">// namespace V1_0
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>  <span class="c1">// namespace omx
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>  <span class="c1">// namespace media
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>  <span class="c1">// namespace hardware
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>  <span class="c1">// namespace android
+</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>listNodes(…) 内部主要调用 OMXMaster enumerateComponents(…) 函数进行枚举组件，具体可以查看 Omx 初始化一节关于 OMXMaster 构造函数的过程。枚举组件名称后，构建 ::android::IOMX::ComponentInfo 并将其推入 list 中，然后给其进行必要的字段初始化，这里会调到 OMXMaster getRolesOfComponent(…) 函数获取角色。最后将 std::list&lt;::android::IOMX::ComponentInfo&gt; 转化为 hidl_vec，接着调用 _hidl_cb(…) 回调前面提到的匿名函数。</p>
+</div><p><code>listNodes(…) </code>内部主要调用<code> OMXMaster enumerateComponents(…)</code> 函数进行枚举组件，具体可以查看 Omx 初始化一节关于 OMXMaster 构造函数的过程。枚举组件名称后，构建 <code>::android::IOMX::ComponentInfo</code> 并将其推入 list 中，然后给其进行必要的字段初始化，这里会调到 OMXMaster getRolesOfComponent(…) 函数获取角色。最后将 <code>std::list&lt;::android::IOMX::ComponentInfo&gt;</code> 转化为 <code>hidl_vec</code>，接着调用 <code>_hidl_cb(…)</code> 回调前面提到的匿名函数。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/omx/1.0/Omx.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -530,35 +583,35 @@
 </span><span class="lnt">29
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Return&lt;void&gt; Omx::listNodes(listNodes_cb _hidl_cb) {
-</span></span><span class="line"><span class="cl">    std::list&lt;::android::IOMX::ComponentInfo&gt; list;
-</span></span><span class="line"><span class="cl">    char componentName[256];
-</span></span><span class="line"><span class="cl">    for (OMX_U32 index = 0;
-</span></span><span class="line"><span class="cl">            mMaster-&gt;enumerateComponents(
-</span></span><span class="line"><span class="cl">            componentName, sizeof(componentName), index) == OMX_ErrorNone;
-</span></span><span class="line"><span class="cl">            ++index) {
-</span></span><span class="line"><span class="cl">        list.push_back(::android::IOMX::ComponentInfo());
-</span></span><span class="line"><span class="cl">        ::android::IOMX::ComponentInfo&amp; info = list.back();
-</span></span><span class="line"><span class="cl">        info.mName = componentName;
-</span></span><span class="line"><span class="cl">        ::android::Vector&lt;::android::String8&gt; roles;
-</span></span><span class="line"><span class="cl">        OMX_ERRORTYPE err =
-</span></span><span class="line"><span class="cl">                mMaster-&gt;getRolesOfComponent(componentName, &amp;roles);
-</span></span><span class="line"><span class="cl">        if (err == OMX_ErrorNone) {
-</span></span><span class="line"><span class="cl">            for (OMX_U32 i = 0; i &lt; roles.size(); ++i) {
-</span></span><span class="line"><span class="cl">                info.mRoles.push_back(roles[i]);
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">    }
+<pre tabindex="0" class="chroma"><code class="language-CPP" data-lang="CPP"><span class="line"><span class="cl"><span class="n">Return</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">Omx</span><span class="o">::</span><span class="n">listNodes</span><span class="p">(</span><span class="n">listNodes_cb</span> <span class="n">_hidl_cb</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;::</span><span class="n">android</span><span class="o">::</span><span class="n">IOMX</span><span class="o">::</span><span class="n">ComponentInfo</span><span class="o">&gt;</span> <span class="n">list</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">componentName</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">OMX_U32</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">mMaster</span><span class="o">-&gt;</span><span class="n">enumerateComponents</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">componentName</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">componentName</span><span class="p">),</span> <span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="n">OMX_ErrorNone</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">IOMX</span><span class="o">::</span><span class="n">ComponentInfo</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">IOMX</span><span class="o">::</span><span class="n">ComponentInfo</span><span class="o">&amp;</span> <span class="n">info</span> <span class="o">=</span> <span class="n">list</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">info</span><span class="p">.</span><span class="n">mName</span> <span class="o">=</span> <span class="n">componentName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;::</span><span class="n">android</span><span class="o">::</span><span class="n">String8</span><span class="o">&gt;</span> <span class="n">roles</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">OMX_ERRORTYPE</span> <span class="n">err</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">                <span class="n">mMaster</span><span class="o">-&gt;</span><span class="n">getRolesOfComponent</span><span class="p">(</span><span class="n">componentName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">roles</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">==</span> <span class="n">OMX_ErrorNone</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="n">OMX_U32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">roles</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">info</span><span class="p">.</span><span class="n">mRoles</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">roles</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    hidl_vec&lt;ComponentInfo&gt; tList;
-</span></span><span class="line"><span class="cl">    tList.resize(list.size());
-</span></span><span class="line"><span class="cl">    size_t i = 0;
-</span></span><span class="line"><span class="cl">    for (auto const&amp; info : list) {
-</span></span><span class="line"><span class="cl">        convertTo(&amp;(tList[i++]), info);
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    _hidl_cb(toStatus(OK), tList);
-</span></span><span class="line"><span class="cl">    return Void();
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">    <span class="n">hidl_vec</span><span class="o">&lt;</span><span class="n">ComponentInfo</span><span class="o">&gt;</span> <span class="n">tList</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tList</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="k">const</span><span class="o">&amp;</span> <span class="nl">info</span> <span class="p">:</span> <span class="n">list</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">convertTo</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">tList</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">]),</span> <span class="n">info</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_hidl_cb</span><span class="p">(</span><span class="n">toStatus</span><span class="p">(</span><span class="n">OK</span><span class="p">),</span> <span class="n">tList</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Void</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ol>
@@ -566,7 +619,9 @@
 <li>根据 index 查到对应项，然后获取 plugin；</li>
 <li>根据 name 调用 plugin OMXPluginBase 具体实现 getRolesOfComponent(…) 获取所有角色。</li>
 </ol>
+<blockquote>
 <p>frameworks/av/media/libstagefright/omx/OMXMaster.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -587,31 +642,33 @@
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">OMX_ERRORTYPE OMXMaster::getRolesOfComponent(
-</span></span><span class="line"><span class="cl">        const char *name,
-</span></span><span class="line"><span class="cl">        Vector&lt;String8&gt; *roles) {
-</span></span><span class="line"><span class="cl">    Mutex::Autolock autoLock(mLock);
+<pre tabindex="0" class="chroma"><code class="language-CPP" data-lang="CPP"><span class="line"><span class="cl"><span class="n">OMX_ERRORTYPE</span> <span class="n">OMXMaster</span><span class="o">::</span><span class="n">getRolesOfComponent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector</span><span class="o">&lt;</span><span class="n">String8</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">roles</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Mutex</span><span class="o">::</span><span class="n">Autolock</span> <span class="n">autoLock</span><span class="p">(</span><span class="n">mLock</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    roles-&gt;clear();
+</span></span><span class="line"><span class="cl">    <span class="n">roles</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    ssize_t index = mPluginByComponentName.indexOfKey(String8(name));
+</span></span><span class="line"><span class="cl">    <span class="n">ssize_t</span> <span class="n">index</span> <span class="o">=</span> <span class="n">mPluginByComponentName</span><span class="p">.</span><span class="n">indexOfKey</span><span class="p">(</span><span class="n">String8</span><span class="p">(</span><span class="n">name</span><span class="p">));</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    if (index &lt; 0) {
-</span></span><span class="line"><span class="cl">        return OMX_ErrorInvalidComponentName;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">OMX_ErrorInvalidComponentName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    OMXPluginBase *plugin = mPluginByComponentName.valueAt(index);
-</span></span><span class="line"><span class="cl">    return plugin-&gt;getRolesOfComponent(name, roles);
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">    <span class="n">OMXPluginBase</span> <span class="o">*</span><span class="n">plugin</span> <span class="o">=</span> <span class="n">mPluginByComponentName</span><span class="p">.</span><span class="n">valueAt</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">plugin</span><span class="o">-&gt;</span><span class="n">getRolesOfComponent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">roles</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>假设我们查找的角色是 rk3399 android 10 实现的，比如角色是 video_decoder.avc 时。这就会调用到 libstagefrighthw so 内的 getRolesOfComponent(…) 具体实现。</p>
+</div><p>假设我们查找的角色是 rk3399 android 10 实现的，比如角色是 <code>video_decoder.avc</code> 时。这就会调用到 <code>libstagefrighthw so</code> 内的 <code>getRolesOfComponent(…) </code>具体实现。</p>
 <ol>
 <li>调用 RKOMX_GetComponentsOfRole(…) 获取角色数量；</li>
 <li>调用 RKOMX_GetComponentsOfRole(…) 获取具体角色数组；</li>
 <li>转换角色数组到容器 Vector。</li>
 </ol>
+<blockquote>
 <p>hardware/rockchip/librkvpu/libstagefrighthw/RKOMXPlugin.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -661,55 +718,57 @@
 </span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">OMX_ERRORTYPE RKOMXPlugin::getRolesOfComponent(
-</span></span><span class="line"><span class="cl">        const char *name,
-</span></span><span class="line"><span class="cl">        Vector&lt;String8&gt; *roles) {
-</span></span><span class="line"><span class="cl">    roles-&gt;clear();
-</span></span><span class="line"><span class="cl">    for (OMX_U32 j = 0; j &lt; mCores.size(); j++) {
-</span></span><span class="line"><span class="cl">        if (mCores[j]-&gt;mLibHandle == NULL) {
-</span></span><span class="line"><span class="cl">           continue;
-</span></span><span class="line"><span class="cl">        }
+<pre tabindex="0" class="chroma"><code class="language-CPP" data-lang="CPP"><span class="line"><span class="cl"><span class="n">OMX_ERRORTYPE</span> <span class="n">RKOMXPlugin</span><span class="o">::</span><span class="n">getRolesOfComponent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Vector</span><span class="o">&lt;</span><span class="n">String8</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">roles</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">roles</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">OMX_U32</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">mCores</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">mCores</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">mLibHandle</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">           <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        OMX_U32 numRoles;
-</span></span><span class="line"><span class="cl">        OMX_ERRORTYPE err = (*(mCores[j]-&gt;mGetRolesOfComponentHandle))(
-</span></span><span class="line"><span class="cl">                const_cast&lt;OMX_STRING&gt;(name), &amp;numRoles, NULL);
+</span></span><span class="line"><span class="cl">        <span class="n">OMX_U32</span> <span class="n">numRoles</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">OMX_ERRORTYPE</span> <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">mCores</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">mGetRolesOfComponentHandle</span><span class="p">))(</span>
+</span></span><span class="line"><span class="cl">                <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">OMX_STRING</span><span class="o">&gt;</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">numRoles</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        if (err != OMX_ErrorNone) {
-</span></span><span class="line"><span class="cl">            continue;
-</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">err</span> <span class="o">!=</span> <span class="n">OMX_ErrorNone</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        if (numRoles &gt; 0) {
-</span></span><span class="line"><span class="cl">            OMX_U8 **array = new OMX_U8 *[numRoles];
-</span></span><span class="line"><span class="cl">            for (OMX_U32 i = 0; i &lt; numRoles; ++i) {
-</span></span><span class="line"><span class="cl">                array[i] = new OMX_U8[OMX_MAX_STRINGNAME_SIZE];
-</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">numRoles</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">OMX_U8</span> <span class="o">**</span><span class="n">array</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OMX_U8</span> <span class="o">*</span><span class="p">[</span><span class="n">numRoles</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="n">OMX_U32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numRoles</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OMX_U8</span><span class="p">[</span><span class="n">OMX_MAX_STRINGNAME_SIZE</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            OMX_U32 numRoles2 = numRoles;
-</span></span><span class="line"><span class="cl">            err = (*(mCores[j]-&gt;mGetRolesOfComponentHandle))(
-</span></span><span class="line"><span class="cl">                    const_cast&lt;OMX_STRING&gt;(name), &amp;numRoles2, array);
+</span></span><span class="line"><span class="cl">            <span class="n">OMX_U32</span> <span class="n">numRoles2</span> <span class="o">=</span> <span class="n">numRoles</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">mCores</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">mGetRolesOfComponentHandle</span><span class="p">))(</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">OMX_STRING</span><span class="o">&gt;</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">numRoles2</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            CHECK_EQ(err, OMX_ErrorNone);
-</span></span><span class="line"><span class="cl">            CHECK_EQ(numRoles, numRoles2);
+</span></span><span class="line"><span class="cl">            <span class="n">CHECK_EQ</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">OMX_ErrorNone</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">CHECK_EQ</span><span class="p">(</span><span class="n">numRoles</span><span class="p">,</span> <span class="n">numRoles2</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            for (OMX_U32 i = 0; i &lt; numRoles; ++i) {
-</span></span><span class="line"><span class="cl">                String8 s((const char *)array[i]);
-</span></span><span class="line"><span class="cl">                roles-&gt;push(s);
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="n">OMX_U32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numRoles</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">String8</span> <span class="nf">s</span><span class="p">((</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">roles</span><span class="o">-&gt;</span><span class="n">push</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                delete[] array[i];
-</span></span><span class="line"><span class="cl">                array[i] = NULL;
-</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">                <span class="k">delete</span><span class="p">[]</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            delete[] array;
-</span></span><span class="line"><span class="cl">            array = NULL;
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">        return OMX_ErrorNone;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    return OMX_ErrorInvalidComponent;
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span><span class="p">[]</span> <span class="n">array</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">array</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">OMX_ErrorNone</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">OMX_ErrorInvalidComponent</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>RKOMX_GetComponentsOfRole(…) 主要遍历所有组件，然后从全局组件列表 gComponentList 中查找角色（role）匹配项，如果入参 compNames 不为 NULL 则将查找到的组件名称写回，否则只返回匹配的组件个数。</p>
+<blockquote>
 <p>hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -750,46 +809,48 @@
 </span><span class="lnt">36
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">OMX_API OMX_ERRORTYPE RKOMX_GetComponentsOfRole (
-</span></span><span class="line"><span class="cl">    OMX_IN    OMX_STRING role,
-</span></span><span class="line"><span class="cl">    OMX_INOUT OMX_U32 *pNumComps,
-</span></span><span class="line"><span class="cl">    OMX_INOUT OMX_U8  **compNames)
-</span></span><span class="line"><span class="cl">{
-</span></span><span class="line"><span class="cl">    OMX_ERRORTYPE ret = OMX_ErrorNone;
-</span></span><span class="line"><span class="cl">    int           max_role_num = 0;
-</span></span><span class="line"><span class="cl">    int i = 0, j = 0;
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="n">OMX_API</span> <span class="n">OMX_ERRORTYPE</span> <span class="nf">RKOMX_GetComponentsOfRole</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">OMX_IN</span>    <span class="n">OMX_STRING</span> <span class="n">role</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">OMX_INOUT</span> <span class="n">OMX_U32</span> <span class="o">*</span><span class="n">pNumComps</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">OMX_INOUT</span> <span class="n">OMX_U8</span>  <span class="o">**</span><span class="n">compNames</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">OMX_ERRORTYPE</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">OMX_ErrorNone</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span>           <span class="n">max_role_num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    FunctionIn();
+</span></span><span class="line"><span class="cl">    <span class="nf">FunctionIn</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    if (gInitialized != 1) {
-</span></span><span class="line"><span class="cl">        ret = OMX_ErrorNotReady;
-</span></span><span class="line"><span class="cl">        goto EXIT;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">gInitialized</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ret</span> <span class="o">=</span> <span class="n">OMX_ErrorNotReady</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">goto</span> <span class="n">EXIT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    *pNumComps = 0;
+</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="n">pNumComps</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    for (i = 0; i &lt; MAX_OMX_COMPONENT_NUM; i++) {
-</span></span><span class="line"><span class="cl">        max_role_num = gComponentList[i].component.totalRoleNum;
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_OMX_COMPONENT_NUM</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">max_role_num</span> <span class="o">=</span> <span class="n">gComponentList</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">component</span><span class="p">.</span><span class="n">totalRoleNum</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        for (j = 0; j &lt; max_role_num; j++) {
-</span></span><span class="line"><span class="cl">            if (Rockchip_OSAL_Strcmp(gComponentList[i].component.roles[j], role) == 0) {
-</span></span><span class="line"><span class="cl">                if (compNames != NULL) {
-</span></span><span class="line"><span class="cl">                    Rockchip_OSAL_Strcpy((OMX_STRING)compNames[*pNumComps], gComponentList[i].component.componentName);
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">                *pNumComps = (*pNumComps + 1);
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">max_role_num</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nf">Rockchip_OSAL_Strcmp</span><span class="p">(</span><span class="n">gComponentList</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">component</span><span class="p">.</span><span class="n">roles</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">role</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">compNames</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nf">Rockchip_OSAL_Strcpy</span><span class="p">((</span><span class="n">OMX_STRING</span><span class="p">)</span><span class="n">compNames</span><span class="p">[</span><span class="o">*</span><span class="n">pNumComps</span><span class="p">],</span> <span class="n">gComponentList</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">component</span><span class="p">.</span><span class="n">componentName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="o">*</span><span class="n">pNumComps</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">pNumComps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">EXIT:
-</span></span><span class="line"><span class="cl">    FunctionOut();
+</span></span><span class="line"><span class="cl"><span class="nl">EXIT</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">FunctionOut</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    return ret;
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>再来看 MediaCodecsXmlParser 的 getServiceAttributeMap() 具体实现，其内部调用实现 Impl 同名函数，此函数内部只是简单返回 Data 结构体 mServiceAttributeMap 字段，此字段的填充发生在解析 xml 期间。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -815,32 +876,34 @@
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">struct MediaCodecsXmlParser::Impl {
-</span></span><span class="line"><span class="cl">    ......
-</span></span><span class="line"><span class="cl">    // Parsed data
-</span></span><span class="line"><span class="cl">    struct Data {
-</span></span><span class="line"><span class="cl">        // Service attributes
-</span></span><span class="line"><span class="cl">        AttributeMap mServiceAttributeMap;
-</span></span><span class="line"><span class="cl">        CodecMap mCodecMap;
-</span></span><span class="line"><span class="cl">        Result addGlobal(std::string key, std::string value, bool updating);
-</span></span><span class="line"><span class="cl">    };
-</span></span><span class="line"><span class="cl">    ......
-</span></span><span class="line"><span class="cl">    const AttributeMap&amp; getServiceAttributeMap() const {
-</span></span><span class="line"><span class="cl">        std::lock_guard&lt;std::mutex&gt; guard(mLock);
-</span></span><span class="line"><span class="cl">        return mData.mServiceAttributeMap;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    ......
-</span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">......
-</span></span><span class="line"><span class="cl">const MediaCodecsXmlParser::AttributeMap&amp;
-</span></span><span class="line"><span class="cl">MediaCodecsXmlParser::getServiceAttributeMap() const {
-</span></span><span class="line"><span class="cl">    return mImpl-&gt;getServiceAttributeMap();
-</span></span><span class="line"><span class="cl">}
+<pre tabindex="0" class="chroma"><code class="language-CPP" data-lang="CPP"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">Impl</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">......</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Parsed data
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">struct</span> <span class="nc">Data</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Service attributes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">AttributeMap</span> <span class="n">mServiceAttributeMap</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CodecMap</span> <span class="n">mCodecMap</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Result</span> <span class="nf">addGlobal</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">updating</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="p">......</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">AttributeMap</span><span class="o">&amp;</span> <span class="n">getServiceAttributeMap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">guard</span><span class="p">(</span><span class="n">mLock</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">mData</span><span class="p">.</span><span class="n">mServiceAttributeMap</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">......</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">......</span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">AttributeMap</span><span class="o">&amp;</span>
+</span></span><span class="line"><span class="cl"><span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">getServiceAttributeMap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">mImpl</span><span class="o">-&gt;</span><span class="n">getServiceAttributeMap</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>MediaCodecsXmlParser 的 getRoleMap() 具体实现中委托给 Impl getRoleMap() 方法的 ，如果 mRoleMap 为空，就调用 generateRoleMap() 先生成，不为空直接返回。</p>
-<p>generateRoleMap() 实现并不复杂，主要遍历 mData.mCodecMap，然后在每轮迭代中构建 std::string — RoleProperties 对，如果 mRoleMap 中不存在对应项就插入。中间调用了 GetComponentRole(…) 根据 isEncoder 和 mime 类型字符串作为入参去查找角色名。</p>
+<p><code>generateRoleMap()</code> 实现并不复杂，主要遍历 <code>mData.mCodecMap</code>，然后在每轮迭代中构建 std::string — <code>RoleProperties</code> 对，如果 <code>mRoleMap</code> 中不存在对应项就插入。中间调用了 <code>GetComponentRole(…)</code> 根据 <code>isEncoder</code> 和 <code>mime</code> 类型字符串作为入参去查找角色名。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -931,96 +994,98 @@
 </span><span class="lnt">86
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">const MediaCodecsXmlParser::RoleMap&amp;
-</span></span><span class="line"><span class="cl">MediaCodecsXmlParser::getRoleMap() const {
-</span></span><span class="line"><span class="cl">    return mImpl-&gt;getRoleMap();
-</span></span><span class="line"><span class="cl">}
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">RoleMap</span><span class="o">&amp;</span>
+</span></span><span class="line"><span class="cl"><span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">getRoleMap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">mImpl</span><span class="o">-&gt;</span><span class="n">getRoleMap</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">const MediaCodecsXmlParser::RoleMap&amp;
-</span></span><span class="line"><span class="cl">MediaCodecsXmlParser::Impl::getRoleMap() const {
-</span></span><span class="line"><span class="cl">    std::lock_guard&lt;std::mutex&gt; guard(mLock);
-</span></span><span class="line"><span class="cl">    if (mRoleMap.empty()) {
-</span></span><span class="line"><span class="cl">        generateRoleMap();
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    return mRoleMap;
-</span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">......
-</span></span><span class="line"><span class="cl">void MediaCodecsXmlParser::Impl::generateRoleMap() const {
-</span></span><span class="line"><span class="cl">    for (const auto&amp; codec : mData.mCodecMap) {
-</span></span><span class="line"><span class="cl">        const auto &amp;codecName = codec.first;
-</span></span><span class="line"><span class="cl">        if (codecName == &#34;&lt;dummy&gt;&#34;) {
-</span></span><span class="line"><span class="cl">            continue;
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">        bool isEncoder = codec.second.isEncoder;
-</span></span><span class="line"><span class="cl">        size_t order = codec.second.order;
-</span></span><span class="line"><span class="cl">        std::string rank = codec.second.rank;
-</span></span><span class="line"><span class="cl">        const auto&amp; typeMap = codec.second.typeMap;
-</span></span><span class="line"><span class="cl">        for (const auto&amp; type : typeMap) {
-</span></span><span class="line"><span class="cl">            const auto&amp; typeName = type.first;
-</span></span><span class="line"><span class="cl">            const char* roleName = GetComponentRole(isEncoder, typeName.data());
-</span></span><span class="line"><span class="cl">            if (roleName == nullptr) {
-</span></span><span class="line"><span class="cl">                ALOGE(&#34;Cannot find the role for %s of type %s&#34;,
-</span></span><span class="line"><span class="cl">                        isEncoder ? &#34;an encoder&#34; : &#34;a decoder&#34;,
-</span></span><span class="line"><span class="cl">                        typeName.data());
-</span></span><span class="line"><span class="cl">                continue;
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            const auto&amp; typeAttributeMap = type.second;
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">RoleMap</span><span class="o">&amp;</span>
+</span></span><span class="line"><span class="cl"><span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">Impl</span><span class="o">::</span><span class="n">getRoleMap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">guard</span><span class="p">(</span><span class="n">mLock</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">mRoleMap</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">generateRoleMap</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">mRoleMap</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">......</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">Impl</span><span class="o">::</span><span class="n">generateRoleMap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">codec</span> <span class="p">:</span> <span class="n">mData</span><span class="p">.</span><span class="n">mCodecMap</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">codecName</span> <span class="o">=</span> <span class="n">codec</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">codecName</span> <span class="o">==</span> <span class="s">&#34;&lt;dummy&gt;&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">bool</span> <span class="n">isEncoder</span> <span class="o">=</span> <span class="n">codec</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">isEncoder</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">size_t</span> <span class="n">order</span> <span class="o">=</span> <span class="n">codec</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">order</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">codec</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">rank</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">typeMap</span> <span class="o">=</span> <span class="n">codec</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">typeMap</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">type</span> <span class="p">:</span> <span class="n">typeMap</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">typeName</span> <span class="o">=</span> <span class="n">type</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">roleName</span> <span class="o">=</span> <span class="n">GetComponentRole</span><span class="p">(</span><span class="n">isEncoder</span><span class="p">,</span> <span class="n">typeName</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">roleName</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ALOGE</span><span class="p">(</span><span class="s">&#34;Cannot find the role for %s of type %s&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">isEncoder</span> <span class="o">?</span> <span class="s">&#34;an encoder&#34;</span> <span class="o">:</span> <span class="s">&#34;a decoder&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">typeName</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">                <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">typeAttributeMap</span> <span class="o">=</span> <span class="n">type</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            auto roleIterator = mRoleMap.find(roleName);
-</span></span><span class="line"><span class="cl">            std::multimap&lt;size_t, NodeInfo&gt;* nodeList;
-</span></span><span class="line"><span class="cl">            if (roleIterator == mRoleMap.end()) {
-</span></span><span class="line"><span class="cl">                RoleProperties roleProperties;
-</span></span><span class="line"><span class="cl">                roleProperties.type = typeName;
-</span></span><span class="line"><span class="cl">                roleProperties.isEncoder = isEncoder;
-</span></span><span class="line"><span class="cl">                auto insertResult = mRoleMap.insert(
-</span></span><span class="line"><span class="cl">                        std::make_pair(roleName, roleProperties));
-</span></span><span class="line"><span class="cl">                if (!insertResult.second) {
-</span></span><span class="line"><span class="cl">                    ALOGE(&#34;Cannot add role %s&#34;, roleName);
-</span></span><span class="line"><span class="cl">                    continue;
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">                nodeList = &amp;insertResult.first-&gt;second.nodeList;
-</span></span><span class="line"><span class="cl">            } else {
-</span></span><span class="line"><span class="cl">                if (roleIterator-&gt;second.type != typeName) {
-</span></span><span class="line"><span class="cl">                    ALOGE(&#34;Role %s has mismatching types: %s and %s&#34;,
-</span></span><span class="line"><span class="cl">                            roleName,
-</span></span><span class="line"><span class="cl">                            roleIterator-&gt;second.type.data(),
-</span></span><span class="line"><span class="cl">                            typeName.data());
-</span></span><span class="line"><span class="cl">                    continue;
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">                if (roleIterator-&gt;second.isEncoder != isEncoder) {
-</span></span><span class="line"><span class="cl">                    ALOGE(&#34;Role %s cannot be both an encoder and a decoder&#34;,
-</span></span><span class="line"><span class="cl">                            roleName);
-</span></span><span class="line"><span class="cl">                    continue;
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">                nodeList = &amp;roleIterator-&gt;second.nodeList;
-</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">            <span class="k">auto</span> <span class="n">roleIterator</span> <span class="o">=</span> <span class="n">mRoleMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">roleName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="n">size_t</span><span class="p">,</span> <span class="n">NodeInfo</span><span class="o">&gt;*</span> <span class="n">nodeList</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">roleIterator</span> <span class="o">==</span> <span class="n">mRoleMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">RoleProperties</span> <span class="n">roleProperties</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">roleProperties</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">typeName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">roleProperties</span><span class="p">.</span><span class="n">isEncoder</span> <span class="o">=</span> <span class="n">isEncoder</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">auto</span> <span class="n">insertResult</span> <span class="o">=</span> <span class="n">mRoleMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">roleName</span><span class="p">,</span> <span class="n">roleProperties</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">insertResult</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">ALOGE</span><span class="p">(</span><span class="s">&#34;Cannot add role %s&#34;</span><span class="p">,</span> <span class="n">roleName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nodeList</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">insertResult</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">nodeList</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">roleIterator</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">typeName</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">ALOGE</span><span class="p">(</span><span class="s">&#34;Role %s has mismatching types: %s and %s&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">roleName</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">roleIterator</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">type</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">typeName</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">roleIterator</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">isEncoder</span> <span class="o">!=</span> <span class="n">isEncoder</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">ALOGE</span><span class="p">(</span><span class="s">&#34;Role %s cannot be both an encoder and a decoder&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">roleName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nodeList</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">roleIterator</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">nodeList</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            NodeInfo nodeInfo;
-</span></span><span class="line"><span class="cl">            nodeInfo.name = codecName;
-</span></span><span class="line"><span class="cl">            // NOTE: no aliases are exposed in role info
-</span></span><span class="line"><span class="cl">            // attribute quirks are exposed as node attributes
-</span></span><span class="line"><span class="cl">            nodeInfo.attributeList.reserve(typeAttributeMap.size());
-</span></span><span class="line"><span class="cl">            for (const auto&amp; attribute : typeAttributeMap) {
-</span></span><span class="line"><span class="cl">                nodeInfo.attributeList.push_back(
-</span></span><span class="line"><span class="cl">                        Attribute{attribute.first, attribute.second});
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            for (const std::string &amp;quirk : codec.second.quirkSet) {
-</span></span><span class="line"><span class="cl">                if (strHasPrefix(quirk.c_str(), &#34;attribute::&#34;)) {
-</span></span><span class="line"><span class="cl">                    nodeInfo.attributeList.push_back(Attribute{quirk, &#34;present&#34;});
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            if (!rank.empty()) {
-</span></span><span class="line"><span class="cl">                nodeInfo.attributeList.push_back(Attribute{&#34;rank&#34;, rank});
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            nodeList-&gt;insert(std::make_pair(
-</span></span><span class="line"><span class="cl">                    std::move(order), std::move(nodeInfo)));
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">            <span class="n">NodeInfo</span> <span class="n">nodeInfo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nodeInfo</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">codecName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// NOTE: no aliases are exposed in role info
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// attribute quirks are exposed as node attributes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">nodeInfo</span><span class="p">.</span><span class="n">attributeList</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">typeAttributeMap</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">attribute</span> <span class="p">:</span> <span class="n">typeAttributeMap</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nodeInfo</span><span class="p">.</span><span class="n">attributeList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">Attribute</span><span class="p">{</span><span class="n">attribute</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">attribute</span><span class="p">.</span><span class="n">second</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="nl">quirk</span> <span class="p">:</span> <span class="n">codec</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">quirkSet</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">strHasPrefix</span><span class="p">(</span><span class="n">quirk</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="s">&#34;attribute::&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">nodeInfo</span><span class="p">.</span><span class="n">attributeList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Attribute</span><span class="p">{</span><span class="n">quirk</span><span class="p">,</span> <span class="s">&#34;present&#34;</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">rank</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nodeInfo</span><span class="p">.</span><span class="n">attributeList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Attribute</span><span class="p">{</span><span class="s">&#34;rank&#34;</span><span class="p">,</span> <span class="n">rank</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nodeList</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">order</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">nodeInfo</span><span class="p">)));</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>GetComponentRole(…) 内部遍历定义好的静态常量 MimeToRole 数组，调用 strcasecmp(…) 忽略大小写去比较入参 mime 和 MimeToRole 项 mime 字段是否匹配，匹配后 break 出循环，再根据 isEncoder 入参返回角色名，是那个编码器或解码器就被唯一确定了，也就是角色名查到了。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/omx/OMXUtils.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -1106,94 +1171,98 @@
 </span><span class="lnt">81
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">const char *GetComponentRole(bool isEncoder, const char *mime) {
-</span></span><span class="line"><span class="cl">    struct MimeToRole {
-</span></span><span class="line"><span class="cl">        const char *mime;
-</span></span><span class="line"><span class="cl">        const char *decoderRole;
-</span></span><span class="line"><span class="cl">        const char *encoderRole;
-</span></span><span class="line"><span class="cl">    };
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">GetComponentRole</span><span class="p">(</span><span class="kt">bool</span> <span class="n">isEncoder</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">mime</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="nc">MimeToRole</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">mime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">decoderRole</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">encoderRole</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    static const MimeToRole kMimeToRole[] = {
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_MPEG,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.mp3&#34;, &#34;audio_encoder.mp3&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_MPEG_LAYER_I,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.mp1&#34;, &#34;audio_encoder.mp1&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_MPEG_LAYER_II,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.mp2&#34;, &#34;audio_encoder.mp2&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_AMR_NB,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.amrnb&#34;, &#34;audio_encoder.amrnb&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_AMR_WB,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.amrwb&#34;, &#34;audio_encoder.amrwb&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_AAC,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.aac&#34;, &#34;audio_encoder.aac&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_VORBIS,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.vorbis&#34;, &#34;audio_encoder.vorbis&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_OPUS,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.opus&#34;, &#34;audio_encoder.opus&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_G711_MLAW,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.g711mlaw&#34;, &#34;audio_encoder.g711mlaw&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_G711_ALAW,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.g711alaw&#34;, &#34;audio_encoder.g711alaw&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_AVC,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.avc&#34;, &#34;video_encoder.avc&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_HEVC,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.hevc&#34;, &#34;video_encoder.hevc&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_MPEG4,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.mpeg4&#34;, &#34;video_encoder.mpeg4&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_H263,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.h263&#34;, &#34;video_encoder.h263&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_VP8,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.vp8&#34;, &#34;video_encoder.vp8&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_VP9,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.vp9&#34;, &#34;video_encoder.vp9&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_AV1,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.av1&#34;, &#34;video_encoder.av1&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_RAW,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.raw&#34;, &#34;audio_encoder.raw&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_DOLBY_VISION,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.dolby-vision&#34;, &#34;video_encoder.dolby-vision&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_FLAC,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.flac&#34;, &#34;audio_encoder.flac&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_MSGSM,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.gsm&#34;, &#34;audio_encoder.gsm&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_VIDEO_MPEG2,
-</span></span><span class="line"><span class="cl">            &#34;video_decoder.mpeg2&#34;, &#34;video_encoder.mpeg2&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_AC3,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.ac3&#34;, &#34;audio_encoder.ac3&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_EAC3,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.eac3&#34;, &#34;audio_encoder.eac3&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_EAC3_JOC,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.eac3_joc&#34;, &#34;audio_encoder.eac3_joc&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_AUDIO_AC4,
-</span></span><span class="line"><span class="cl">            &#34;audio_decoder.ac4&#34;, &#34;audio_encoder.ac4&#34; },
-</span></span><span class="line"><span class="cl">        { MEDIA_MIMETYPE_IMAGE_ANDROID_HEIC,
-</span></span><span class="line"><span class="cl">            &#34;image_decoder.heic&#34;, &#34;image_encoder.heic&#34; },
-</span></span><span class="line"><span class="cl">    };
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">const</span> <span class="n">MimeToRole</span> <span class="n">kMimeToRole</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_MPEG</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.mp3&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.mp3&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_MPEG_LAYER_I</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.mp1&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.mp1&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_MPEG_LAYER_II</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.mp2&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.mp2&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_AMR_NB</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.amrnb&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.amrnb&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_AMR_WB</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.amrwb&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.amrwb&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_AAC</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.aac&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.aac&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_VORBIS</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.vorbis&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.vorbis&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_OPUS</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.opus&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.opus&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_G711_MLAW</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.g711mlaw&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.g711mlaw&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_G711_ALAW</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.g711alaw&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.g711alaw&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_AVC</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.avc&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.avc&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_HEVC</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.hevc&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.hevc&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_MPEG4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.mpeg4&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.mpeg4&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_H263</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.h263&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.h263&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_VP8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.vp8&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.vp8&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_VP9</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.vp9&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.vp9&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_AV1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.av1&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.av1&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_RAW</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.raw&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.raw&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_DOLBY_VISION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.dolby-vision&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.dolby-vision&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_FLAC</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.flac&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.flac&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_MSGSM</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.gsm&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.gsm&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_VIDEO_MPEG2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;video_decoder.mpeg2&#34;</span><span class="p">,</span> <span class="s">&#34;video_encoder.mpeg2&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_AC3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.ac3&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.ac3&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_EAC3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.eac3&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.eac3&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_EAC3_JOC</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.eac3_joc&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.eac3_joc&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_AUDIO_AC4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;audio_decoder.ac4&#34;</span><span class="p">,</span> <span class="s">&#34;audio_encoder.ac4&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span> <span class="n">MEDIA_MIMETYPE_IMAGE_ANDROID_HEIC</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s">&#34;image_decoder.heic&#34;</span><span class="p">,</span> <span class="s">&#34;image_encoder.heic&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    static const size_t kNumMimeToRole =
-</span></span><span class="line"><span class="cl">        sizeof(kMimeToRole) / sizeof(kMimeToRole[0]);
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">kNumMimeToRole</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">        <span class="k">sizeof</span><span class="p">(</span><span class="n">kMimeToRole</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">kMimeToRole</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    size_t i;
-</span></span><span class="line"><span class="cl">    for (i = 0; i &lt; kNumMimeToRole; ++i) {
-</span></span><span class="line"><span class="cl">        if (!strcasecmp(mime, kMimeToRole[i].mime)) {
-</span></span><span class="line"><span class="cl">            break;
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">kNumMimeToRole</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcasecmp</span><span class="p">(</span><span class="n">mime</span><span class="p">,</span> <span class="n">kMimeToRole</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">mime</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    if (i == kNumMimeToRole) {
-</span></span><span class="line"><span class="cl">        return NULL;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">kNumMimeToRole</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    return isEncoder ? kMimeToRole[i].encoderRole
-</span></span><span class="line"><span class="cl">                  : kMimeToRole[i].decoderRole;
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">isEncoder</span> <span class="o">?</span> <span class="n">kMimeToRole</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nl">encoderRole</span>
+</span></span><span class="line"><span class="cl">                  <span class="p">:</span> <span class="n">kMimeToRole</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">decoderRole</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>再来看一个常量 MEDIA_MIMETYPE_VIDEO_AVC。回顾一下我们使用 MediaCodec 的时候是不是会传入这个 mime 类型呢？</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/foundation/MediaDefs.cpp</p>
-<p>最后再来看 MediaCodecsXmlParser::Impl::getCommonPrefix() 中调用 generateCommonPrefix() 生成前缀，然后获取指向前缀的 char* 指针后返回。</p>
-<p>这里用到了 std::mismatch(…) 标准库的函数，在这里就是找出 CodecMap 中所有元素 key 中共同的前缀部分字符串，然后更新到 mCommonPrefix 这个变量上。</p>
+</blockquote>
+<p>最后再来看 <code>MediaCodecsXmlParser::Impl::getCommonPrefix()</code> 中调用<code> generateCommonPrefix()</code> 生成前缀，然后获取指向前缀的 char* 指针后返回。</p>
+<p>这里用到了 <code>std::mismatch(…)</code> 标准库的函数，在这里就是找出 CodecMap 中所有元素 key 中共同的前缀部分字符串，然后更新到 <code>mCommonPrefix</code> 这个变量上。</p>
+<blockquote>
 <p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -1219,27 +1288,27 @@
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">const char* MediaCodecsXmlParser::Impl::getCommonPrefix() const {
-</span></span><span class="line"><span class="cl">    std::lock_guard&lt;std::mutex&gt; guard(mLock);
-</span></span><span class="line"><span class="cl">    if (mCommonPrefix.empty()) {
-</span></span><span class="line"><span class="cl">        generateCommonPrefix();
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    return mCommonPrefix.data();
-</span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">......
-</span></span><span class="line"><span class="cl">void MediaCodecsXmlParser::Impl::generateCommonPrefix() const {
-</span></span><span class="line"><span class="cl">    if (mData.mCodecMap.empty()) {
-</span></span><span class="line"><span class="cl">        return;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    auto i = mData.mCodecMap.cbegin();
-</span></span><span class="line"><span class="cl">    auto first = i-&gt;first.cbegin();
-</span></span><span class="line"><span class="cl">    auto last = i-&gt;first.cend();
-</span></span><span class="line"><span class="cl">    for (++i; i != mData.mCodecMap.cend(); ++i) {
-</span></span><span class="line"><span class="cl">        last = std::mismatch(
-</span></span><span class="line"><span class="cl">                first, last, i-&gt;first.cbegin(), i-&gt;first.cend()).first;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    mCommonPrefix.insert(mCommonPrefix.begin(), first, last);
-</span></span><span class="line"><span class="cl">}
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">Impl</span><span class="o">::</span><span class="n">getCommonPrefix</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">guard</span><span class="p">(</span><span class="n">mLock</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">mCommonPrefix</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">generateCommonPrefix</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">mCommonPrefix</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">......</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">MediaCodecsXmlParser</span><span class="o">::</span><span class="n">Impl</span><span class="o">::</span><span class="n">generateCommonPrefix</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">mData</span><span class="p">.</span><span class="n">mCodecMap</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">mData</span><span class="p">.</span><span class="n">mCodecMap</span><span class="p">.</span><span class="n">cbegin</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">first</span> <span class="o">=</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">cbegin</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">last</span> <span class="o">=</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">cend</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="o">++</span><span class="n">i</span><span class="p">;</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">mData</span><span class="p">.</span><span class="n">mCodecMap</span><span class="p">.</span><span class="n">cend</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">last</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">mismatch</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">cbegin</span><span class="p">(),</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">cend</span><span class="p">()).</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mCommonPrefix</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">mCommonPrefix</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div></div><div class="post-footer" id="post-footer">
