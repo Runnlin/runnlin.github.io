@@ -1,10 +1,13 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN, en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>深入理解构建 MediaCodec 列表：7-MediaCodec configure - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="深入理解构建 MediaCodec 列表：7-MediaCodec configure" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>深入理解构建 MediaCodec 列表：7-MediaCodec configure - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="深入理解构建 MediaCodec 列表：7-MediaCodec configure" />
 <meta property="og:description" content="使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以解码为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
@@ -16,10 +19,13 @@
 <meta name="twitter:title" content="深入理解构建 MediaCodec 列表：7-MediaCodec configure"/>
 <meta name="twitter:description" content="使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以解码为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/" /><link rel="prev" href="https://runnlin.github.io/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/" /><link rel="next" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/" /><link rel="prev" href="https://runnlin.github.io/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/" /><link rel="next" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -37,10 +43,20 @@
                 "name": "Runnlin"
             },"description": ""
     }
-    </script></head>
-    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
@@ -49,16 +65,16 @@
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-adjust fa-fw"></i>
                 </a></div>
         </div>
     </div>
@@ -76,39 +92,39 @@
                     <div class="search mobile" id="search-mobile">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </div>
                     <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
                         Cancel
                     </a>
                 </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-adjust fa-fw"></i>
             </a></div>
     </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：7-MediaCodec configure</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;15791 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;32 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="true">
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：7-MediaCodec configure</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">category <a href="/categories/android/"><i class="far fa-folder fa-fw"></i>Android</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;15791 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;32 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
@@ -125,18 +141,19 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><blockquote>
-<p>使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。</p>
+<p>使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">解码</a>为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。</p>
 </blockquote>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg"
-        data-srcset="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 1.5x, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 2x"
-        data-sizes="auto"
-        alt="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg"
-        title="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg" /></p>
-<h4 id="configure-提供给外部调用的-public-方法内部调用了同名重载版本的方法">configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。</h4>
-<ol>
+<p><figure><a class="lightgallery" href="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg" title="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg" data-thumbnail="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg">
+        <img
+            
+            loading="lazy"
+            src="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg"
+            srcset="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 1.5x, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 2x"
+            sizes="auto"
+            alt="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg">
+    </a></figure></p>
+<h4 id="configure-提供给外部调用的-public-方法内部调用了同名重载版本的方法" class="headerLink">
+    <a href="#configure-%e6%8f%90%e4%be%9b%e7%bb%99%e5%a4%96%e9%83%a8%e8%b0%83%e7%94%a8%e7%9a%84-public-%e6%96%b9%e6%b3%95%e5%86%85%e9%83%a8%e8%b0%83%e7%94%a8%e4%ba%86%e5%90%8c%e5%90%8d%e9%87%8d%e8%bd%bd%e7%89%88%e6%9c%ac%e7%9a%84%e6%96%b9%e6%b3%95" class="header-mark"></a>configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。</h4><ol>
 <li>遍历从 MediaFormat 返回的 map，构造为 key 和 value 数组；</li>
 <li>调用 native_configure(…) 交给 native 层处理。</li>
 </ol>
@@ -218,10 +235,10 @@
 </span></span><span class="line"><span class="cl">            <span class="n">keys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">formatMap</span><span class="o">.</span><span class="na">size</span><span class="o">()];</span>
 </span></span><span class="line"><span class="cl">            <span class="n">values</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[</span><span class="n">formatMap</span><span class="o">.</span><span class="na">size</span><span class="o">()];</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">entry</span><span class="o">:</span> <span class="n">formatMap</span><span class="o">.</span><span class="na">entrySet</span><span class="o">())</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">MediaFormat</span><span class="o">.</span><span class="na">KEY_AUDIO_SESSION_ID</span><span class="o">))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="kt">int</span> <span class="n">sessionId</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="kt">int</span> <span class="n">sessionId</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">                    <span class="k">try</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">                        <span class="n">sessionId</span> <span class="o">=</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
 </span></span><span class="line"><span class="cl">                    <span class="o">}</span>
@@ -245,8 +262,8 @@
 </span></span><span class="line"><span class="cl">    <span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="native_configure-jni-具体实现">native_configure(…) jni 具体实现</h4>
-<p>native_configure(…) jni 实现具体为 android_media_MediaCodec.cpp::android_media_MediaCodec_native_configure(…)</p>
+</div><h4 id="native_configure-jni-具体实现" class="headerLink">
+    <a href="#native_configure-jni-%e5%85%b7%e4%bd%93%e5%ae%9e%e7%8e%b0" class="header-mark"></a>native_configure(…) jni 具体实现</h4><p>native_configure(…) jni 实现具体为 android_media_MediaCodec.cpp::android_media_MediaCodec_native_configure(…)</p>
 <ol>
 <li>调用 getMediaCodec(…) 获取 JMediaCodec；</li>
 <li>调用 ConvertKeyValueArraysToMessage(…) 将 key 和 value 数组转化为 AMessage；</li>
@@ -384,7 +401,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>方法代码有点长，实际上核心逻辑很简单：<a href="https://so.csdn.net/so/search?q=%E9%81%8D%E5%8E%86&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">遍历</a>所有的 key 和 value 数组从其 java 对象中获取值用来构建 AMessage。</p>
+</div><p>方法代码有点长，实际上核心逻辑很简单：<a href="https://so.csdn.net/so/search?q=%E9%81%8D%E5%8E%86&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">遍历</a>所有的 key 和 value 数组从其 java 对象中获取值用来构建 AMessage。</p>
 <blockquote>
 <p>frameworks/base/media/jni/android_media_Streams.cpp</p>
 </blockquote>
@@ -670,7 +687,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>此方法在主流程上实际调用了 <a href="https://so.csdn.net/so/search?q=native&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">native</a> MediaCodec configure(…) 方法。由于下面分析会用到 Surface 的创建，这里重点再去看下 Surface 的构造函数。</p>
+</div><p>此方法在主流程上实际调用了 <a href="https://so.csdn.net/so/search?q=native&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">native</a> MediaCodec configure(…) 方法。由于下面分析会用到 Surface 的创建，这里重点再去看下 Surface 的构造函数。</p>
 <blockquote>
 <p>frameworks/base/media/jni/android_media_MediaCodec.cpp</p>
 </blockquote>
@@ -1064,7 +1081,7 @@
 <li>调用 extractCSD(…) 提出 CSD；</li>
 <li>调用 initiateConfigureComponent(…) 初始化组件。</li>
 </ol>
-<p>此处需要注意一下 mAllowFrameDroppingBySurface 的值，由于 surface 不为空，因此就会查找 allow-<a href="https://so.csdn.net/so/search?q=frame&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">frame</a>-drop 为 key 的 value，但这个 key-value 对并未设置，所以 mAllowFrameDroppingBySurface 会被默认赋值为 true。</p>
+<p>此处需要注意一下 mAllowFrameDroppingBySurface 的值，由于 surface 不为空，因此就会查找 allow-<a href="https://so.csdn.net/so/search?q=frame&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">frame</a>-drop 为 key 的 value，但这个 key-value 对并未设置，所以 mAllowFrameDroppingBySurface 会被默认赋值为 true。</p>
 <blockquote>
 <p>frameworks/av/media/libstagefright/MediaCodec.cpp</p>
 </blockquote>
@@ -2284,7 +2301,7 @@
 <p>mMaxDequeuedBufferCount —— 生产者一次可以出列的缓冲区数。它默认为1，可以由生产者通过 setMaxDequeuedBufferCount 更改。</p>
 <p>mAsyncMode —— 表示是否开启异步模式。在异步模式中将分配一个额外的缓冲区，以允许生产者在不阻塞的情况下将缓冲区放入队列。</p>
 <p>mDequeueBufferCannotBlock —— 表示是否允许 dequeueBuffer 阻塞。当生产者和消费者都由应用程序控制时，此标志在连接期间设置。</p>
-<p>mSlots —— 一个缓冲区槽<a href="https://so.csdn.net/so/search?q=%E6%95%B0%E7%BB%84&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">数组</a>，必须在生产者端进行镜像。这允许缓冲区所有权在生产者和消费者之间转移，而不需要通过 Binder 发送 GraphicBuffer。整个数组在构造时被初始化为 NULL，并且在使用槽的索引调用 requestBuffer 时为槽分配缓冲区。</p>
+<p>mSlots —— 一个缓冲区槽<a href="https://so.csdn.net/so/search?q=%E6%95%B0%E7%BB%84&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">数组</a>，必须在生产者端进行镜像。这允许缓冲区所有权在生产者和消费者之间转移，而不需要通过 Binder 发送 GraphicBuffer。整个数组在构造时被初始化为 NULL，并且在使用槽的索引调用 requestBuffer 时为槽分配缓冲区。</p>
 <p>mFreeSlots —— 包含所有空闲的槽，这些槽目前没有一个 attach 了缓冲区，类型为 std::set。</p>
 <p>mFreeBuffers —— 包含所有空闲的槽，并且当前有一个 attach 了缓冲区，类型为 std::list。</p>
 <p>mActiveBuffers —— 包含所有 attach 了的非空闲缓冲区的槽，类型为 std::set。</p>
@@ -4849,42 +4866,48 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div></div><div class="post-footer" id="post-footer">
+</div></div>
+
+        <div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>Updated on 2023-02-09</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/index.md" target="_blank">Read Markdown</a>
-                        </span></div>
-            <div class="post-info-share">
-                <span></span>
             </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/codec/">Codec</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/">深入理解构建 MediaCodec 列表</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/codec/">Codec</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/">深入理解构建 MediaCodec 列表</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/" class="prev" rel="prev" title="Android 音频硬编解码知多少"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android 音频硬编解码知多少</a>
-            <a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/" class="next" rel="next" title="深入理解构建 MediaCodec 列表：6-MediaCodec 组件分配">深入理解构建 MediaCodec 列表：6-MediaCodec 组件分配<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/android-%E9%9F%B3%E9%A2%91%E7%A1%AC%E7%BC%96%E8%A7%A3%E7%A0%81%E7%9F%A5%E5%A4%9A%E5%B0%91/" class="prev" rel="prev" title="Android 音频硬编解码知多少"><i class="fas fa-angle-left fa-fw"></i>Android 音频硬编解码知多少</a>
+            <a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/" class="next" rel="next" title="深入理解构建 MediaCodec 列表：6-MediaCodec 组件分配">深入理解构建 MediaCodec 列表：6-MediaCodec 组件分配<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
 </html>

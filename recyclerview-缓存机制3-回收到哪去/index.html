@@ -1,0 +1,742 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN, en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title> - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="" />
+<meta property="og:description" content="本文由 简悦 SimpRead 转码， 原文地址 juejin.cn RecyclerView 缓存机制 | 如何复用表项？ RecyclerView 缓存机制 | 回收些什么？ RecyclerView 缓存机制 | 回收到哪去？ RecyclerView 缓存机制 | scrap view 的生命周期 RecyclerView 动画原理 |" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://runnlin.github.io/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B63-%E5%9B%9E%E6%94%B6%E5%88%B0%E5%93%AA%E5%8E%BB/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="我的网站" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
+
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="本文由 简悦 SimpRead 转码， 原文地址 juejin.cn RecyclerView 缓存机制 | 如何复用表项？ RecyclerView 缓存机制 | 回收些什么？ RecyclerView 缓存机制 | 回收到哪去？ RecyclerView 缓存机制 | scrap view 的生命周期 RecyclerView 动画原理 |"/>
+<meta name="application-name" content="Runnlin&#39;s Whisper">
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B63-%E5%9B%9E%E6%94%B6%E5%88%B0%E5%93%AA%E5%8E%BB/" /><link rel="prev" href="https://runnlin.github.io/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B64-scrap-view-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" /><link rel="next" href="https://runnlin.github.io/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B62-%E5%9B%9E%E6%94%B6%E4%BA%9B%E4%BB%80%E4%B9%88/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "",
+        "inLanguage": "zh-CN, en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/runnlin.github.io\/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B63-%E5%9B%9E%E6%94%B6%E5%88%B0%E5%93%AA%E5%8E%BB\/"
+        },"genre": "posts","wordcount":  3329 ,
+        "url": "https:\/\/runnlin.github.io\/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B63-%E5%9B%9E%E6%94%B6%E5%88%B0%E5%93%AA%E5%8E%BB\/","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Runnlin"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
+
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX"></h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;3329 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#回收入口">回收入口</a></li>
+    <li><a href="#缓存优先级">缓存优先级</a></li>
+    <li><a href="#总结">总结</a></li>
+    <li><a href="#推荐阅读">推荐阅读</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/" target="_blank" rel="noopener noreferrer">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903778307538958" target="_blank" rel="noopener noreferrer">juejin.cn</a></p>
+</blockquote>
+<ol>
+<li>
+<p><a href="https://juejin.cn/post/6844903778303344647" title="https://juejin.cn/post/6844903778303344647" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | 如何复用表项？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903778303361038" title="https://juejin.cn/post/6844903778303361038" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | 回收些什么？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903778307538958" title="https://juejin.cn/post/6844903778307538958" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | 回收到哪去？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903780006264845" title="https://juejin.cn/post/6844903780006264845" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | scrap view 的生命周期</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6892809944702124045" title="https://juejin.cn/post/6892809944702124045" target="_blank" rel="noopener noreferrer">RecyclerView 动画原理 | pre-layout，post-layout 与 scrap 缓存的关系</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6930412704578404360/" title="https://juejin.cn/post/6930412704578404360/" target="_blank" rel="noopener noreferrer">RecyclerView 面试题 | 哪些情况下表项会被回收到缓存池？</a></p>
+</li>
+</ol>
+<p>如果想直接看结论可以移步到<a href="https://juejin.cn/post/6844903780006264845" title="https://juejin.cn/post/6844903780006264845" target="_blank" rel="noopener noreferrer">第四篇</a>末尾（你会后悔的，过程更加精彩）。</p>
+<h2 id="回收入口" class="headerLink">
+    <a href="#%e5%9b%9e%e6%94%b6%e5%85%a5%e5%8f%a3" class="header-mark"></a>回收入口</h2><p>上一篇以列表滑动事件为起点沿着调用链一直往下寻找，验证了 “滑出屏幕的表项” 会被回收。那它们被回收去哪里了？沿着上一篇的调用链继续往下探究：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public class LinearLayoutManager {
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">    // 回收滚出屏幕的表项
+</span></span><span class="line"><span class="cl">    private void recycleViewsFromStart(RecyclerView.Recycler recycler, int dt) {
+</span></span><span class="line"><span class="cl">        final int limit = dt;
+</span></span><span class="line"><span class="cl">        final int childCount = getChildCount();
+</span></span><span class="line"><span class="cl">            //遍历LinearLayoutManager的孩子找出其中应该被回收的
+</span></span><span class="line"><span class="cl">            for (int i = 0; i &lt; childCount; i++) {
+</span></span><span class="line"><span class="cl">                View child = getChildAt(i);
+</span></span><span class="line"><span class="cl">                //直到表项底部纵坐标大于 limit 隐形线，回收该表项以上的所有表项
+</span></span><span class="line"><span class="cl">                if (mOrientationHelper.getDecoratedEnd(child) &gt; limit
+</span></span><span class="line"><span class="cl">                        || mOrientationHelper.getTransformedEndWithDecoration(child) &gt; limit) {
+</span></span><span class="line"><span class="cl">                    //回收索引为 0 到 i-1 的表项
+</span></span><span class="line"><span class="cl">                    recycleChildren(recycler, 0, i);
+</span></span><span class="line"><span class="cl">                    return;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>limit 隐形线</strong> 是 “列表滚动后，哪些表项被该被回收” 的依据，当列表向下滚动时，所有位于这条线上方的表项都会被回收。关于 limit 隐形线 的详细解释可以点击<a href="https://juejin.cn/post/6903290882095579143" title="https://juejin.cn/post/6903290882095579143" target="_blank" rel="noopener noreferrer">这里</a> 。</p>
+<p><code>recycleViewsFromStart()</code>通过遍历找到滑出屏幕的表项，然后调用了<code>recycleChildren()</code>回收他们：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public class LinearLayoutManager {
+</span></span><span class="line"><span class="cl">    // 回收子表项
+</span></span><span class="line"><span class="cl">    private void recycleChildren(RecyclerView.Recycler recycler, int startIndex, int endIndex) {
+</span></span><span class="line"><span class="cl">        if (startIndex == endIndex) {
+</span></span><span class="line"><span class="cl">            return;
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        if (endIndex &gt; startIndex) {
+</span></span><span class="line"><span class="cl">            for (int i = endIndex - 1; i &gt;= startIndex; i--) {
+</span></span><span class="line"><span class="cl">                removeAndRecycleViewAt(i, recycler);
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">        } else {
+</span></span><span class="line"><span class="cl">            for (int i = startIndex; i &gt; endIndex; i--) {
+</span></span><span class="line"><span class="cl">                removeAndRecycleViewAt(i, recycler);
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最终调用了父类<code>LayoutManager.removeAndRecycleViewAt()</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public abstract static class LayoutManager {
+</span></span><span class="line"><span class="cl">        public void removeAndRecycleViewAt(int index, Recycler recycler) {
+</span></span><span class="line"><span class="cl">            final View view = getChildAt(index);
+</span></span><span class="line"><span class="cl">            removeViewAt(index);
+</span></span><span class="line"><span class="cl">            recycler.recycleView(view);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>先从<code>LayoutManager</code>中删除表项，然后调用<code>Recycler.recycleView()</code>回收表项：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public final class Recycler {
+</span></span><span class="line"><span class="cl">        public void recycleView(View view) {
+</span></span><span class="line"><span class="cl">            // 获取表项 ViewHolder
+</span></span><span class="line"><span class="cl">            ViewHolder holder = getChildViewHolderInt(view);
+</span></span><span class="line"><span class="cl">            if (holder.isTmpDetached()) {
+</span></span><span class="line"><span class="cl">                removeDetachedView(view, false);
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">            if (holder.isScrap()) {
+</span></span><span class="line"><span class="cl">                holder.unScrap();
+</span></span><span class="line"><span class="cl">            } else if (holder.wasReturnedFromScrap()) {
+</span></span><span class="line"><span class="cl">                holder.clearReturnedFromScrapFlag();
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">            recycleViewHolderInternal(holder);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>先通过表项视图拿到了对应<code>ViewHolder</code>，然后把其传入<code>Recycler.recycleViewHolderInternal()</code>，现在就可以更准地回答上一篇的那个问题 “回收些啥？”：<strong>回收的是滑出屏幕表项对应的<code>ViewHolder</code></strong> 。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public final class Recycler {
+</span></span><span class="line"><span class="cl">        ...
+</span></span><span class="line"><span class="cl">        int mViewCacheMax = DEFAULT_CACHE_SIZE;
+</span></span><span class="line"><span class="cl">        static final int DEFAULT_CACHE_SIZE = 2;
+</span></span><span class="line"><span class="cl">        final ArrayList&lt;ViewHolder&gt; mCachedViews = new ArrayList&lt;ViewHolder&gt;();
+</span></span><span class="line"><span class="cl">        ...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        void recycleViewHolderInternal(ViewHolder holder) {
+</span></span><span class="line"><span class="cl">            ...
+</span></span><span class="line"><span class="cl">            if (forceRecycle || holder.isRecyclable()) {
+</span></span><span class="line"><span class="cl">                //先存在mCachedViews里面
+</span></span><span class="line"><span class="cl">                //这里的判断条件决定了复用mViewCacheMax中的ViewHolder时不需要重新绑定数据
+</span></span><span class="line"><span class="cl">                if (mViewCacheMax &gt; 0
+</span></span><span class="line"><span class="cl">                        &amp;&amp; !holder.hasAnyOfTheFlags(ViewHolder.FLAG_INVALID
+</span></span><span class="line"><span class="cl">                        | ViewHolder.FLAG_REMOVED
+</span></span><span class="line"><span class="cl">                        | ViewHolder.FLAG_UPDATE
+</span></span><span class="line"><span class="cl">                        | ViewHolder.FLAG_ADAPTER_POSITION_UNKNOWN)) {
+</span></span><span class="line"><span class="cl">                    // Retire oldest cached view
+</span></span><span class="line"><span class="cl">                    //如果mCachedViews大小超限了，则删掉最老的被缓存的ViewHolder
+</span></span><span class="line"><span class="cl">                    int cachedViewSize = mCachedViews.size();
+</span></span><span class="line"><span class="cl">                    if (cachedViewSize &gt;= mViewCacheMax &amp;&amp; cachedViewSize &gt; 0) {
+</span></span><span class="line"><span class="cl">                        recycleCachedViewAt(0);
+</span></span><span class="line"><span class="cl">                        cachedViewSize--;
+</span></span><span class="line"><span class="cl">                    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                    int targetCacheIndex = cachedViewSize;
+</span></span><span class="line"><span class="cl">                    if (ALLOW_THREAD_GAP_WORK
+</span></span><span class="line"><span class="cl">                            &amp;&amp; cachedViewSize &gt; 0
+</span></span><span class="line"><span class="cl">                            &amp;&amp; !mPrefetchRegistry.lastPrefetchIncludedPosition(holder.mPosition)) {
+</span></span><span class="line"><span class="cl">                        // when adding the view, skip past most recently prefetched views
+</span></span><span class="line"><span class="cl">                        int cacheIndex = cachedViewSize - 1;
+</span></span><span class="line"><span class="cl">                        while (cacheIndex &gt;= 0) {
+</span></span><span class="line"><span class="cl">                            int cachedPos = mCachedViews.get(cacheIndex).mPosition;
+</span></span><span class="line"><span class="cl">                            if (!mPrefetchRegistry.lastPrefetchIncludedPosition(cachedPos)) {
+</span></span><span class="line"><span class="cl">                                break;
+</span></span><span class="line"><span class="cl">                            }
+</span></span><span class="line"><span class="cl">                            cacheIndex--;
+</span></span><span class="line"><span class="cl">                        }
+</span></span><span class="line"><span class="cl">                        targetCacheIndex = cacheIndex + 1;
+</span></span><span class="line"><span class="cl">                    }
+</span></span><span class="line"><span class="cl">                    //ViewHolder加到缓存中
+</span></span><span class="line"><span class="cl">                    mCachedViews.add(targetCacheIndex, holder);
+</span></span><span class="line"><span class="cl">                    cached = true;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">                //若ViewHolder没有入缓存则存入回收池
+</span></span><span class="line"><span class="cl">                if (!cached) {
+</span></span><span class="line"><span class="cl">                    addViewHolderToRecycledViewPool(holder, true);
+</span></span><span class="line"><span class="cl">                    recycled = true;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">            } else {
+</span></span><span class="line"><span class="cl">                ...
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">            ...
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>ViewHolder 最终的落脚点有两个：</p>
+<ol>
+<li>mCachedViews</li>
+<li>RecycledViewPool</li>
+</ol>
+<p>落脚点通过<code>cached</code>这个布尔值，实现互斥，即<code>ViewHolder</code>要么存入<code>mCachedViews</code>，要么存入<code>pool</code></p>
+<p><code>mCachedViews</code>有大小限制，默认只能存 2 个<code>ViewHolder</code>，当第三个<code>ViewHolder</code>存入时会把第一个移除掉：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public final class Recycler {
+</span></span><span class="line"><span class="cl">        // 讲 mCachedViews 中的 ViewHolder 移到 RecycledViewPool 中
+</span></span><span class="line"><span class="cl">        void recycleCachedViewAt(int cachedViewIndex) {
+</span></span><span class="line"><span class="cl">            ViewHolder viewHolder = mCachedViews.get(cachedViewIndex);
+</span></span><span class="line"><span class="cl">            //将ViewHolder加入到回收池
+</span></span><span class="line"><span class="cl">            addViewHolderToRecycledViewPool(viewHolder, true);
+</span></span><span class="line"><span class="cl">            //将ViewHolder从cache中移除
+</span></span><span class="line"><span class="cl">            mCachedViews.remove(cachedViewIndex);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        ...
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从<code>mCachedViews</code>移除掉的<code>ViewHolder</code>会加入到回收池中。 <strong><code>mCachedViews</code>有点像 “回收池预备队列”，即总是先回收到<code>mCachedViews</code>，当它放不下的时候，按照先进先出原则将最先进入的<code>ViewHolder</code>存入回收池</strong> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public final class Recycler {
+</span></span><span class="line"><span class="cl">        // 缓存池实例
+</span></span><span class="line"><span class="cl">        RecycledViewPool mRecyclerPool;
+</span></span><span class="line"><span class="cl">        // 将viewHolder存入缓存池
+</span></span><span class="line"><span class="cl">        void addViewHolderToRecycledViewPool(ViewHolder holder, boolean dispatchRecycled) {
+</span></span><span class="line"><span class="cl">            ...
+</span></span><span class="line"><span class="cl">            getRecycledViewPool().putRecycledView(holder);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        // 获取 RecycledViewPool 实例
+</span></span><span class="line"><span class="cl">        RecycledViewPool getRecycledViewPool() {
+</span></span><span class="line"><span class="cl">            if (mRecyclerPool == null) {
+</span></span><span class="line"><span class="cl">                mRecyclerPool = new RecycledViewPool();
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">            return mRecyclerPool;
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">//缓存池
+</span></span><span class="line"><span class="cl">public static class RecycledViewPool {
+</span></span><span class="line"><span class="cl">        // 但类型 ViewHolder 列表
+</span></span><span class="line"><span class="cl">        static class ScrapData {
+</span></span><span class="line"><span class="cl">            // 最终存储 ViewHolder 实例的列表
+</span></span><span class="line"><span class="cl">            ArrayList&lt;ViewHolder&gt; mScrapHeap = new ArrayList&lt;&gt;();
+</span></span><span class="line"><span class="cl">            //每种类型的 ViewHolder 最多存 5 个
+</span></span><span class="line"><span class="cl">            int mMaxScrap = DEFAULT_MAX_SCRAP;
+</span></span><span class="line"><span class="cl">            ...
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        //键值对:以 viewType 为键，ScrapData 为值，用以存储不同类型的 ViewHolder 列表
+</span></span><span class="line"><span class="cl">        SparseArray&lt;ScrapData&gt; mScrap = new SparseArray&lt;&gt;();
+</span></span><span class="line"><span class="cl">        //ViewHolder 入池 按 viewType 分类入池，相同的 ViewType 存放在同一个列表中
+</span></span><span class="line"><span class="cl">        public void putRecycledView(ViewHolder scrap) {
+</span></span><span class="line"><span class="cl">            final int viewType = scrap.getItemViewType();
+</span></span><span class="line"><span class="cl">            final ArrayList&lt;ViewHolder&gt; scrapHeap = getScrapDataForType(viewType).mScrapHeap;
+</span></span><span class="line"><span class="cl">            //如果超限了，则放弃入池
+</span></span><span class="line"><span class="cl">            if (mScrap.get(viewType).mMaxScrap &lt;= scrapHeap.size()) {
+</span></span><span class="line"><span class="cl">                return;
+</span></span><span class="line"><span class="cl">            }
+</span></span><span class="line"><span class="cl">            // 入回收池之前重置 ViewHolder
+</span></span><span class="line"><span class="cl">            scrap.resetInternal();
+</span></span><span class="line"><span class="cl">            // 最终 ViewHolder 入池
+</span></span><span class="line"><span class="cl">            scrapHeap.add(scrap);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>ViewHolder</code>会按<code>viewType</code>分类存入回收池，最终存储在<code>ScrapData</code> 的<code>ArrayList</code>中，回收池数据结构分析详见 <a href="https://juejin.cn/post/6844903778303344647" title="https://juejin.cn/post/6844903778303344647" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制（咋复用？）</a>。</p>
+<h2 id="缓存优先级" class="headerLink">
+    <a href="#%e7%bc%93%e5%ad%98%e4%bc%98%e5%85%88%e7%ba%a7" class="header-mark"></a>缓存优先级</h2><p>还记得 <a href="https://juejin.cn/post/6844903778303344647" title="https://juejin.cn/post/6844903778303344647" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制（咋复用？）</a>中得出的结论吗？这里再引用一下：</p>
+<blockquote>
+<p>虽然为了获取<code>ViewHolder</code>做了 5 次尝试（共从 6 个地方获取），先排除 3 种特殊情况，即从<code>mChangedScrap</code>获取、通过 id 获取、从自定义缓存获取，正常流程中只剩下 3 种获取方式，优先级从高到低依次是：</p>
+<ol>
+<li>从 mAttachedScrap 获取</li>
+<li>从 mCachedViews 获取</li>
+<li>从 mRecyclerPool 获取 这样的缓存优先级意味着，对应的复用性能也是从高到低（复用性能越好意味着所做的昂贵操作越少）</li>
+<li>最坏情况：重新创建 ViewHodler 并重新绑定数据</li>
+<li>次好情况：复用 ViewHolder 但重新绑定数据</li>
+<li>最好情况：复用 ViewHolder 且不重新绑定数据</li>
+</ol>
+</blockquote>
+<p>当时分析了<code>mAttachedScrap</code>和<code>mRecyclerPool</code>的复用性能，即 <strong>从<code>mRecyclerPool</code>中复用的<code>ViewHolder</code>需要重新绑定数据，从<code>mAttachedScrap</code> 中复用的<code>ViewHolder</code>不需要重新创建也不需要重新绑定数据</strong> 。</p>
+<p>把存入<code>mCachedViews</code>的代码和复用时绑定数据的代码结合起来看一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">void recycleViewHolderInternal(ViewHolder holder) {
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">    //满足这个条件才能存入mCachedViews
+</span></span><span class="line"><span class="cl">    if (mViewCacheMax &gt; 0
+</span></span><span class="line"><span class="cl">        &amp;&amp; !holder.hasAnyOfTheFlags(ViewHolder.FLAG_INVALID
+</span></span><span class="line"><span class="cl">        | ViewHolder.FLAG_REMOVED
+</span></span><span class="line"><span class="cl">        | ViewHolder.FLAG_UPDATE
+</span></span><span class="line"><span class="cl">        | ViewHolder.FLAG_ADAPTER_POSITION_UNKNOWN)) {
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ViewHolder tryGetViewHolderForPositionByDeadline(int position,boolean dryRun, long deadlineNs) {
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">    //满足这个条件就需要重新绑定数据
+</span></span><span class="line"><span class="cl">    if (!holder.isBound() || holder.needsUpdate() || holder.isInvalid()){
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl">复制代码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重新绑定数据的三个条件中，<code>holder.needsUpdate()</code>和<code>holder.isInvalid()</code>都是<code>false</code>时才能存入<code>mCachedViews</code> ，而<code>!holder.isBound()</code>对于<code>mCachedViews</code> 中的<code>ViewHolder</code>来说必然为<code>false</code>，因为只有当调用<code>ViewHolder.resetInternal()</code>重置<code>ViewHolder</code>后，才会将其设置为未绑定状态，而只有存入回收池时才会重置<code>ViewHolder</code>。所以 <strong>从<code>mCachedViews</code>中复用的<code>ViewHolder</code>不需要重新绑定数据</strong></p>
+<h2 id="总结" class="headerLink">
+    <a href="#%e6%80%bb%e7%bb%93" class="header-mark"></a>总结</h2><ul>
+<li>滑出屏幕表项对应的 ViewHolder 会被回收到<code>mCachedViews</code>+<code>mRecyclerPool</code> 结构中。</li>
+<li><code>mCachedViews</code>是 ArrayList ，默认存储最多 2 个 ViewHolder ，当它放不下的时候，按照先进先出原则将最先进入的 ViewHolder 存入回收池的方式来腾出空间。<code>mRecyclerPool</code> 是 SparseArray ，它会按<code>viewType</code>分类存储 ViewHolder ，默认每种类型最多存 5 个。</li>
+<li>从<code>mRecyclerPool</code>中复用的 ViewHolder 需要重新绑定数据</li>
+<li>从<code>mCachedViews</code>中复用的 ViewHolder 不需要重新绑定数据</li>
+</ul>
+<h2 id="推荐阅读" class="headerLink">
+    <a href="#%e6%8e%a8%e8%8d%90%e9%98%85%e8%af%bb" class="header-mark"></a>推荐阅读</h2><p>RecyclerView 系列文章目录如下:</p>
+<ol>
+<li>
+<p><a href="https://juejin.cn/post/6844903778303344647" title="https://juejin.cn/post/6844903778303344647" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | 如何复用表项？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903778303361038" title="https://juejin.cn/post/6844903778303361038" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | 回收些什么？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903778307538958" title="https://juejin.cn/post/6844903778307538958" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | 回收到哪去？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903780006264845" title="https://juejin.cn/post/6844903780006264845" target="_blank" rel="noopener noreferrer">RecyclerView 缓存机制 | scrap view 的生命周期</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903862361391117" title="https://juejin.cn/post/6844903862361391117" target="_blank" rel="noopener noreferrer">读源码长知识 | 更好的 RecyclerView 点击监听器</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6876967151975006221" title="https://juejin.cn/post/6876967151975006221" target="_blank" rel="noopener noreferrer">代理模式应用 | 每当为 RecyclerView 新增类型时就很抓狂</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6881427923316768776" title="https://juejin.cn/post/6881427923316768776" target="_blank" rel="noopener noreferrer">更好的 RecyclerView 表项子控件点击监听器</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6882531923537707015" title="https://juejin.cn/post/6882531923537707015" target="_blank" rel="noopener noreferrer">更高效地刷新 RecyclerView | DiffUtil 二次封装</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6885146484791050247" title="https://juejin.cn/post/6885146484791050247" target="_blank" rel="noopener noreferrer">换一个思路，超简单的 RecyclerView 预加载</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6890288761783975950" title="https://juejin.cn/post/6890288761783975950" target="_blank" rel="noopener noreferrer">RecyclerView 动画原理 | 换个姿势看源码（pre-layout）</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6892809944702124045" title="https://juejin.cn/post/6892809944702124045" target="_blank" rel="noopener noreferrer">RecyclerView 动画原理 | pre-layout，post-layout 与 scrap 缓存的关系</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6895523568025600014" title="https://juejin.cn/post/6895523568025600014" target="_blank" rel="noopener noreferrer">RecyclerView 动画原理 | 如何存储并应用动画属性值？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6903290882095579143" title="https://juejin.cn/post/6903290882095579143" target="_blank" rel="noopener noreferrer">RecyclerView 面试题 | 列表滚动时，表项是如何被填充或回收的？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6930412704578404360/" title="https://juejin.cn/post/6930412704578404360/" target="_blank" rel="noopener noreferrer">RecyclerView 面试题 | 哪些情况下表项会被回收到缓存池？</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6939666015500369950" title="https://juejin.cn/post/6939666015500369950" target="_blank" rel="noopener noreferrer">RecyclerView 性能优化 | 把加载表项耗时减半 (一)</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6942276625090215943" title="https://juejin.cn/post/6942276625090215943" target="_blank" rel="noopener noreferrer">RecyclerView 性能优化 | 把加载表项耗时减半 (二)</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6954892589539524615" title="https://juejin.cn/post/6954892589539524615" target="_blank" rel="noopener noreferrer">RecyclerView 性能优化 | 把加载表项耗时减半 (三)</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6958962329220284453" title="https://juejin.cn/post/6958962329220284453" target="_blank" rel="noopener noreferrer">RecyclerView 的滚动是怎么实现的？（一）| 解锁阅读源码新姿势</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6960457567680069645/" title="https://juejin.cn/post/6960457567680069645/" target="_blank" rel="noopener noreferrer">RecyclerView 的滚动时怎么实现的？（二）| Fling</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6965633977960890381" title="https://juejin.cn/post/6965633977960890381" target="_blank" rel="noopener noreferrer">RecyclerView 刷新列表数据的 notifyDataSetChanged() 为什么是昂贵的?</a></p>
+</li>
+</ol>
+</div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B63-%E5%9B%9E%E6%94%B6%E5%88%B0%E5%93%AA%E5%8E%BB/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B64-scrap-view-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="prev" rel="prev" title=""><i class="fas fa-angle-left fa-fw"></i></a>
+            <a href="/recyclerview-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B62-%E5%9B%9E%E6%94%B6%E4%BA%9B%E4%BB%80%E4%B9%88/" class="next" rel="next" title=""><i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>

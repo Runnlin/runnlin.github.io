@@ -7,12 +7,11 @@
             <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><lastBuildDate>Wed, 27 Jul 2022 16:32:50 &#43;0800</lastBuildDate><atom:link href="https://runnlin.github.io/tags/video/" rel="self" type="application/rss+xml" /><item>
     <title>H264 is magic</title>
     <link>https://runnlin.github.io/h264_is_magic/</link>
-    <pubDate>Wed, 27 Jul 2022 16:32:50 &#43;0800</pubDate>
-    <author>Runnlin</author>
-    <guid>https://runnlin.github.io/h264_is_magic/</guid>
+    <pubDate>Wed, 27 Jul 2022 16:32:50 &#43;0800</pubDate><author>
+        <name>Runnlin</name>
+    </author><guid>https://runnlin.github.io/h264_is_magic/</guid>
     <description><![CDATA[H.264 is a video compression codec standard. It is ubiquitous - internet video, Blu-ray, phones, security cameras, drones, everything. Everything uses H.264 now.
 H.264 is a remarkable piece of technology. It is the result of 30+ years of work with one single goal: To reduce the bandwidth required for transmission of full-motion video.
 Technically, it is very interesting. This post will give insight into some of the details at a high level - I hope to not bore you too much with the intricacies.]]></description>
-</item>
-</channel>
+</item></channel>
 </rss>

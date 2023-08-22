@@ -1,10 +1,13 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN, en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>深入理解构建 MediaCodec 列表：2-Omx 初始化 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="深入理解构建 MediaCodec 列表：2-Omx 初始化" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>深入理解构建 MediaCodec 列表：2-Omx 初始化 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="深入理解构建 MediaCodec 列表：2-Omx 初始化" />
 <meta property="og:description" content="Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编解码芯片级支持。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
@@ -16,10 +19,13 @@
 <meta name="twitter:title" content="深入理解构建 MediaCodec 列表：2-Omx 初始化"/>
 <meta name="twitter:description" content="Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编解码芯片级支持。"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/" /><link rel="prev" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" /><link rel="next" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/" /><link rel="prev" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" /><link rel="next" href="https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -29,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96\/"
-        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  8255 ,
+        },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  8268 ,
         "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -37,10 +43,20 @@
                 "name": "Runnlin"
             },"description": ""
     }
-    </script></head>
-    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
@@ -49,16 +65,16 @@
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-adjust fa-fw"></i>
                 </a></div>
         </div>
     </div>
@@ -76,39 +92,39 @@
                     <div class="search mobile" id="search-mobile">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </div>
                     <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
                         Cancel
                     </a>
                 </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-adjust fa-fw"></i>
             </a></div>
     </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：2-Omx 初始化</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>repost</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;8255 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;17 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="true">
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">深入理解构建 MediaCodec 列表：2-Omx 初始化</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">categories <a href="/categories/android/"><i class="far fa-folder fa-fw"></i>Android</a>&nbsp;<a href="/categories/repost/"><i class="far fa-folder fa-fw"></i>repost</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2023-02-09">2023-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;8268 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;17 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
@@ -129,18 +145,19 @@
     </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><p>Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">解码</a>芯片级支持</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="../assets/images/%e5%8a%a0%e8%bd%bdso.png"
-        data-srcset="../assets/images/%e5%8a%a0%e8%bd%bdso.png, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 1.5x, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 2x"
-        data-sizes="auto"
-        alt="../assets/images/加载so.png"
-        title="../assets/images/加载so.png" /></p>
+            </div><div class="content" id="content"><p>Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">解码</a>芯片级支持</p>
+<p><figure><a class="lightgallery" href="../assets/images/%e5%8a%a0%e8%bd%bdso.png" title="../assets/images/加载so.png" data-thumbnail="../assets/images/加载so.png">
+        <img
+            
+            loading="lazy"
+            src="../assets/images/%e5%8a%a0%e8%bd%bdso.png"
+            srcset="../assets/images/%e5%8a%a0%e8%bd%bdso.png, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 1.5x, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 2x"
+            sizes="auto"
+            alt="../assets/images/加载so.png">
+    </a></figure></p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
             <div class="admonition-content"><p>在Android系统中,libstagefrighthw是用于管理音视频编解码器的硬件抽象层(HAL)组件</p>
@@ -148,8 +165,8 @@
 </div>
         </div>
     </div>
-<h3 id="构造函数">构造函数</h3>
-<p>Omx 初始化主要从其<a href="https://so.csdn.net/so/search?q=%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">构造函数</a>开始分析。</p>
+<h3 id="构造函数" class="headerLink">
+    <a href="#%e6%9e%84%e9%80%a0%e5%87%bd%e6%95%b0" class="header-mark"></a>构造函数</h3><p>Omx 初始化主要从其<a href="https://so.csdn.net/so/search?q=%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">构造函数</a>开始分析。</p>
 <ol>
 <li>创建 OMXMaster 对象，并初始化 mMaster 变量</li>
 <li>初始化 MediaCodecsXmlParser 对象</li>
@@ -241,14 +258,14 @@
 </div>
 </div><div class="details admonition tip open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
             <div class="admonition-content">addVendorPlugin() 和 addPlatformPlugin() 内部实际都是调用了 addPlugin(const char *libname)，只是传递的实参不一样，前一个为 libstagefrighthw.so，后一个为 libstagefright_softomx_plugin.so 字符串。第一个 so 是硬件厂家实现的，第二个是软件实现的。</div>
         </div>
     </div>
-<h4 id="addplugin">addPlugin</h4>
-<p>addPlugin(const char *libname) 方法主要步骤如下：</p>
+<h4 id="addplugin" class="headerLink">
+    <a href="#addplugin" class="header-mark"></a>addPlugin</h4><p>addPlugin(const char *libname) 方法主要步骤如下：</p>
 <ol>
 <li>调用 android_load_sphal_library(…) 打开 so 库获取句柄；</li>
 <li>调用 dlsym(…) 解析 createOMXPlugin 方法符号，如果此符号不存在就去解析 _ZN7android15createOMXPluginEv 这个符号；</li>
@@ -394,12 +411,12 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="createomxplugin">createOMXPlugin</h4>
-<p>我们以瑞芯微 rk3399 android 10 <a href="https://so.csdn.net/so/search?q=%E6%BA%90%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">源码</a>为例进行分析，当加载的是 libstagefrighthw.so，调用其 createOMXPlugin 函数。</p>
+</div><h4 id="createomxplugin" class="headerLink">
+    <a href="#createomxplugin" class="header-mark"></a>createOMXPlugin</h4><p>我们以瑞芯微 rk3399 android 10 <a href="https://so.csdn.net/so/search?q=%E6%BA%90%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">源码</a>为例进行分析，当加载的是 libstagefrighthw.so，调用其 createOMXPlugin 函数。</p>
 <p>createOMXPlugin() 函数内内部仅仅创建了 RKOMXPlugin 对象，RKOMXPlugin 构造函数内根据不同的宏定义进行分支。USE_ROCKCHIP_OMX 在 mk 文件中指定为 true，所以实际会调用 AddCore(“libOMX_Core.so”) 这行代码。</p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
             <div class="admonition-content">ROCKCHIP OMX是Rockchip公司为其SoC设计的OMX组件,用于操作Rockchip平台视频编解码IP Core,以完成H.264、H.265、VP8、VP9等视频格式的硬件加速编解码</div>
@@ -635,15 +652,15 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>libOMX_Core.so 源码位于 /hardware/rockchip/omx_il/core 路径下。重点来看 <code>RKOMX_Init</code> 和 <code>RKOMX_ComponentNameEnum</code> 函数实现。</p>
-<h5 id="rkomx_init">RKOMX_Init</h5>
-<p>RKOMX_Init 函数实现主要步骤：</p>
+<h5 id="rkomx_init" class="headerLink">
+    <a href="#rkomx_init" class="header-mark"></a>RKOMX_Init</h5><p>RKOMX_Init 函数实现主要步骤：</p>
 <ol>
 <li>调用 Rockchip_OMX_Component_Register(…) 注册瑞芯微 OMX 组件；</li>
 <li>调用 Rockchip_OMX_ResourceManager_Init(…) 进行资源管理初始化；</li>
 <li>调用 Rockchip_OSAL_MutexCreate(…) 创建 OSAL 互斥锁。</li>
 </ol>
-<h5 id="rkomx_componentnameenum">RKOMX_ComponentNameEnum</h5>
-<p><code>RKOMX_ComponentNameEnum</code> 函数实现简单地多，在 <code>gComponentList</code> 全局组件列表中根据 index 返回组件名称。</p>
+<h5 id="rkomx_componentnameenum" class="headerLink">
+    <a href="#rkomx_componentnameenum" class="header-mark"></a>RKOMX_ComponentNameEnum</h5><p><code>RKOMX_ComponentNameEnum</code> 函数实现简单地多，在 <code>gComponentList</code> 全局组件列表中根据 index 返回组件名称。</p>
 <blockquote>
 <p>/hardware/rockchip/omx_il/core/Rockchip_OMX_Core.c</p>
 </blockquote>
@@ -932,7 +949,7 @@
 <li>当入参不为 NULL 时，for 循环遍历 <code>dec_core</code> 数组，对 <code>RockchipRegisterComponentType</code> 具体项进行 copy 赋值。<code>dec_core</code> 数组也定义在 <code>RkOMX_Core.h</code> 中 ；</li>
 </ol>
 <blockquote>
-<p>hardware/rockchip/omx_il/<a href="https://so.csdn.net/so/search?q=component&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">component</a>/video/dec/library_register.c</p>
+<p>hardware/rockchip/omx_il/<a href="https://so.csdn.net/so/search?q=component&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">component</a>/video/dec/library_register.c</p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1514,14 +1531,15 @@
 </div>
 </div><p><code>OMXMaster()</code> 构造函数中最后一行调用了 <code>addPlatformPlugin()</code>，也就是添加软编码插件库。软编码插件库编译 bp 定义在 <code>frameworks/av/media/libstagefright/omx/Android.bp</code> 中，编译源文件只使用到了<code> SoftOMXPlugin.cpp</code>。
 <code>OMXMaster::addPlugin(const char *libname</code>) 方法中对 <code>createOMXPlugin</code> 函数指针的调用实际上会调用到<code>frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp</code>类中的 <code>createOMXPlugin()</code> 函数。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="../assets/images/addPlatformPlugin.jpg"
-        data-srcset="../assets/images/addPlatformPlugin.jpg, ../assets/images/addPlatformPlugin.jpg 1.5x, ../assets/images/addPlatformPlugin.jpg 2x"
-        data-sizes="auto"
-        alt="../assets/images/addPlatformPlugin.jpg"
-        title="../assets/images/addPlatformPlugin.jpg" /></p>
+<p><figure><a class="lightgallery" href="../assets/images/addPlatformPlugin.jpg" title="../assets/images/addPlatformPlugin.jpg" data-thumbnail="../assets/images/addPlatformPlugin.jpg">
+        <img
+            
+            loading="lazy"
+            src="../assets/images/addPlatformPlugin.jpg"
+            srcset="../assets/images/addPlatformPlugin.jpg, ../assets/images/addPlatformPlugin.jpg 1.5x, ../assets/images/addPlatformPlugin.jpg 2x"
+            sizes="auto"
+            alt="../assets/images/addPlatformPlugin.jpg">
+    </a></figure></p>
 <blockquote>
 <p>frameworks/av/media/libstagefright/omx/Android.bp</p>
 </blockquote>
@@ -1765,7 +1783,7 @@
 <blockquote>
 <p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
 </blockquote>
-<p>Impl 无参构造函数中初始化了 <code>mState</code> 和 <code>mParsingStatus</code>（NO_INIT 未初始化）变量，和解析 <a href="https://so.csdn.net/so/search?q=xml&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">xml</a> 有关。</p>
+<p>Impl 无参构造函数中初始化了 <code>mState</code> 和 <code>mParsingStatus</code>（NO_INIT 未初始化）变量，和解析 <a href="https://so.csdn.net/so/search?q=xml&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">xml</a> 有关。</p>
 <blockquote>
 <p>frameworks/av/media/libstagefright/xmlparser/MediaCodecsXmlParser.cpp</p>
 </blockquote>
@@ -1923,7 +1941,7 @@
 <p><code>findFileInDirs(…)</code> 内部调用了<code> fileExists(…)</code> 用于判断文件是否存在。</p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
             <div class="admonition-content"><p>stat 用来判断没有打开的文件，而 fstat 用来判断打开的文件。我们使用最多的属性是 st_mode。通过这个属性我们可以判断给定的文件是一个普通文件还是一个目录、连接等等。可以使用下面几个宏来判断：</p>
@@ -2046,7 +2064,7 @@
 </div><p>MediaCodecsXmlParser::Impl::Parser::parseXmlFile() 方法中打开了 xml 文件，调用 XML Parser expat 库进行实际的 xml 解析。</p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
             <div class="admonition-content"><p>expat 是使用 C 所写的 XML 解释器，采用流的方式来解析 XML 文件，并且基于事件通知型来调用分析到的数据，并不需要把所有 XML 文件全部加载到内存里，这样可以分析非常大的 XML 文件。由于 expat 库是由 XML 的主要负责人 James Clark 来实现的，因此它是符合 W3C 的 XML 标准的。</p>
@@ -2637,42 +2655,48 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>最后再来看执行代码 Omx 构造函数中的 <code>(void)mParser.parseXmlPath(mParser.defaultProfilingResultsXmlPath)</code> 这段代码，<code>defaultProfilingResultsXmlPath</code> 路径等于 <code>“/data/misc/media/media_codecs_profiling_results.xml”</code>，也就是直接解析这个 xml 文件。</p>
-</div><div class="post-footer" id="post-footer">
+</div>
+
+        <div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>Updated on 2023-02-09</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/index.md" target="_blank">Read Markdown</a>
-                        </span></div>
-            <div class="post-info-share">
-                <span></span>
             </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/codec/">Codec</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/">深入理解构建 MediaCodec 列表</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/codec/">Codec</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/">深入理解构建 MediaCodec 列表</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" class="prev" rel="prev" title="深入理解构建 MediaCodec 列表：3-Codecservice 启动"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>深入理解构建 MediaCodec 列表：3-Codecservice 启动</a>
-            <a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96/" class="next" rel="next" title="深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化">深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A83-codecservice-%E5%90%AF%E5%8A%A8/" class="prev" rel="prev" title="深入理解构建 MediaCodec 列表：3-Codecservice 启动"><i class="fas fa-angle-left fa-fw"></i>深入理解构建 MediaCodec 列表：3-Codecservice 启动</a>
+            <a href="/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A81-mediacodec-%E7%A1%AC%E8%A7%A3%E7%A0%81%E5%88%9D%E5%A7%8B%E5%8C%96/" class="next" rel="next" title="深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化">深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
 </html>

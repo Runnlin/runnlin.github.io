@@ -1,11 +1,14 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN, en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>Android 深入浅出之 Binder 机制（转载） - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android 深入浅出之 Binder 机制（转载）" />
-<meta property="og:description" content="Android 深入浅出之 Binder 机制 一 说明 Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder 的话，在很大" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>Android 深入浅出之 Binder 机制（转载） - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android 深入浅出之 Binder 机制（转载）" />
+<meta property="og:description" content="Android 深入浅出之 Binder 机制 一 说明Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
@@ -14,12 +17,15 @@
 <meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
 
 <meta name="twitter:title" content="Android 深入浅出之 Binder 机制（转载）"/>
-<meta name="twitter:description" content="Android 深入浅出之 Binder 机制 一 说明 Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder 的话，在很大"/>
+<meta name="twitter:description" content="Android 深入浅出之 Binder 机制 一 说明Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" /><link rel="prev" href="https://runnlin.github.io/android-%E9%A2%84%E7%BC%96%E8%AF%91/" /><link rel="next" href="https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" /><link rel="prev" href="https://runnlin.github.io/android-%E9%A2%84%E7%BC%96%E8%AF%91/" /><link rel="next" href="https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -29,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6\/"
-        },"genre": "posts","keywords": "Android","wordcount":  10745 ,
+        },"genre": "posts","keywords": "Android","wordcount":  10850 ,
         "url": "https:\/\/runnlin.github.io\/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -37,10 +43,20 @@
                 "name": "Runnlin"
             },"description": ""
     }
-    </script></head>
-    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
@@ -49,16 +65,16 @@
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-adjust fa-fw"></i>
                 </a></div>
         </div>
     </div>
@@ -76,39 +92,39 @@
                     <div class="search mobile" id="search-mobile">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </div>
                     <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
                         Cancel
                     </a>
                 </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-adjust fa-fw"></i>
             </a></div>
     </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android 深入浅出之 Binder 机制（转载）</h1><h2 class="single-subtitle">Binder机制</h2><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;10745 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;22 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="true">
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android 深入浅出之 Binder 机制（转载）</h1><h2 class="single-subtitle">Binder机制</h2><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">category <a href="/categories/development/"><i class="far fa-folder fa-fw"></i>development</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;10850 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;22 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
@@ -145,9 +161,9 @@
     </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h1 id="android-深入浅出之-binder-机制">Android 深入浅出之 Binder 机制</h1>
-<h2 id="一-说明">一 说明</h2>
-<p>Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder 的话，在很大程度上就能理解程序运行的流程。</p>
+            </div><div class="content" id="content"><h1 id="android-深入浅出之-binder-机制" class="headerLink">
+    <a href="#android-%e6%b7%b1%e5%85%a5%e6%b5%85%e5%87%ba%e4%b9%8b-binder-%e6%9c%ba%e5%88%b6" class="header-mark"></a>Android 深入浅出之 Binder 机制</h1><h2 id="一-说明" class="headerLink">
+    <a href="#%e4%b8%80-%e8%af%b4%e6%98%8e" class="header-mark"></a>一 说明</h2><p>Android 系统最常见也是初学者最难搞明白的就是 Binder 了，很多很多的 Service 就是通过 Binder 机制来和客户端通讯交互的。所以搞明白 Binder 的话，在很大程度上就能理解程序运行的流程。</p>
 <p>我们这里将以 MediaService 的例子来分析 Binder 的使用：</p>
 <ol>
 <li>
@@ -164,8 +180,8 @@
 </li>
 </ol>
 <p>下面先讲讲 MediaService 应用程序。</p>
-<h2 id="二-mediaservice-的诞生">二 MediaService 的诞生</h2>
-<p>MediaService 是一个应用程序，虽然 Android 搞了七七八八的 JAVA 之类的东西，但是在本质上，它还是一个完整的 Linux 操作系统，也还没有牛到什么应用程序都是 JAVA 写。所以，MS(MediaService) 就是一个和普通的 C++ 应用程序一样的东西。</p>
+<h2 id="二-mediaservice-的诞生" class="headerLink">
+    <a href="#%e4%ba%8c-mediaservice-%e7%9a%84%e8%af%9e%e7%94%9f" class="header-mark"></a>二 MediaService 的诞生</h2><p>MediaService 是一个应用程序，虽然 Android 搞了七七八八的 JAVA 之类的东西，但是在本质上，它还是一个完整的 Linux 操作系统，也还没有牛到什么应用程序都是 JAVA 写。所以，MS(MediaService) 就是一个和普通的 C++ 应用程序一样的东西。</p>
 <p>MediaService 的源码文件在：framework\base\Media\MediaServer\Main_mediaserver.cpp 中。让我们看看到底是个什么玩意儿！</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -203,8 +219,8 @@
 <p>这么多疑问，看来我们只有一个个函数深入分析了。不过，这里先简单介绍下 sp 这个东西。</p>
 <p>sp，究竟是 smart pointer 还是 strong pointer 呢？其实我后来发现不用太关注这个，就把它当做一个普通的指针看待，即 sp&lt;IServiceManager&gt; &mdash;-&gt; IServiceManager* 吧。sp 是 google 搞出来的为了方便 C/C++ 程序员管理指针的分配和释放的一套方法，类似 JAVA 的什么 WeakReference 之类的。我个人觉得，要是自己写程序的话，不用这个东西也成。</p>
 <p>好了，以后的分析中，sp&lt;XXX&gt; 就看成是 XXX* 就可以了。</p>
-<h3 id="21-processstate">2.1 ProcessState</h3>
-<p>第一个调用的函数是 ProcessState::self()，然后赋值给了 proc 变量，程序运行完，proc 会自动 delete 内部的内容，所以就自动释放了先前分配的资源。</p>
+<h3 id="21-processstate" class="headerLink">
+    <a href="#21-processstate" class="header-mark"></a>2.1 ProcessState</h3><p>第一个调用的函数是 ProcessState::self()，然后赋值给了 proc 变量，程序运行完，proc 会自动 delete 内部的内容，所以就自动释放了先前分配的资源。</p>
 <p>ProcessState 位置在 framework\base\libs\binder\ProcessState.cpp</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -318,8 +334,8 @@
 <p>打开 /dev/binder 设备，这样的话就相当于和内核 binder 机制有了交互的通道</p>
 <p>映射 fd 到内存，设备的 fd 传进去后，估计这块内存是和 binder 设备共享的</p>
 <p>接下来，就到调用 defaultServiceManager() 地方了。</p>
-<h3 id="22-defaultservicemanager">2.2 defaultServiceManager</h3>
-<p>defaultServiceManager 位置在 framework\base\libs\binder\IServiceManager.cpp 中</p>
+<h3 id="22-defaultservicemanager" class="headerLink">
+    <a href="#22-defaultservicemanager" class="header-mark"></a>2.2 defaultServiceManager</h3><p>defaultServiceManager 位置在 framework\base\libs\binder\IServiceManager.cpp 中</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -499,8 +515,8 @@
 </div><p>BpBinder 又是个什么玩意儿？Android 名字起得太眼花缭乱了。</p>
 <p>因为还没介绍 Binder 机制的大架构，所以这里介绍 BpBinder 不合适，但是又讲到 BpBinder 了，不介绍 Binder 架构似乎又说不清楚&hellip;.，sigh！</p>
 <p>恩，还是继续把层层深入的函数调用栈化繁为简吧，至少大脑还可以工作。先看看 BpBinder 的构造函数把。</p>
-<h3 id="23-bpbinder">2.3 BpBinder</h3>
-<p>BpBinder 位置在 framework\base\libs\binder\BpBinder.cpp 中。</p>
+<h3 id="23-bpbinder" class="headerLink">
+    <a href="#23-bpbinder" class="header-mark"></a>2.3 BpBinder</h3><p>BpBinder 位置在 framework\base\libs\binder\BpBinder.cpp 中。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -732,8 +748,8 @@
 </div><p>看来，只能跟到 IServiceManager 了。</p>
 <p>IServiceManager.h&mdash;》framework/base/include/binder/IServiceManager.h</p>
 <p>看看它是如何定义的:</p>
-<h3 id="24-iservicemanager">2.4 IServiceManager</h3>
-<div class="highlight"><div class="chroma">
+<h3 id="24-iservicemanager" class="headerLink">
+    <a href="#24-iservicemanager" class="header-mark"></a>2.4 IServiceManager</h3><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -985,8 +1001,8 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>BpServiceManager 是个什么玩意儿？p 是什么个意思？</p>
-<h3 id="25-bpservicemanager">2.5 BpServiceManager</h3>
-<p>终于可以讲解点架构上的东西了。</p>
+<h3 id="25-bpservicemanager" class="headerLink">
+    <a href="#25-bpservicemanager" class="header-mark"></a>2.5 BpServiceManager</h3><p>终于可以讲解点架构上的东西了。</p>
 <blockquote>
 <p>p 是 proxy 即代理的意思，Bp 就是 BinderProxy,BpServiceManager，就是 SM 的 Binder 代理。</p>
 </blockquote>
@@ -1099,8 +1115,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>到这里，我们把 binder 设备打开了，得到一个 BpServiceManager 对象，这表明我们可以和 SM 打交道了，但是好像没干什么有意义的事情吧？</p>
-<h3 id="26-mediaplayerservice">2.6 MediaPlayerService</h3>
-<p>那下面我们看看后续又干了什么？以 MediaPlayerService 为例。</p>
+<h3 id="26-mediaplayerservice" class="headerLink">
+    <a href="#26-mediaplayerservice" class="header-mark"></a>2.6 MediaPlayerService</h3><p>那下面我们看看后续又干了什么？以 MediaPlayerService 为例。</p>
 <p>它位于 framework\base\media\libmediaplayerservice\libMediaPlayerService.cpp</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1154,8 +1170,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 <p>喔，明白了。我创建一个新的 Service—BnMediaPlayerService，想把它告诉 ServiceManager。</p>
 <p>那我怎么和 ServiceManager 通讯呢？恩，利用 BpServiceManager。所以嘛，我调用了 BpServiceManager 的 addService 函数！</p>
 <p>为什么要搞个 ServiceManager 来呢？这个和 Android 机制有关系。所有 Service 都需要加入到 ServiceManager 来管理。同时也方便了 Client 来查询系统存在哪些 Service，没看见我们传入了字符串吗？这样就可以通过 Human Readable 的字符串来查找 Service 了。</p>
-<h3 id="27-addservice">2.7 addService</h3>
-<p>addService 是调用的 BpServiceManager 的函数。前面略去没讲，现在我们看看。</p>
+<h3 id="27-addservice" class="headerLink">
+    <a href="#27-addservice" class="header-mark"></a>2.7 addService</h3><p>addService 是调用的 BpServiceManager 的函数。前面略去没讲，现在我们看看。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -1528,8 +1544,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 <p>MediaPlayerService 是一个 BnMediaPlayerService, 那么它是不是应该等着 BpMediaPlayerService 来和他交互呢? 但是我们没看见 MediaPlayerService 有打开 binder 设备的操作啊！</p>
 <p>这个嘛，到底是继续 addService 操作的另一端 BnServiceManager 还是先说 BnMediaPlayerService 呢？</p>
 <p>还是先说 BnServiceManager 吧。顺便把系统的 Binder 架构说说。</p>
-<h3 id="28-bnservicemanager">2.8 BnServiceManager</h3>
-<p>上面说了，defaultServiceManager 返回的是一个 BpServiceManager，通过它可以把命令请求发送到 binder 设备，而且 handle 的值为 0。那么，系统的另外一端肯定有个接收命令的，那又是谁呢？</p>
+<h3 id="28-bnservicemanager" class="headerLink">
+    <a href="#28-bnservicemanager" class="header-mark"></a>2.8 BnServiceManager</h3><p>上面说了，defaultServiceManager 返回的是一个 BpServiceManager，通过它可以把命令请求发送到 binder 设备，而且 handle 的值为 0。那么，系统的另外一端肯定有个接收命令的，那又是谁呢？</p>
 <p>很可惜啊，BnServiceManager 不存在，但确实有一个程序完成了 BnServiceManager 的工作，那就是 service.exe(如果在 windows 上一定有 exe 后缀，叫 service 的名字太多了，这里加 exe 就表明它是一个程序)</p>
 <p>位置在 framework/base/cmds/servicemanger.c 中。</p>
 <div class="highlight"><div class="chroma">
@@ -1797,8 +1813,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>喔，对于 addService 来说，看来 ServiceManager 把信息加入到自己维护的一个服务列表中了。</p>
-<h3 id="29-servicemanager-存在的意义">2.9 ServiceManager 存在的意义</h3>
-<p>为何需要一个这样的东西呢？</p>
+<h3 id="29-servicemanager-存在的意义" class="headerLink">
+    <a href="#29-servicemanager-%e5%ad%98%e5%9c%a8%e7%9a%84%e6%84%8f%e4%b9%89" class="header-mark"></a>2.9 ServiceManager 存在的意义</h3><p>为何需要一个这样的东西呢？</p>
 <p>原来，Android 系统中 Service 信息都是先 add 到 ServiceManager 中，由 ServiceManager 来集中管理，这样就可以查询当前系统有哪些服务。而且,Android 系统中某个服务例如 MediaPlayerService 的客户端想要和 MediaPlayerService 通讯的话，必须先向 ServiceManager 查询 MediaPlayerService 的信息，然后通过 ServiceManager 返回的东西再来和 MediaPlayerService 交互。</p>
 <p>毕竟，要是 MediaPlayerService 身体不好，老是挂掉的话，客户的代码就麻烦了，就不知道后续新生的 MediaPlayerService 的信息了，所以只能这样：</p>
 <ol>
@@ -1813,8 +1829,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </li>
 </ol>
 <p>另外，ServiceManager 的 handle 标示是 0，所以只要往 handle 是 0 的服务发送消息了，最终都会被传递到 ServiceManager 中去。</p>
-<h2 id="三-mediaservice-的运行">三 MediaService 的运行</h2>
-<p>上一节的知识，我们知道了：</p>
+<h2 id="三-mediaservice-的运行" class="headerLink">
+    <a href="#%e4%b8%89-mediaservice-%e7%9a%84%e8%bf%90%e8%a1%8c" class="header-mark"></a>三 MediaService 的运行</h2><p>上一节的知识，我们知道了：</p>
 <p>defaultServiceManager 得到了 BpServiceManager，然后 MediaPlayerService 实例化后，调用 BpServiceManager 的 addService 函数</p>
 <p>这个过程中，是 service_manager 收到 addService 的请求，然后把对应信息放到自己保存的一个服务 list 中</p>
 <p>到这儿，我们可看到，service_manager 有一个 binder_looper 函数，专门等着从 binder 中接收请求。虽然 service_manager 没有从 BnServiceManager 中派生，但是它肯定完成了 BnServiceManager 的功能。</p>
@@ -1829,8 +1845,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </ol>
 <p>service，service，这个和网络编程中的监听 socket 的工作很像嘛！</p>
 <p>好吧，既然 MediaPlayerService 的构造函数没有看到显示的打开 binder 设备，那么我们看看它的父类即 BnXXX 又到底干了些什么呢？</p>
-<h3 id="31-mediaplayerservice-打开-binder">3.1 MediaPlayerService 打开 binder</h3>
-<div class="highlight"><div class="chroma">
+<h3 id="31-mediaplayerservice-打开-binder" class="headerLink">
+    <a href="#31-mediaplayerservice-%e6%89%93%e5%bc%80-binder" class="header-mark"></a>3.1 MediaPlayerService 打开 binder</h3><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -1953,8 +1969,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="32-looper">3.2 looper</h3>
-<p>啊? 原来打开 binder 设备的地方是和进程相关的啊？一个进程打开一个就可以了。那么，我在哪里进行类似的消息循环 looper 操作呢？</p>
+</div><h3 id="32-looper" class="headerLink">
+    <a href="#32-looper" class="header-mark"></a>3.2 looper</h3><p>啊? 原来打开 binder 设备的地方是和进程相关的啊？一个进程打开一个就可以了。那么，我在哪里进行类似的消息循环 looper 操作呢？</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -2309,8 +2325,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 <p>说明：</p>
 <p>这里有点特殊，startThreadPool 和 joinThreadPool 完后确实有两个线程，主线程和工作线程，而且都在做消息循环。为什么要这么做呢？他们参数 isMain 都是 true。不知道 google 搞什么。难道是怕一个线程工作量太多，所以搞两个线程来工作？这种解释应该也是合理的。</p>
 <p>网上有人测试过把最后一句屏蔽掉，也能正常工作。但是难道主线程提出了，程序还能不退出吗？这个&hellip; 管它的，反正知道有两个线程在那处理就行了。</p>
-<h2 id="四-mediaplayerclient">四 MediaPlayerClient</h2>
-<p>这节讲讲 MediaPlayerClient 怎么和 MediaPlayerService 交互。</p>
+<h2 id="四-mediaplayerclient" class="headerLink">
+    <a href="#%e5%9b%9b-mediaplayerclient" class="header-mark"></a>四 MediaPlayerClient</h2><p>这节讲讲 MediaPlayerClient 怎么和 MediaPlayerService 交互。</p>
 <p>使用 MediaPlayerService 的时候，先要创建它的 BpMediaPlayerService。我们看看一个例子</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2369,8 +2385,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </div><p>为什么反复强调这个 Bridge？其实也不一定是 Bridge 模式，但是我真正想说明的是：</p>
 <p>Binder 其实就是一个和 binder 设备打交道的接口，而上层 IMediaPlayerService 只不过把它当做一个类似 socket 使用罢了。我以前经常把 binder 和上层类 IMediaPlayerService 的功能混到一起去。</p>
 <p>当然，你们不一定会犯这个错误。但是有一点请注意：</p>
-<h3 id="41-native-层">4.1 Native 层</h3>
-<p>刚才那个 getMediaPlayerService 代码是 C++ 层的，但是整个使用的例子确实 JAVA-&gt;JNI 层的调用。如果我要写一个纯 C++ 的程序该怎么办？</p>
+<h3 id="41-native-层" class="headerLink">
+    <a href="#41-native-%e5%b1%82" class="header-mark"></a>4.1 Native 层</h3><p>刚才那个 getMediaPlayerService 代码是 C++ 层的，但是整个使用的例子确实 JAVA-&gt;JNI 层的调用。如果我要写一个纯 C++ 的程序该怎么办？</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -2411,8 +2427,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="五-实现自己的-service">五 实现自己的 Service</h2>
-<p>好了，我们学习了这么多 Binder 的东西，那么想要实现一个自己的 Service 该咋办呢？</p>
+</div><h2 id="五-实现自己的-service" class="headerLink">
+    <a href="#%e4%ba%94-%e5%ae%9e%e7%8e%b0%e8%87%aa%e5%b7%b1%e7%9a%84-service" class="header-mark"></a>五 实现自己的 Service</h2><p>好了，我们学习了这么多 Binder 的东西，那么想要实现一个自己的 Service 该咋办呢？</p>
 <p>如果是纯 C++ 程序的话，肯定得类似 main_MediaService 那样干了。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2445,8 +2461,8 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </div><p>看看 XXXService 怎么定义呢？</p>
 <p>我们需要一个 Bn，需要一个 Bp，而且 Bp 不用暴露出来。那么就在 BnXXX.cpp 中一起实现好了。</p>
 <p>另外，XXXService 提供自己的功能，例如 getXXX 调用</p>
-<h3 id="51-定义-xxx-接口">5.1 定义 XXX 接口</h3>
-<p>XXX 接口是和 XXX 服务相关的，例如提供 getXXX，setXXX 函数，和应用逻辑相关。</p>
+<h3 id="51-定义-xxx-接口" class="headerLink">
+    <a href="#51-%e5%ae%9a%e4%b9%89-xxx-%e6%8e%a5%e5%8f%a3" class="header-mark"></a>5.1 定义 XXX 接口</h3><p>XXX 接口是和 XXX 服务相关的，例如提供 getXXX，setXXX 函数，和应用逻辑相关。</p>
 <p>需要从 IInterface 派生</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2469,15 +2485,15 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">DECLARE_META_INTERFACE</span><span class="p">(</span><span class="n">XXX</span><span class="p">);</span> <span class="err">申明宏</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="n">getXXX</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="nf">getXXX</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="nf">setXXX</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="c1">//这是一个接口。
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="52-定义-bnxxx-和-bpxxx">5.2 定义 BnXXX 和 BpXXX</h3>
-<p>为了把 IXXX 加入到 Binder 结构，需要定义 BnXXX 和对客户端透明的 BpXXX。</p>
+</div><h3 id="52-定义-bnxxx-和-bpxxx" class="headerLink">
+    <a href="#52-%e5%ae%9a%e4%b9%89-bnxxx-%e5%92%8c-bpxxx" class="header-mark"></a>5.2 定义 BnXXX 和 BpXXX</h3><p>为了把 IXXX 加入到 Binder 结构，需要定义 BnXXX 和对客户端透明的 BpXXX。</p>
 <p>其中 BnXXX 是需要有头文件的。BnXXX 只不过是把 IXXX 接口加入到 Binder 架构中来，而不参与实际的 getXXX 和 setXXX 应用层逻辑。</p>
 <p>这个 BnXXX 定义可以和上面的 IXXX 定义放在一块。分开也行。</p>
 <div class="highlight"><div class="chroma">
@@ -2583,42 +2599,48 @@ sp&lt;IServiceManager&gt; sm = defaultServiceManager(); 返回的实际是 BpSer
 <p>如果需要跟踪 bug 的话，得知道从 Client 端调用的函数，是怎么最终传到到远端的 Service。这样，对于一些函数调用，Client 端跟踪完了，我就知道转到 Service 去看对应函数调用了。反正是同步方式。也就是 Client 一个函数调用会一直等待到 Service 返回为止。</p>
 </li>
 </ul>
-</div><div class="post-footer" id="post-footer">
+</div>
+
+        <div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>Updated on 2022-04-01</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/index.md" target="_blank">Read Markdown</a>
-                        </span></div>
-            <div class="post-info-share">
-                <span></span>
             </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/android/">Android</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/android-%E9%A2%84%E7%BC%96%E8%AF%91/" class="prev" rel="prev" title="Android 预编译简述"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android 预编译简述</a>
-            <a href="/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="next" rel="next" title="Android 大型项目LocalMedia-USB模块学习笔记">Android 大型项目LocalMedia-USB模块学习笔记<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/android-%E9%A2%84%E7%BC%96%E8%AF%91/" class="prev" rel="prev" title="Android 预编译简述"><i class="fas fa-angle-left fa-fw"></i>Android 预编译简述</a>
+            <a href="/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="next" rel="next" title="Android 大型项目LocalMedia-USB模块学习笔记">Android 大型项目LocalMedia-USB模块学习笔记<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
 </html>

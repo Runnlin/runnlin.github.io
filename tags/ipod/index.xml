@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>iPod - Tag - Runnlin&#39;s Whisper</title>
+        <link>https://runnlin.github.io/tags/ipod/</link>
+        <description>iPod - Tag - Runnlin&#39;s Whisper</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN, en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
+            <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><lastBuildDate>Wed, 05 Jul 2023 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/ipod/" rel="self" type="application/rss+xml" /><item>
+    <title>Android iPod模块编译往事</title>
+    <link>https://runnlin.github.io/android-ipod%E6%A8%A1%E5%9D%97%E7%BC%96%E8%AF%91%E5%BE%80%E4%BA%8B/</link>
+    <pubDate>Wed, 05 Jul 2023 00:00:00 &#43;0000</pubDate><author>
+        <name>Runnlin</name>
+    </author><guid>https://runnlin.github.io/android-ipod%E6%A8%A1%E5%9D%97%E7%BC%96%E8%AF%91%E5%BE%80%E4%BA%8B/</guid>
+    <description><![CDATA[记录将老项目中的iPod模块移植到新的Android12平台时出现的各种问题]]></description>
+</item></channel>
+</rss>

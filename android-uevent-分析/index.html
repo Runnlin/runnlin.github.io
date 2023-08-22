@@ -1,25 +1,31 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN, en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>Android UEvent分析 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android UEvent分析" />
-<meta property="og:description" content="Android UEvent分析 在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>Android UEvent分析 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android UEvent分析" />
+<meta property="og:description" content="udev以守护进程的方式运行于Linux系统，并监听在新设备初始化或设备从系统中移除时，内核（通过netlinksocket）所发出的uevent" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-07-18T20:38:30+08:00" />
-<meta property="article:modified_time" content="2022-07-18T20:38:30+08:00" /><meta property="og:site_name" content="我的网站" />
+<meta property="article:modified_time" content="2023-05-16T11:41:50+08:00" /><meta property="og:site_name" content="我的网站" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
 
 <meta name="twitter:title" content="Android UEvent分析"/>
-<meta name="twitter:description" content="Android UEvent分析 在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0"/>
+<meta name="twitter:description" content="udev以守护进程的方式运行于Linux系统，并监听在新设备初始化或设备从系统中移除时，内核（通过netlinksocket）所发出的uevent"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/" /><link rel="prev" href="https://runnlin.github.io/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><link rel="next" href="https://runnlin.github.io/androidmediaplayer/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/android-uevent-%E5%88%86%E6%9E%90/" /><link rel="prev" href="https://runnlin.github.io/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><link rel="next" href="https://runnlin.github.io/androidmediaplayer/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -29,18 +35,28 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android-uevent-%E5%88%86%E6%9E%90\/"
-        },"genre": "posts","keywords": "Android, Framework","wordcount":  2709 ,
-        "url": "https:\/\/runnlin.github.io\/android-uevent-%E5%88%86%E6%9E%90\/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2022-07-18T20:38:30+08:00","publisher": {
+        },"genre": "posts","keywords": "Android, Framework","wordcount":  3243 ,
+        "url": "https:\/\/runnlin.github.io\/android-uevent-%E5%88%86%E6%9E%90\/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2023-05-16T11:41:50+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script></head>
-    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
@@ -49,16 +65,16 @@
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-adjust fa-fw"></i>
                 </a></div>
         </div>
     </div>
@@ -76,39 +92,39 @@
                     <div class="search mobile" id="search-mobile">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </div>
                     <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
                         Cancel
                     </a>
                 </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-adjust fa-fw"></i>
             </a></div>
     </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android UEvent分析</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-07-18">2022-07-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;2709 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;6 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="true">
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android UEvent分析</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">category <a href="/categories/development/"><i class="far fa-folder fa-fw"></i>development</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-07-18">2022-07-18</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2023-05-16">2023-05-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;3243 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
@@ -126,14 +142,38 @@
     <li><a href="#后续操作是等待挂载完成广播挂载部分在vold分析中再细表且听下回分解">后续操作是等待挂载完成广播，挂载部分在Vold分析中再细表，且听下回分解。</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h1 id="android-uevent分析">Android UEvent分析</h1>
-<blockquote>
+            </div><div class="content" id="content"><h1 id="android-uevent分析" class="headerLink">
+    <a href="#android-uevent%e5%88%86%e6%9e%90" class="header-mark"></a>Android UEvent分析</h1><blockquote>
 <p>在项目中我们有时会需要接收由底层发出的UEvent信息，来对连接或断开的设备在挂载、卸载之前做出一些逻辑，本文通过一个 Android 9.0 项目中使用到的接收UEvent的流程来一步步分析其实现逻辑</p>
 </blockquote>
+<div class="details admonition tip open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>RxBus有很多实现，如：</p>
+<ol>
+<li>
+<p>在Linux系统下一切皆是文件，设备也不例外；/dev目录下包含了所有可能出现的设备的设备文件（设备节点），通过Linux内核驱动程序来与硬件设备通信（读写），但是用户很难在大量设备文件中找到匹配的设备文件，于是Linux系统开始使用udev来在运行时管理/dev下的设备文件，如udev将在设备被检测到时创建设备文件并在设备移除时删除这些文件（设备拔插消息由内核通知出），包括热插拔设备。</p>
+</li>
+<li>
+<p>udev是一种新的管理/dev目录的方法；udev在/etc/udev/rules.d目录下有一个强大的脚本接口，终端用户和驱动发布者通常使用脚本文件编写udev规则来定制设备节点文件的创建。
+可定制的属性包括文件权限、在文件系统中的路径和符号链接。</p>
+</li>
+<li>
+<p>udev处理的所有设备信息都存储在udev数据库中，并且会发送给可能的设备事件的订阅者。可以通过libudev库访问udev数据库以及设备事件源。</p>
+</li>
+<li>
+<p>udev以守护进程的方式运行于Linux系统，并监听在新设备初始化或设备从系统中移除时，内核（通过netlinksocket）所发出的uevent。调用libudev接口从sys文件系统中读取设备的信息。</p>
+</li>
+</ol>
+</div>
+        </div>
+    </div>
 <ul>
 <li>
-<h2 id="netlink与uevent">Netlink与UEvent</h2>
-<ol>
+<h2 id="netlink与uevent" class="headerLink">
+    <a href="#netlink%e4%b8%8euevent" class="header-mark"></a>Netlink与UEvent</h2><ol>
 <li>Netlink是Linux系统中一种使用socket来与Kernel交互的机制，使得APP层可以接收来自kernel的消息，也能发送一些控制指令</li>
 <li>Uevent实际上是一组字符串，可以告知APP层发生了什么事情，插入u盘时，内核通过Netlink发送一个消息给Vold，vold根据接收到的消息进行处理，例如挂载这个U盘，这个消息就是UEvent</li>
 </ol>
@@ -183,14 +223,14 @@
 </div></li>
 </ul>
 <p>其他消息都一样，就没有赘述</p>
-<h3 id="那么有哪些情况kernel会发出uevent消息呢">那么有哪些情况Kernel会发出UEvent消息呢？</h3>
-<ol>
+<h3 id="那么有哪些情况kernel会发出uevent消息呢" class="headerLink">
+    <a href="#%e9%82%a3%e4%b9%88%e6%9c%89%e5%93%aa%e4%ba%9b%e6%83%85%e5%86%b5kernel%e4%bc%9a%e5%8f%91%e5%87%bauevent%e6%b6%88%e6%81%af%e5%91%a2" class="header-mark"></a>那么有哪些情况Kernel会发出UEvent消息呢？</h3><ol>
 <li>设备发生变化时，如插入和拔出。如果vold在设备发生变化之前已经建立了Netlink IPC通信，那么vold可以接收到这些Uevent消息</li>
 <li>设备一般在 /sys 对应的目录下有一个叫uevent的文件，往该文件中写入指定的数据，也会触发Kernel发送和该设备相关的Uevent消息，这是由应用层触发的。例如vold启动时，会往这些uevent文件中写入数据，来促使内核发送Uevent消息，这样vold就能得到这些设备的当前信息了</li>
 </ol>
-<h2 id="app层">app层</h2>
-<h3 id="ueventreceiver">UEventReceiver</h3>
-<p>APP在此处通过一个receiver进行UEvent信息的接收</p>
+<h2 id="app层" class="headerLink">
+    <a href="#app%e5%b1%82" class="header-mark"></a>app层</h2><h3 id="ueventreceiver" class="headerLink">
+    <a href="#ueventreceiver" class="header-mark"></a>UEventReceiver</h3><p>APP在此处通过一个receiver进行UEvent信息的接收</p>
 <p>涉案人员:</p>
 <blockquote>
 <p>APP/myReciever/UEventReceiver.java</p>
@@ -243,8 +283,8 @@
 <p><code>private static final String USB_STATE_MATCH = &quot;DEVPATH=/&quot;;</code></p>
 <ul>
 <li>
-<h3 id="ueventobserver">UEventObserver</h3>
-<p>这里提供了给APP层的各种Observing方法，先看看 startObserving：</p>
+<h3 id="ueventobserver" class="headerLink">
+    <a href="#ueventobserver" class="header-mark"></a>UEventObserver</h3><p>这里提供了给APP层的各种Observing方法，先看看 startObserving：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">  1
@@ -402,7 +442,7 @@
 </span></span><span class="line"><span class="cl">   <span class="n">t</span><span class="o">.</span><span class="na">addObserver</span><span class="o">(</span><span class="n">match</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">先进入</span><span class="n">getThread</span><span class="o">()</span><span class="err">看看</span>
+</span></span><span class="line"><span class="cl"><span class="n">先进入getThread</span><span class="o">()</span><span class="n">看看</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kd">private</span> <span class="kd">static</span> <span class="n">UEventThread</span> <span class="nf">getThread</span><span class="o">()</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">  <span class="kd">synchronized</span> <span class="o">(</span><span class="n">UEventObserver</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
@@ -414,7 +454,7 @@
 </span></span><span class="line"><span class="cl">  <span class="o">}</span>
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="err">在</span><span class="n">getThread</span><span class="err">中直接启动了</span> <span class="n">UEventThrad</span> <span class="err">线程</span>
+</span></span><span class="line"><span class="cl"><span class="n">在getThread中直接启动了</span> <span class="n">UEventThrad</span> <span class="n">线程</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">UEventThread</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">  <span class="cm">/** Many to many mapping of string match to observer.
@@ -454,11 +494,11 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">sendEvent</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">      <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mKeysAndObservers</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">          <span class="kd">final</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">2</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">              <span class="kd">final</span> <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span><span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">              <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">                  <span class="kd">final</span> <span class="n">UEventObserver</span> <span class="n">observer</span> <span class="o">=</span>
-</span></span><span class="line"><span class="cl">                          <span class="o">(</span><span class="n">UEventObserver</span><span class="o">)</span><span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                          <span class="o">(</span><span class="n">UEventObserver</span><span class="o">)</span><span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">                  <span class="n">mTempObserversToSignal</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">              <span class="o">}</span>
 </span></span><span class="line"><span class="cl">          <span class="o">}</span>
@@ -467,7 +507,7 @@
 </span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="o">(!</span><span class="n">mTempObserversToSignal</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">          <span class="kd">final</span> <span class="n">UEvent</span> <span class="n">event</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UEvent</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">          <span class="kd">final</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">mTempObserversToSignal</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">              <span class="kd">final</span> <span class="n">UEventObserver</span> <span class="n">observer</span> <span class="o">=</span> <span class="n">mTempObserversToSignal</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">              <span class="n">observer</span><span class="o">.</span><span class="na">onUEvent</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">          <span class="o">}</span>
@@ -486,41 +526,41 @@
 </span></span><span class="line"><span class="cl">  <span class="cm">/** Removes every key/value pair where value=observer from mObservers */</span>
 </span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">removeObserver</span><span class="o">(</span><span class="n">UEventObserver</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">      <span class="kd">synchronized</span> <span class="o">(</span><span class="n">mKeysAndObservers</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">              <span class="k">if</span> <span class="o">(</span><span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                  <span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">              <span class="k">if</span> <span class="o">(</span><span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">)</span> <span class="o">==</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                  <span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">1</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">                  <span class="kd">final</span> <span class="n">String</span> <span class="n">match</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span><span class="n">mKeysAndObservers</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">                  <span class="n">nativeRemoveMatch</span><span class="o">(</span><span class="n">match</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">              <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                  <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                  <span class="n">i</span> <span class="o">+=</span> <span class="n">2</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">              <span class="o">}</span>
 </span></span><span class="line"><span class="cl">          <span class="o">}</span>
 </span></span><span class="line"><span class="cl">      <span class="o">}</span>
 </span></span><span class="line"><span class="cl">  <span class="o">}</span>
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">UEvent</span> <span class="err">对象是这样的：</span>
+</span></span><span class="line"><span class="cl"><span class="n">UEvent</span> <span class="n">对象是这样的</span><span class="err">：</span>
 </span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">UEvent</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">  <span class="c1">// collection of key=value pairs parsed from the uevent message
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">private</span> <span class="kd">final</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">mMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">  <span class="c1">// Uevent对象在创建时会进行message的解析，
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">public</span> <span class="nf">UEvent</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">      <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">      <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">      <span class="k">while</span> <span class="o">(</span><span class="n">offset</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">          <span class="kt">int</span> <span class="n">equals</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;=&#39;</span><span class="o">,</span> <span class="n">offset</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">          <span class="kt">int</span> <span class="n">at</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;\0&#39;</span><span class="o">,</span> <span class="n">offset</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="o">(</span><span class="n">at</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="o">(</span><span class="n">at</span> <span class="o">&lt;</span> <span class="n">0</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="o">(</span><span class="n">equals</span> <span class="o">&gt;</span> <span class="n">offset</span> <span class="o">&amp;&amp;</span> <span class="n">equals</span> <span class="o">&lt;</span> <span class="n">at</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">              <span class="c1">// key is before the equals sign, and value is after
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>              <span class="n">mMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">offset</span><span class="o">,</span> <span class="n">equals</span><span class="o">),</span>
-</span></span><span class="line"><span class="cl">                      <span class="n">message</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">equals</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">at</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">                      <span class="n">message</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">equals</span> <span class="o">+</span> <span class="n">1</span><span class="o">,</span> <span class="n">at</span><span class="o">));</span>
 </span></span><span class="line"><span class="cl">          <span class="o">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">          <span class="n">offset</span> <span class="o">=</span> <span class="n">at</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">offset</span> <span class="o">=</span> <span class="n">at</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">      <span class="o">}</span>
 </span></span><span class="line"><span class="cl">  <span class="o">}</span>
 </span></span><span class="line"><span class="cl">
@@ -775,46 +815,52 @@
 </div>
 </div><p>APP中先通过确定DEVPATH在对的位置上，然后通过action分别处理各种事件</p>
 <p>通过INTERFACE分辨USB设备类型，分别处理u盘、ipod等设备，如果是U盘，则获取对应的封装设备信息进行封装，然后进行数量记录和 Toast显示。 在本APP中UEventReceiver只用于即时的toast提示用户已插入，和USBNotification相同。</p>
-<h2 id="后续操作是等待挂载完成广播挂载部分在vold分析中再细表且听下回分解">后续操作是等待挂载完成广播，挂载部分在Vold分析中再细表，且听下回分解。</h2>
-<ul>
+<h2 id="后续操作是等待挂载完成广播挂载部分在vold分析中再细表且听下回分解" class="headerLink">
+    <a href="#%e5%90%8e%e7%bb%ad%e6%93%8d%e4%bd%9c%e6%98%af%e7%ad%89%e5%be%85%e6%8c%82%e8%bd%bd%e5%ae%8c%e6%88%90%e5%b9%bf%e6%92%ad%e6%8c%82%e8%bd%bd%e9%83%a8%e5%88%86%e5%9c%a8vold%e5%88%86%e6%9e%90%e4%b8%ad%e5%86%8d%e7%bb%86%e8%a1%a8%e4%b8%94%e5%90%ac%e4%b8%8b%e5%9b%9e%e5%88%86%e8%a7%a3" class="header-mark"></a>后续操作是等待挂载完成广播，挂载部分在Vold分析中再细表，且听下回分解。</h2><ul>
 <li>[[2022-04-25-Android Vold分析]]</li>
 </ul>
-</div><div class="post-footer" id="post-footer">
+</div>
+
+        <div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2022-07-18</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/android-uevent-%E5%88%86%E6%9E%90/index.md" target="_blank">Read Markdown</a>
-                        </span></div>
-            <div class="post-info-share">
-                <span></span>
+                <span>Updated on 2023-05-16</span>
             </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/android-uevent-%E5%88%86%E6%9E%90/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/framework/">Framework</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/framework/">Framework</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="prev" rel="prev" title="Android 源码编译学习笔记"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android 源码编译学习笔记</a>
-            <a href="/androidmediaplayer/" class="next" rel="next" title="Android MediaPlayer">Android MediaPlayer<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="prev" rel="prev" title="Android 源码编译学习笔记"><i class="fas fa-angle-left fa-fw"></i>Android 源码编译学习笔记</a>
+            <a href="/androidmediaplayer/" class="next" rel="next" title="Android MediaPlayer">Android MediaPlayer<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
 </html>

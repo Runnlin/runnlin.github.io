@@ -1,10 +1,13 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN, en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>使用LiveDataBus代替EventBus - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="使用LiveDataBus代替EventBus" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>使用LiveDataBus代替EventBus - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="使用LiveDataBus代替EventBus" />
 <meta property="og:description" content="对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
@@ -16,10 +19,13 @@
 <meta name="twitter:title" content="使用LiveDataBus代替EventBus"/>
 <meta name="twitter:description" content="对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><link rel="prev" href="https://runnlin.github.io/android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/" /><link rel="prev" href="https://runnlin.github.io/android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" /><link rel="next" href="https://runnlin.github.io/android-ipod%E6%A8%A1%E5%9D%97%E7%BC%96%E8%AF%91%E5%BE%80%E4%BA%8B/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -29,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/"
-        },"genre": "posts","keywords": "Android, repost","wordcount":  7344 ,
+        },"genre": "posts","keywords": "Android, repost","wordcount":  7348 ,
         "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-11T11:41:50+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -37,10 +43,20 @@
                 "name": "Runnlin"
             },"description": ""
     }
-    </script></head>
-    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
@@ -49,16 +65,16 @@
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-adjust fa-fw"></i>
                 </a></div>
         </div>
     </div>
@@ -76,39 +92,39 @@
                     <div class="search mobile" id="search-mobile">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </div>
                     <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
                         Cancel
                     </a>
                 </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-adjust fa-fw"></i>
             </a></div>
     </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">使用LiveDataBus代替EventBus</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/android/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Android</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;7344 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;15 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="true">
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">使用LiveDataBus代替EventBus</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">category <a href="/categories/android/"><i class="far fa-folder fa-fw"></i>Android</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2023-05-01">2023-05-01</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2023-05-11">2023-05-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;7348 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;15 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
@@ -182,38 +198,40 @@
             </div><div class="content" id="content"><blockquote>
 <p>对于Android系统来说，消息传递是最基本的组件，每一个App内的不同页面，不同组件都在进行消息传递。消息传递既可以用于Android四大组件之间的通信，也可用于异步线程和主线程之间的通信。对于Android开发者来说，经常使用的消息传递方式有很多种，从最早使用的Handler、BroadcastReceiver、接口回调，到前些年流行的通信总线类框架EventBus、RxBus。Android消息传递框架总在不断地演进中</p>
 </blockquote>
-<h2 id="从eventbus说起">从EventBus说起</h2>
-<p>EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。</p>
+<h2 id="从eventbus说起" class="headerLink">
+    <a href="#%e4%bb%8eeventbus%e8%af%b4%e8%b5%b7" class="header-mark"></a>从EventBus说起</h2><p>EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。</p>
 <p>EventBus最大的特点就是：简洁、解耦。在没有EventBus之前我们通常用广播来实现监听，或者自定义接口函数回调，有的场景我们也可以直接用Intent携带简单数据，或者在线程之间通过Handler处理消息传递。但无论是广播还是Handler机制远远不能满足我们高效的开发。EventBus简化了应用程序内各组件间、组件与后台线程间的通信。EventBus一经推出，便受到广大开发者的推崇。</p>
 <p>现在看来，EventBus给Android开发者世界带来了一种新的框架和思想，就是消息的发布和订阅。这种思想在其后很多框架中都得到了应用。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="eventbus" /></p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="eventbus" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="eventbus">
+    </a></figure></p>
 <p>图片摘自EventBus GitHub主页</p>
-<h2 id="发布订阅模式">发布/订阅模式</h2>
-<p>订阅发布模式定义了一种“一对多”的依赖关系，让多个订阅者对象同时监听某一个主题对象。这个主题对象在自身状态变化时，会通知所有订阅者对象，使它们能够自动更新自己的状态。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="发布/订阅模式" /></p>
-<h1 id="rxbus的出现">RxBus的出现</h1>
-<p>RxBus不是一个库，而是一个文件，实现只有短短30行代码。RxBus本身不需要过多分析，它的强大完全来自于它基于的RxJava技术。响应式编程（Reactive Programming）技术这几年特别火，RxJava是它在Java上的实作。RxJava天生就是发布/订阅模式，而且很容易处理线程切换。所以，RxBus凭借区区30行代码，就敢挑战EventBus江湖老大的地位。</p>
-<h2 id="rxbus原理">RxBus原理</h2>
-<p>在RxJava中有个Subject类，它继承Observable类，同时实现了Observer接口，因此Subject可以同时担当订阅者和被订阅者的角色，我们使用Subject的子类PublishSubject来创建一个Subject对象（PublishSubject只有被订阅后才会把接收到的事件立刻发送给订阅者），在需要接收事件的地方，订阅该Subject对象，之后如果Subject对象接收到事件，则会发射给该订阅者，此时Subject对象充当被订阅者的角色。</p>
+<h2 id="发布订阅模式" class="headerLink">
+    <a href="#%e5%8f%91%e5%b8%83%e8%ae%a2%e9%98%85%e6%a8%a1%e5%bc%8f" class="header-mark"></a>发布/订阅模式</h2><p>订阅发布模式定义了一种“一对多”的依赖关系，让多个订阅者对象同时监听某一个主题对象。这个主题对象在自身状态变化时，会通知所有订阅者对象，使它们能够自动更新自己的状态。</p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="发布/订阅模式" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="发布/订阅模式">
+    </a></figure></p>
+<h1 id="rxbus的出现" class="headerLink">
+    <a href="#rxbus%e7%9a%84%e5%87%ba%e7%8e%b0" class="header-mark"></a>RxBus的出现</h1><p>RxBus不是一个库，而是一个文件，实现只有短短30行代码。RxBus本身不需要过多分析，它的强大完全来自于它基于的RxJava技术。响应式编程（Reactive Programming）技术这几年特别火，RxJava是它在Java上的实作。RxJava天生就是发布/订阅模式，而且很容易处理线程切换。所以，RxBus凭借区区30行代码，就敢挑战EventBus江湖老大的地位。</p>
+<h2 id="rxbus原理" class="headerLink">
+    <a href="#rxbus%e5%8e%9f%e7%90%86" class="header-mark"></a>RxBus原理</h2><p>在RxJava中有个Subject类，它继承Observable类，同时实现了Observer接口，因此Subject可以同时担当订阅者和被订阅者的角色，我们使用Subject的子类PublishSubject来创建一个Subject对象（PublishSubject只有被订阅后才会把接收到的事件立刻发送给订阅者），在需要接收事件的地方，订阅该Subject对象，之后如果Subject对象接收到事件，则会发射给该订阅者，此时Subject对象充当被订阅者的角色。</p>
 <p>完成了订阅，在需要发送事件的地方将事件发送给之前被订阅的Subject对象，则此时Subject对象作为订阅者接收事件，然后会立刻将事件转发给订阅该Subject对象的订阅者，以便订阅者处理相应事件，到这里就完成了事件的发送与处理。</p>
 <p>最后就是取消订阅的操作了，RxJava中，订阅操作会返回一个Subscription对象，以便在合适的时机取消订阅，防止内存泄漏，如果一个类产生多个Subscription对象，我们可以用一个CompositeSubscription存储起来，以进行批量的取消订阅。</p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-lightbulb fa-fw" aria-hidden="true"></i>Tip<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
         </div>
         <div class="details-content">
             <div class="admonition-content"><p>RxBus有很多实现，如：</p>
@@ -223,8 +241,8 @@
         </div>
     </div>
 <p>其实正如前面所说的，RxBus的原理是如此简单，我们自己都可以写出一个RxBus的实现：</p>
-<h3 id="基于rxjava1的rxbus实现">基于RxJava1的RxBus实现：</h3>
-<div class="highlight"><div class="chroma">
+<h3 id="基于rxjava1的rxbus实现" class="headerLink">
+    <a href="#%e5%9f%ba%e4%ba%8erxjava1%e7%9a%84rxbus%e5%ae%9e%e7%8e%b0" class="header-mark"></a>基于RxJava1的RxBus实现：</h3><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -304,8 +322,8 @@
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="基于rxjava2的rxbus实现">基于RxJava2的RxBus实现：</h3>
-<div class="highlight"><div class="chroma">
+</div><h3 id="基于rxjava2的rxbus实现" class="headerLink">
+    <a href="#%e5%9f%ba%e4%ba%8erxjava2%e7%9a%84rxbus%e5%ae%9e%e7%8e%b0" class="header-mark"></a>基于RxJava2的RxBus实现：</h3><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -377,12 +395,12 @@
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="引入livedatabus的想法">引入LiveDataBus的想法</h1>
-<h2 id="从livedata谈起">从LiveData谈起</h2>
-<p>LiveData是Android Architecture Components提出的框架。LiveData是一个可以被观察的数据持有类，它可以感知并遵循Activity、Fragment或Service等组件的生命周期。正是由于LiveData对组件生命周期可感知特点，因此可以做到仅在组件处于生命周期的激活状态时才更新UI数据。</p>
+</div><h1 id="引入livedatabus的想法" class="headerLink">
+    <a href="#%e5%bc%95%e5%85%a5livedatabus%e7%9a%84%e6%83%b3%e6%b3%95" class="header-mark"></a>引入LiveDataBus的想法</h1><h2 id="从livedata谈起" class="headerLink">
+    <a href="#%e4%bb%8elivedata%e8%b0%88%e8%b5%b7" class="header-mark"></a>从LiveData谈起</h2><p>LiveData是Android Architecture Components提出的框架。LiveData是一个可以被观察的数据持有类，它可以感知并遵循Activity、Fragment或Service等组件的生命周期。正是由于LiveData对组件生命周期可感知特点，因此可以做到仅在组件处于生命周期的激活状态时才更新UI数据。</p>
 <p>LiveData需要一个观察者对象，一般是Observer类的具体实现。当观察者的生命周期处于STARTED或RESUMED状态时，LiveData会通知观察者数据变化；在观察者处于其他状态时，即使LiveData的数据变化了，也不会通知。</p>
-<h3 id="livedata的优点">LiveData的优点</h3>
-<ul>
+<h3 id="livedata的优点" class="headerLink">
+    <a href="#livedata%e7%9a%84%e4%bc%98%e7%82%b9" class="header-mark"></a>LiveData的优点</h3><ul>
 <li><strong>UI和实时数据保持一致</strong> 因为LiveData采用的是观察者模式，这样一来就可以在数据发生改变时获得通知，更新UI。</li>
 <li><strong>避免内存泄漏</strong> 观察者被绑定到组件的生命周期上，当被绑定的组件销毁（destroy）时，观察者会立刻自动清理自身的数据。</li>
 <li><strong>不会再产生由于Activity处于stop状态而引起的崩溃</strong> 例如：当Activity处于后台状态时，是不会收到LiveData的任何事件的。</li>
@@ -390,55 +408,56 @@
 <li><strong>实时数据刷新</strong> 当组件处于活跃状态或者从不活跃状态到活跃状态时总是能收到最新的数据。</li>
 <li><strong>解决Configuration Change问题</strong> 在屏幕发生旋转或者被回收再次启动，立刻就能收到最新的数据。</li>
 </ul>
-<h3 id="谈一谈android-architecture-components">谈一谈Android Architecture Components</h3>
-<p>Android Architecture Components的核心是Lifecycle、LiveData、ViewModel 以及 Room，通过它可以非常优雅的让数据与界面进行交互，并做一些持久化的操作，高度解耦，自动管理生命周期，而且不用担心内存泄漏的问题。</p>
+<h3 id="谈一谈android-architecture-components" class="headerLink">
+    <a href="#%e8%b0%88%e4%b8%80%e8%b0%88android-architecture-components" class="header-mark"></a>谈一谈Android Architecture Components</h3><p>Android Architecture Components的核心是Lifecycle、LiveData、ViewModel 以及 Room，通过它可以非常优雅的让数据与界面进行交互，并做一些持久化的操作，高度解耦，自动管理生命周期，而且不用担心内存泄漏的问题。</p>
 <ul>
 <li><strong>Room</strong> 一个强大的SQLite对象映射库。</li>
 <li><strong>ViewModel</strong> 一类对象，它用于为UI组件提供数据，在设备配置发生变更时依旧可以存活。</li>
 <li><strong>LiveData</strong> 一个可感知生命周期、可被观察的数据容器，它可以存储数据，还会在数据发生改变时进行提醒。</li>
 <li><strong>Lifecycle</strong> 包含LifeCycleOwer和LifecycleObserver，分别是生命周期所有者和生命周期感知者。</li>
 </ul>
-<h4 id="android-architecture-components的特点">Android Architecture Components的特点</h4>
-<ul>
+<h4 id="android-architecture-components的特点" class="headerLink">
+    <a href="#android-architecture-components%e7%9a%84%e7%89%b9%e7%82%b9" class="header-mark"></a>Android Architecture Components的特点</h4><ul>
 <li><strong>数据驱动型编程</strong> 变化的永远是数据，界面无需更改。</li>
 <li><strong>感知生命周期，防止内存泄漏。</strong></li>
 <li><strong>高度解耦</strong> 数据，界面高度分离。</li>
 <li><strong>数据持久化</strong> 数据、ViewModel不与UI的生命周期挂钩，不会因为界面的重建而销毁。</li>
 </ul>
-<h2 id="重点为什么使用livedata构建数据通信总线livedatabus">重点：为什么使用LiveData构建数据通信总线LiveDataBus</h2>
-<h3 id="使用livedata的理由">使用LiveData的理由</h3>
-<ul>
+<h2 id="重点为什么使用livedata构建数据通信总线livedatabus" class="headerLink">
+    <a href="#%e9%87%8d%e7%82%b9%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bd%bf%e7%94%a8livedata%e6%9e%84%e5%bb%ba%e6%95%b0%e6%8d%ae%e9%80%9a%e4%bf%a1%e6%80%bb%e7%ba%bflivedatabus" class="header-mark"></a>重点：为什么使用LiveData构建数据通信总线LiveDataBus</h2><h3 id="使用livedata的理由" class="headerLink">
+    <a href="#%e4%bd%bf%e7%94%a8livedata%e7%9a%84%e7%90%86%e7%94%b1" class="header-mark"></a>使用LiveData的理由</h3><ul>
 <li><strong>LiveData具有的这种可观察性和生命周期感知的能力，使其非常适合作为Android通信总线的基础构件。</strong></li>
 <li><strong>使用者不用显示调用反注册方法。</strong> 由于LiveData具有生命周期感知能力，所以LiveDataBus只需要调用注册回调方法，而不需要显示的调用反注册方法。这样带来的好处不仅可以编写更少的代码，而且可以完全杜绝其他通信总线类框架（如EventBus、RxBus）忘记调用反注册所带来的内存泄漏的风险。</li>
 </ul>
-<h3 id="为什么要用livedatabus替代eventbus和rxbus">为什么要用LiveDataBus替代EventBus和RxBus</h3>
-<ul>
+<h3 id="为什么要用livedatabus替代eventbus和rxbus" class="headerLink">
+    <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e7%94%a8livedatabus%e6%9b%bf%e4%bb%a3eventbus%e5%92%8crxbus" class="header-mark"></a>为什么要用LiveDataBus替代EventBus和RxBus</h3><ul>
 <li><strong>LiveDataBus的实现及其简单</strong> 相对EventBus复杂的实现，LiveDataBus只需要一个类就可以实现。</li>
 <li><strong>LiveDataBus可以减小APK包的大小</strong> 由于LiveDataBus只依赖Android官方Android Architecture Components组件的LiveData，没有其他依赖，本身实现只有一个类。作为比较，EventBus JAR包大小为57kb，RxBus依赖RxJava和RxAndroid，其中RxJava2包大小2.2MB，RxJava1包大小1.1MB，RxAndroid包大小9kb。使用LiveDataBus可以大大减小APK包的大小。</li>
 <li><strong>LiveDataBus依赖方支持更好</strong> LiveDataBus只依赖Android官方Android Architecture Components组件的LiveData，相比RxBus依赖的RxJava和RxAndroid，依赖方支持更好。</li>
 <li><strong>LiveDataBus具有生命周期感知</strong> LiveDataBus具有生命周期感知，在Android系统中使用调用者不需要调用反注册，相比EventBus和RxBus使用更为方便，并且没有内存泄漏风险。</li>
 </ul>
-<h2 id="livedatabus的设计和架构">LiveDataBus的设计和架构</h2>
-<h3 id="livedatabus的组成">LiveDataBus的组成</h3>
-<ul>
+<h2 id="livedatabus的设计和架构" class="headerLink">
+    <a href="#livedatabus%e7%9a%84%e8%ae%be%e8%ae%a1%e5%92%8c%e6%9e%b6%e6%9e%84" class="header-mark"></a>LiveDataBus的设计和架构</h2><h3 id="livedatabus的组成" class="headerLink">
+    <a href="#livedatabus%e7%9a%84%e7%bb%84%e6%88%90" class="header-mark"></a>LiveDataBus的组成</h3><ul>
 <li><strong>消息</strong> 消息可以是任何的Object，可以定义不同类型的消息，如Boolean、String。也可以定义自定义类型的消息。</li>
 <li><strong>消息通道</strong> LiveData扮演了消息通道的角色，不同的消息通道用不同的名字区分，名字是String类型的，可以通过名字获取到一个LiveData消息通道。</li>
 <li><strong>消息总线</strong> 消息总线通过单例实现，不同的消息通道存放在一个HashMap中。</li>
 <li><strong>订阅</strong> 订阅者通过getChannel获取消息通道，然后调用observe订阅这个通道的消息。</li>
 <li><strong>发布</strong> 发布者通过getChannel获取消息通道，然后调用setValue或者postValue发布消息。</li>
 </ul>
-<h3 id="livedatabus原理图">LiveDataBus原理图</h3>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="LiveDataBus原理图" /></p>
-<h2 id="livedatabus的实现">LiveDataBus的实现</h2>
-<h4 id="第一个实现">第一个实现：</h4>
-<div class="highlight"><div class="chroma">
+<h3 id="livedatabus原理图" class="headerLink">
+    <a href="#livedatabus%e5%8e%9f%e7%90%86%e5%9b%be" class="header-mark"></a>LiveDataBus原理图</h3><p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="LiveDataBus原理图" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="LiveDataBus原理图">
+    </a></figure></p>
+<h2 id="livedatabus的实现" class="headerLink">
+    <a href="#livedatabus%e7%9a%84%e5%ae%9e%e7%8e%b0" class="header-mark"></a>LiveDataBus的实现</h2><h4 id="第一个实现" class="headerLink">
+    <a href="#%e7%ac%ac%e4%b8%80%e4%b8%aa%e5%ae%9e%e7%8e%b0" class="header-mark"></a>第一个实现：</h4><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
@@ -528,63 +547,68 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们发送了一个名为&quot;key_test&quot;，值为true的事件。 这个时候订阅者就会收到消息，并作相应的处理，非常简单。</p>
-<h4 id="问题出现">问题出现</h4>
-<p>对于LiveDataBus的第一版实现，我们发现，在使用这个LiveDataBus的过程中，订阅者会收到订阅之前发布的消息。对于一个消息总线来说，这是不可接受的。无论EventBus或者RxBus，订阅方都不会收到订阅之前发出的消息。对于一个消息总线，LiveDataBus必须要解决这个问题。</p>
-<h4 id="问题分析">问题分析</h4>
-<p>怎么解决这个问题呢？先分析下原因：</p>
+<h4 id="问题出现" class="headerLink">
+    <a href="#%e9%97%ae%e9%a2%98%e5%87%ba%e7%8e%b0" class="header-mark"></a>问题出现</h4><p>对于LiveDataBus的第一版实现，我们发现，在使用这个LiveDataBus的过程中，订阅者会收到订阅之前发布的消息。对于一个消息总线来说，这是不可接受的。无论EventBus或者RxBus，订阅方都不会收到订阅之前发出的消息。对于一个消息总线，LiveDataBus必须要解决这个问题。</p>
+<h4 id="问题分析" class="headerLink">
+    <a href="#%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90" class="header-mark"></a>问题分析</h4><p>怎么解决这个问题呢？先分析下原因：</p>
 <p>当LifeCircleOwner的状态发生变化的时候，会调用LiveData.ObserverWrapper的activeStateChanged函数，如果这个时候ObserverWrapper的状态是active，就会调用LiveData的dispatchingValue。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="code" /></p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="code">
+    </a></figure></p>
 <p>在LiveData的dispatchingValue中，又会调用LiveData的considerNotify方法。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="code" /></p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="code">
+    </a></figure></p>
 <p>在LiveData的considerNotify方法中，红框中的逻辑是关键，如果ObserverWrapper的mLastVersion小于LiveData的mVersion，就会去回调mObserver的onChanged方法。而每个新的订阅者，其version都是-1，LiveData一旦设置过其version是大于-1的（每次LiveData设置值都会使其version加1），这样就会导致LiveDataBus每注册一个新的订阅者，这个订阅者立刻会收到一个回调，即使这个设置的动作发生在订阅之前。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="code" /></p>
-<h4 id="问题原因总结">问题原因总结</h4>
-<p>对于这个问题，总结一下发生的核心原因。对于LiveData，其初始的version是-1，当我们调用了其setValue或者postValue，其vesion会+1；对于每一个观察者的封装ObserverWrapper，其初始version也为-1，也就是说，每一个新注册的观察者，其version为-1；当LiveData设置这个ObserverWrapper的时候，如果LiveData的version大于ObserverWrapper的version，LiveData就会强制把当前value推送给Observer。</p>
-<h4 id="如何解决这个问题">如何解决这个问题</h4>
-<p>明白了问题产生的原因之后，我们来看看怎么才能解决这个问题。很显然，根据之前的分析，只需要在注册一个新的订阅者的时候把Wrapper的version设置成跟LiveData的version一致即可。</p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="code">
+    </a></figure></p>
+<h4 id="问题原因总结" class="headerLink">
+    <a href="#%e9%97%ae%e9%a2%98%e5%8e%9f%e5%9b%a0%e6%80%bb%e7%bb%93" class="header-mark"></a>问题原因总结</h4><p>对于这个问题，总结一下发生的核心原因。对于LiveData，其初始的version是-1，当我们调用了其setValue或者postValue，其vesion会+1；对于每一个观察者的封装ObserverWrapper，其初始version也为-1，也就是说，每一个新注册的观察者，其version为-1；当LiveData设置这个ObserverWrapper的时候，如果LiveData的version大于ObserverWrapper的version，LiveData就会强制把当前value推送给Observer。</p>
+<h4 id="如何解决这个问题" class="headerLink">
+    <a href="#%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%e8%bf%99%e4%b8%aa%e9%97%ae%e9%a2%98" class="header-mark"></a>如何解决这个问题</h4><p>明白了问题产生的原因之后，我们来看看怎么才能解决这个问题。很显然，根据之前的分析，只需要在注册一个新的订阅者的时候把Wrapper的version设置成跟LiveData的version一致即可。</p>
 <p>那么怎么实现呢，看看LiveData的observe方法，他会在步骤1创建一个LifecycleBoundObserver，LifecycleBoundObserver是ObserverWrapper的派生类。然后会在步骤2把这个LifecycleBoundObserver放入一个私有Map容器mObservers中。无论ObserverWrapper还是LifecycleBoundObserver都是私有的或者包可见的，所以无法通过继承的方式更改LifecycleBoundObserver的version。</p>
 <p>那么能不能从Map容器mObservers中取到LifecycleBoundObserver，然后再更改version呢？答案是肯定的，通过查看SafeIterableMap的源码我们发现有一个protected的get方法。因此，在调用observe的时候，我们可以通过反射拿到LifecycleBoundObserver，再把LifecycleBoundObserver的version设置成和LiveData一致即可。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="code" /></p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="code">
+    </a></figure></p>
 <p>对于非生命周期感知的observeForever方法来说，实现的思路是一致的，但是具体的实现略有不同。observeForever的时候，生成的wrapper不是LifecycleBoundObserver，而是AlwaysActiveObserver（步骤1），而且我们也没有机会在observeForever调用完成之后再去更改AlwaysActiveObserver的version，因为在observeForever方法体内，步骤3的语句，回调就发生了。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        data-srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-        data-sizes="auto"
-        alt="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-        title="code" /></p>
+<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
+        <img
+            
+            loading="lazy"
+            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+            sizes="auto"
+            alt="code">
+    </a></figure></p>
 <p>那么对于observeForever，如何解决这个问题呢？既然是在调用内回调的，那么我们可以写一个ObserverWrapper，把真正的回调给包装起来。把ObserverWrapper传给observeForever，那么在回调的时候我们去检查调用栈，如果回调是observeForever方法引起的，那么就不回调真正的订阅者。</p>
-<h3 id="livedatabus最终实现">LiveDataBus最终实现</h3>
-<div class="highlight"><div class="chroma">
+<h3 id="livedatabus最终实现" class="headerLink">
+    <a href="#livedatabus%e6%9c%80%e7%bb%88%e5%ae%9e%e7%8e%b0" class="header-mark"></a>LiveDataBus最终实现</h3><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
@@ -756,7 +780,7 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isCallOnObserve</span><span class="o">()</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">            <span class="n">StackTraceElement</span><span class="o">[]</span> <span class="n">stackTrace</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getStackTrace</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="n">stackTrace</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">stackTrace</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="n">stackTrace</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">stackTrace</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="o">(</span><span class="n">StackTraceElement</span> <span class="n">element</span> <span class="o">:</span> <span class="n">stackTrace</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">(</span><span class="s">&#34;android.arch.lifecycle.LiveData&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">getClassName</span><span class="o">())</span> <span class="o">&amp;&amp;</span>
 </span></span><span class="line"><span class="cl">                            <span class="s">&#34;observeForever&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">getMethodName</span><span class="o">()))</span> <span class="o">{</span>
@@ -832,8 +856,8 @@
 </span></span><span class="line"><span class="cl"><span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="注册订阅">注册订阅</h4>
-<div class="highlight"><div class="chroma">
+</div><h4 id="注册订阅" class="headerLink">
+    <a href="#%e6%b3%a8%e5%86%8c%e8%ae%a2%e9%98%85" class="header-mark"></a>注册订阅</h4><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
@@ -853,8 +877,8 @@
 </span></span><span class="line"><span class="cl">        <span class="o">});</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="发送消息">发送消息：</h4>
-<div class="highlight"><div class="chroma">
+</div><h4 id="发送消息" class="headerLink">
+    <a href="#%e5%8f%91%e9%80%81%e6%b6%88%e6%81%af" class="header-mark"></a>发送消息：</h4><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
@@ -862,12 +886,12 @@
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LiveDataBus</span><span class="o">.</span><span class="na">get</span><span class="o">().</span><span class="na">with</span><span class="o">(</span><span class="s">&#34;key_test&#34;</span><span class="o">).</span><span class="na">setValue</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="源码说明">源码说明</h3>
-<p>LiveDataBus的源码来源： <a href="https://github.com/JeremyLiao/LiveDataBus" target="_blank" rel="noopener noreffer ">https://github.com/JeremyLiao/LiveDataBus</a></p>
-<h1 id="总结">总结</h1>
-<p>本文提供了一个新的消息总线框架——LiveDataBus。订阅者可以订阅某个消息通道的消息，发布者可以把消息发布到消息通道上。利用LiveDataBus，不仅可以实现消息总线功能，而且对于订阅者，他们不需要关心何时取消订阅，极大减少了因为忘记取消订阅造成的内存泄漏风险。</p>
-<h3 id="update">Update</h3>
-<p>在项目使用的过程中，发现直接全编译打包出来的apk总会出现在执行hook中“getDeclaredMethod(&ldquo;get&rdquo;, Object.class)”时出现 NoSuchMethodException 问题，有可能是因为项目的特殊性导致混淆导致，同时使用反射的方式也不是Google所推荐的，下面尝试采用重写BusMutableLiveData的方式来重构：</p>
+</div><h3 id="源码说明" class="headerLink">
+    <a href="#%e6%ba%90%e7%a0%81%e8%af%b4%e6%98%8e" class="header-mark"></a>源码说明</h3><p>LiveDataBus的源码来源： <a href="https://github.com/JeremyLiao/LiveDataBus" target="_blank" rel="noopener noreferrer">https://github.com/JeremyLiao/LiveDataBus</a></p>
+<h1 id="总结" class="headerLink">
+    <a href="#%e6%80%bb%e7%bb%93" class="header-mark"></a>总结</h1><p>本文提供了一个新的消息总线框架——LiveDataBus。订阅者可以订阅某个消息通道的消息，发布者可以把消息发布到消息通道上。利用LiveDataBus，不仅可以实现消息总线功能，而且对于订阅者，他们不需要关心何时取消订阅，极大减少了因为忘记取消订阅造成的内存泄漏风险。</p>
+<h3 id="update" class="headerLink">
+    <a href="#update" class="header-mark"></a>Update</h3><p>在项目使用的过程中，发现直接全编译打包出来的apk总会出现在执行hook中“getDeclaredMethod(&ldquo;get&rdquo;, Object.class)”时出现 NoSuchMethodException 问题，有可能是因为项目的特殊性导致混淆导致，同时使用反射的方式也不是Google所推荐的，下面尝试采用重写BusMutableLiveData的方式来重构：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -960,43 +984,50 @@
 </div>
 </div><p>在这个方法中，我们不通过反射去获取系统的version信息，而是仿照系统自己弄一个mCurrentVersion，在新的观察者来的时候，吧当前mCurrentVersion传给他，setValue或者postValue的时候给通道的mCurrentVersion加一。</p>
 <p>然后自定义一个观察者的包装类，ObserverWrapper，在其onChanged方法中判断通道的version大于自己的version的时候才更新数据。用法不变效果跟前面那个一样。</p>
-<h3 id="源码说明2">源码说明2</h3>
-<p>更新的LiveDataBus的源码来源： <a href="https://blog.csdn.net/mingyunxiaohai/article/details/89605994" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/mingyunxiaohai/article/details/89605994</a></p>
-</div><div class="post-footer" id="post-footer">
+<h3 id="源码说明2" class="headerLink">
+    <a href="#%e6%ba%90%e7%a0%81%e8%af%b4%e6%98%8e2" class="header-mark"></a>源码说明2</h3><p>更新的LiveDataBus的源码来源： <a href="https://blog.csdn.net/mingyunxiaohai/article/details/89605994" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/mingyunxiaohai/article/details/89605994</a></p>
+</div>
+
+        <div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>Updated on 2023-05-11</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/index.md" target="_blank">Read Markdown</a>
-                        </span></div>
-            <div class="post-info-share">
-                <span></span>
             </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/repost/">repost</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/android/">Android</a>,&nbsp;<a href="/tags/repost/">repost</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="prev" rel="prev" title="Android-Binder学习笔记"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android-Binder学习笔记</a></div>
+    <div class="post-nav"><a href="/android-binder%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="prev" rel="prev" title="Android-Binder学习笔记"><i class="fas fa-angle-left fa-fw"></i>Android-Binder学习笔记</a>
+            <a href="/android-ipod%E6%A8%A1%E5%9D%97%E7%BC%96%E8%AF%91%E5%BE%80%E4%BA%8B/" class="next" rel="next" title="Android iPod模块编译往事">Android iPod模块编译往事<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
 </html>

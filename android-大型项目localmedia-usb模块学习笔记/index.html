@@ -1,11 +1,14 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN, en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>Android 大型项目LocalMedia-USB模块学习笔记 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android 大型项目LocalMedia-USB模块学习笔记" />
-<meta property="og:description" content="整体架构 Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>Android 大型项目LocalMedia-USB模块学习笔记 - Runnlin&#39;s Whisper</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="Android 大型项目LocalMedia-USB模块学习笔记" />
+<meta property="og:description" content="整体架构Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><meta property="og:image" content="https://runnlin.github.io/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
@@ -14,12 +17,15 @@
 <meta name="twitter:image" content="https://runnlin.github.io/logo.png"/>
 
 <meta name="twitter:title" content="Android 大型项目LocalMedia-USB模块学习笔记"/>
-<meta name="twitter:description" content="整体架构 Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供"/>
+<meta name="twitter:description" content="整体架构Media模块及大多数项目可以主要分为以下几个模块： Service View Proxy Data Service 与底层jni连接 确保其他模块正常运行 负责基本操作，如U盘内容的解析 提供"/>
 <meta name="application-name" content="Runnlin&#39;s Whisper">
-<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="apple-mobile-web-app-title" content="Runnlin&#39;s Whisper">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><link rel="prev" href="https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" /><link rel="next" href="https://runnlin.github.io/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://runnlin.github.io/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><link rel="prev" href="https://runnlin.github.io/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" /><link rel="next" href="https://runnlin.github.io/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/" />
+<link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/color.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/fontawesome-free/all.min.css">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/animate/animate.min.css">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -37,10 +43,20 @@
                 "name": "Runnlin"
             },"description": ""
     }
-    </script></head>
-    <body data-header-desktop="normal" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+</head>
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+<body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
             <a href="/" title="Runnlin&#39;s Whisper">Runnlin&#39;s Whisper<span class="header-title-post"><i class='far fa-comment-dots fa-fw' aria-hidden='true'></i></span></a>
@@ -49,16 +65,16 @@
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-adjust fa-fw"></i>
                 </a></div>
         </div>
     </div>
@@ -76,39 +92,39 @@
                     <div class="search mobile" id="search-mobile">
                         <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
                         <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-search fa-fw"></i>
                         </a>
                         <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                            <i class="fas fa-times-circle fa-fw"></i>
                         </a>
                         <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
                         </span>
                     </div>
                     <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
                         Cancel
                     </a>
                 </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-adjust fa-fw"></i>
             </a></div>
     </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android 大型项目LocalMedia-USB模块学习笔记</h1><h2 class="single-subtitle">android 中 USB 音乐、视频播放功能学习</h2><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="runnlin.github.io" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Runnlin</a></span>&nbsp;<span class="post-category">included in <a href="/categories/development/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>development</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;6960 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;14 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="true">
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+            <div class="container"><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "false")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Android 大型项目LocalMedia-USB模块学习笔记</h1><h2 class="single-subtitle">android 中 USB 音乐、视频播放功能学习</h2><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
+                </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">category <a href="/categories/development/"><i class="far fa-folder fa-fw"></i>development</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2022-04-01">2022-04-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;6960 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;14 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
@@ -130,39 +146,39 @@
     </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="整体架构">整体架构</h2>
-<p>Media模块及大多数项目可以主要分为以下几个模块：</p>
+            </div><div class="content" id="content"><h2 id="整体架构" class="headerLink">
+    <a href="#%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84" class="header-mark"></a>整体架构</h2><p>Media模块及大多数项目可以主要分为以下几个模块：</p>
 <ul>
 <li>Service</li>
 <li>View</li>
 <li>Proxy</li>
 <li>Data</li>
 </ul>
-<h3 id="service">Service</h3>
-<ol>
+<h3 id="service" class="headerLink">
+    <a href="#service" class="header-mark"></a>Service</h3><ol>
 <li>与底层jni连接</li>
 <li>确保其他模块正常运行</li>
 <li>负责基本操作，如U盘内容的解析</li>
 <li>提供解析数据</li>
 <li>存储解析数据到数据库</li>
 </ol>
-<h3 id="view">View</h3>
-<ol>
+<h3 id="view" class="headerLink">
+    <a href="#view" class="header-mark"></a>View</h3><ol>
 <li>展示信息</li>
 <li>与Proxy通讯，获取信息更新，传递用户操作</li>
 </ol>
-<h3 id="proxy">Proxy</h3>
-<ol>
+<h3 id="proxy" class="headerLink">
+    <a href="#proxy" class="header-mark"></a>Proxy</h3><ol>
 <li>与View通讯，获取用户操作，进行相关操作或传递给其他模块</li>
 <li>维护 Handler</li>
 </ol>
-<h3 id="data">Data</h3>
-<ol>
+<h3 id="data" class="headerLink">
+    <a href="#data" class="header-mark"></a>Data</h3><ol>
 <li>对象或数据存储</li>
 </ol>
-<h2 id="usb功能解析usb-music-功能代码熟悉">USB功能解析（USB Music 功能代码熟悉）</h2>
-<h3 id="设备识别"><strong>设备识别</strong></h3>
-<ol>
+<h2 id="usb功能解析usb-music-功能代码熟悉" class="headerLink">
+    <a href="#usb%e5%8a%9f%e8%83%bd%e8%a7%a3%e6%9e%90usb-music-%e5%8a%9f%e8%83%bd%e4%bb%a3%e7%a0%81%e7%86%9f%e6%82%89" class="header-mark"></a>USB功能解析（USB Music 功能代码熟悉）</h2><h3 id="设备识别" class="headerLink">
+    <a href="#%e8%ae%be%e5%a4%87%e8%af%86%e5%88%ab" class="header-mark"></a><strong>设备识别</strong></h3><ol>
 <li>
 <p>开机（使用MEDIA_MOUNTEED广播为信号）启动MediaDeviceService服务，这是所有USB功能的基础服务，当服务启动完成后，在回调中创建设备插入处理线程，这样就不会影响UI线程；</p>
 </li>
@@ -173,8 +189,8 @@
 <p>设备识别完成后，除了索引外，还通过MediaDeviceBinder发送了设备类型和状态变化消息（此Binder包括设备所有变化，如索引/检索结果等），在该Binder中，自定义了一个名为IMediaDeviceListener的IInterface接口，其中也包括了各类USB设备变化方法，在实现中通过不同的code区分了binder中transact的不同数据对象，随后在其他模块中通过实现该IInterface接口即可异步获取到有关设备变化的数据；</p>
 </li>
 </ol>
-<h3 id="连接断开处理"><strong>连接/断开处理</strong></h3>
-<ul>
+<h3 id="连接断开处理" class="headerLink">
+    <a href="#%e8%bf%9e%e6%8e%a5%e6%96%ad%e5%bc%80%e5%a4%84%e7%90%86" class="header-mark"></a><strong>连接/断开处理</strong></h3><ul>
 <li>HMI提示</li>
 </ul>
 <ol>
@@ -247,8 +263,8 @@
 </span></span><span class="line"><span class="cl">    <span class="o">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="列表数据库管理"><strong>列表数据库管理</strong></h3>
-<ul>
+</div><h3 id="列表数据库管理" class="headerLink">
+    <a href="#%e5%88%97%e8%a1%a8%e6%95%b0%e6%8d%ae%e5%ba%93%e7%ae%a1%e7%90%86" class="header-mark"></a><strong>列表数据库管理</strong></h3><ul>
 <li>
 <p>索引U盘文件</p>
 <p>在MediaThreadMgr 类中提供的索引方法：</p>
@@ -414,8 +430,8 @@
 </ol>
 </li>
 </ul>
-<h3 id="播放显示操作"><strong>播放/显示/操作</strong></h3>
-<ul>
+<h3 id="播放显示操作" class="headerLink">
+    <a href="#%e6%92%ad%e6%94%be%e6%98%be%e7%a4%ba%e6%93%8d%e4%bd%9c" class="header-mark"></a><strong>播放/显示/操作</strong></h3><ul>
 <li>
 <p><strong>声音输出</strong></p>
 <p>前文提到过音乐是通过 MusicPlayerService 进行播放的，下面来看看具体播放流程</p>
@@ -496,7 +512,7 @@
 <li>GalleryScaleHelper</li>
 </ol>
 <p>Helper类中使用了SnapHelper这个辅助类，用于辅助RecyclerView在滚动结束时将Item对齐到某个位置，其他包括滚动及缩放等效果都在此设置</p>
-<p>[SnapHelper详解]<a href="https://www.jianshu.com/p/e54db232df62" target="_blank" rel="noopener noreffer ">https://www.jianshu.com/p/e54db232df62</a></p>
+<p>[SnapHelper详解]<a href="https://www.jianshu.com/p/e54db232df62" target="_blank" rel="noopener noreferrer">https://www.jianshu.com/p/e54db232df62</a></p>
 <p>该Helper还提供了OnPositionListener接口，通过在proxy实现接口来实现到达指定位置的回调</p>
 <ol start="5">
 <li>GalleryLinearManager</li>
@@ -532,42 +548,48 @@
 </ul>
 </li>
 </ul>
-</div><div class="post-footer" id="post-footer">
+</div>
+
+        <div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>Updated on 2022-04-01</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.md" target="_blank">Read Markdown</a>
-                        </span></div>
-            <div class="post-info-share">
-                <span></span>
             </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span><a class="link-to-mardown" href=/android-%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AElocalmedia-usb%E6%A8%A1%E5%9D%97%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.md target="_blank" rel="noopener noreferrer">Read markdown</a>
+                    </span></div>
+            <div class="post-info-share"></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/android/">Android</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/android/">Android</a></section>
         <section>
             <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" class="prev" rel="prev" title="Android 深入浅出之 Binder 机制（转载）"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Android 深入浅出之 Binder 机制（转载）</a>
-            <a href="/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/" class="next" rel="next" title="Android 四大组件综述">Android 四大组件综述<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E4%B9%8B-binder-%E6%9C%BA%E5%88%B6/" class="prev" rel="prev" title="Android 深入浅出之 Binder 机制（转载）"><i class="fas fa-angle-left fa-fw"></i>Android 深入浅出之 Binder 机制（转载）</a>
+            <a href="/android-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E7%BB%BC%E8%BF%B0/" class="next" rel="next" title="Android 四大组件综述">Android 四大组件综述<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022 - 2023</span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="Back to Top">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div id="cookieconsent-container"></div><div class="assets"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/lib/katex/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"></noscript><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"No results found","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null}};</script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js" defer></script><script type="text/javascript" src="/lib/katex/auto-render.min.js" defer></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js" defer></script><script type="text/javascript" src="/lib/katex/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/cookieconsent.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
 </html>
