@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>深入理解构建 MediaCodec 列表 - Tag - Runnlin&#39;s Whisper</title>
+        <title>深入理解构建 MediaCodec 列表 - Tag - Le vent se lève</title>
         <link>https://runnlin.github.io/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/</link>
-        <description>深入理解构建 MediaCodec 列表 - Tag - Runnlin&#39;s Whisper</description>
+        <description>深入理解构建 MediaCodec 列表 - Tag - Le vent se lève</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN, en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
             <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><lastBuildDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A8/" rel="self" type="application/rss+xml" /><item>
     <title>深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化</title>

@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>repost - Category - Runnlin&#39;s Whisper</title>
+        <title>repost - Category - Le vent se lève</title>
         <link>https://runnlin.github.io/categories/repost/</link>
-        <description>repost - Category - Runnlin&#39;s Whisper</description>
+        <description>repost - Category - Le vent se lève</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN, en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
             <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><lastBuildDate>Thu, 09 Feb 2023 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/categories/repost/" rel="self" type="application/rss+xml" /><item>
     <title>深入理解构建 MediaCodec 列表：1-MediaCodec 硬解码初始化</title>

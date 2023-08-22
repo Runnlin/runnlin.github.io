@@ -1,8 +1,8 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Android - Category - Runnlin&#39;s Whisper</title>
+        <title>Android - Category - Le vent se lève</title>
         <link>https://runnlin.github.io/categories/android/</link>
-        <description>Android - Category - Runnlin&#39;s Whisper</description>
+        <description>Android - Category - Le vent se lève</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN, en</language><managingEditor>z77072716565@gmail.com (Runnlin)</managingEditor>
             <webMaster>z77072716565@gmail.com (Runnlin)</webMaster><lastBuildDate>Wed, 05 Jul 2023 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://runnlin.github.io/categories/android/" rel="self" type="application/rss+xml" /><item>
     <title>Android iPod模块编译往事</title>
