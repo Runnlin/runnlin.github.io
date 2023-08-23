@@ -1,6 +1,6 @@
-# 
+# RecyclerView 缓存机制4 - scrap view 的生命周期
 
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903780006264845)
+
 
 1.  [RecyclerView 缓存机制 | 如何复用表项？](https://juejin.cn/post/6844903778303344647 "https://juejin.cn/post/6844903778303344647")
     

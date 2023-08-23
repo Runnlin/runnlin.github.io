@@ -60,5 +60,19 @@
         <name>Runnlin</name>
     </author><guid>https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/</guid>
     <description><![CDATA[MediaScannerService 是 Android 平台提供的一个用于扫描手机中多媒体文件的应用级 service Note 本文以 Android 5.1 为准 MediaScannerService 研究MediaScannerService 是 Android 平台提供的一个用于扫描]]></description>
+</item><item>
+    <title>RecyclerView 动画原理1</title>
+    <link>https://runnlin.github.io/recyclerview-%E5%8A%A8%E7%94%BB%E5%8E%9F%E7%90%861-%E6%8D%A2%E4%B8%AA%E5%A7%BF%E5%8A%BF%E7%9C%8B%E6%BA%90%E7%A0%81pre-layout/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate><author>
+        <name>Runnlin</name>
+    </author><guid>https://runnlin.github.io/recyclerview-%E5%8A%A8%E7%94%BB%E5%8E%9F%E7%90%861-%E6%8D%A2%E4%B8%AA%E5%A7%BF%E5%8A%BF%E7%9C%8B%E6%BA%90%E7%A0%81pre-layout/</guid>
+    <description><![CDATA[这是 RecyclerView 动画原理的第一篇，系列文章目录如下： RecyclerView 动画原理 | 换个姿势看源码（pre-layout） RecyclerView 动画原理 | pre-layout，post-la]]></description>
+</item><item>
+    <title>RecyclerView 动画原理2 - pre-layout，post-layout 与 scrap 缓存的关系</title>
+    <link>https://runnlin.github.io/recyclerview-%E5%8A%A8%E7%94%BB%E5%8E%9F%E7%90%862-pre-layoutpost-layout-%E4%B8%8E-scrap-%E7%BC%93%E5%AD%98%E7%9A%84%E5%85%B3%E7%B3%BB/</link>
+    <pubDate>Fri, 01 Apr 2022 00:00:00 &#43;0000</pubDate><author>
+        <name>Runnlin</name>
+    </author><guid>https://runnlin.github.io/recyclerview-%E5%8A%A8%E7%94%BB%E5%8E%9F%E7%90%862-pre-layoutpost-layout-%E4%B8%8E-scrap-%E7%BC%93%E5%AD%98%E7%9A%84%E5%85%B3%E7%B3%BB/</guid>
+    <description><![CDATA[这是 RecyclerView 动画原理的第二篇，系列文章目录如下： RecyclerView 动画原理 | 换个姿势看源码（pre-layout） RecyclerView 动画原理 | pre-layout，post-la]]></description>
 </item></channel>
 </rss>

@@ -1,6 +1,5 @@
-# 
+# RecyclerView 动画原理2 - pre-layout，post-layout 与 scrap 缓存的关系
 
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6892809944702124045)
 
 这是 RecyclerView 动画原理的第二篇，系列文章目录如下：
 

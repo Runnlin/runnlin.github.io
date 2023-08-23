@@ -26,7 +26,7 @@
     </author><guid>https://runnlin.github.io/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97/</guid>
     <description><![CDATA[项目中大量使用到了原生的 MediaPlayer 来播放音视频，这里记录一下遇到的问题及解决方式 切曲时出现 Failed to connect to surface &hellip; LOG： 1 2 3 4 5 6 7 8 9 10 05-11 01:42:42.837 E 517 1356 BufferQueueProducer: [SurfaceView - io.github.runnlin.exoplayerdemo/io.github.runnlin.exoplayerdemo.MainActivity#0](id:20500000107,api:3,p:561,c:517)]]></description>
 </item><item>
-    <title>MediaProvider</title>
+    <title>MediaProvider简述</title>
     <link>https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/</link>
     <pubDate>Mon, 18 Jul 2022 20:38:30 &#43;0800</pubDate><author>
         <name>Runnlin</name>

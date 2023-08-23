@@ -1,6 +1,5 @@
-# 
+# RecyclerView 动画原理1
 
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6890288761783975950)
 
 这是 RecyclerView 动画原理的第一篇，系列文章目录如下：
 
