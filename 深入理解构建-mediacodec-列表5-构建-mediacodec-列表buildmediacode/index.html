@@ -1320,85 +1320,85 @@
 </span><span class="lnt">79
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">class Codec2Client::Cache {
-</span></span><span class="line"><span class="cl">    // Cached client
-</span></span><span class="line"><span class="cl">    std::shared_ptr&lt;Codec2Client&gt; mClient;
-</span></span><span class="line"><span class="cl">    mutable std::mutex mClientMutex;
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Codec2Client</span><span class="o">::</span><span class="n">Cache</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Cached client
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Codec2Client</span><span class="o">&gt;</span> <span class="n">mClient</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mClientMutex</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // Cached component traits
-</span></span><span class="line"><span class="cl">    std::vector&lt;C2Component::Traits&gt; mTraits;
-</span></span><span class="line"><span class="cl">    std::once_flag mTraitsInitializationFlag;
+</span></span><span class="line"><span class="cl">    <span class="c1">// Cached component traits
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">C2Component</span><span class="o">::</span><span class="n">Traits</span><span class="o">&gt;</span> <span class="n">mTraits</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">once_flag</span> <span class="n">mTraitsInitializationFlag</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // The index of the service. This is based on GetServiceNames().
-</span></span><span class="line"><span class="cl">    size_t mIndex;
-</span></span><span class="line"><span class="cl">    // Called by s() exactly once to initialize the cache. The index must be a
-</span></span><span class="line"><span class="cl">    // valid index into the vector returned by GetServiceNames(). Calling
-</span></span><span class="line"><span class="cl">    // init(index) will associate the cache to the service with name
-</span></span><span class="line"><span class="cl">    // GetServiceNames()[index].
-</span></span><span class="line"><span class="cl">    void init(size_t index) {
-</span></span><span class="line"><span class="cl">        mIndex = index;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="c1">// The index of the service. This is based on GetServiceNames().
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">size_t</span> <span class="n">mIndex</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Called by s() exactly once to initialize the cache. The index must be a
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// valid index into the vector returned by GetServiceNames(). Calling
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// init(index) will associate the cache to the service with name
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// GetServiceNames()[index].
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="n">size_t</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mIndex</span> <span class="o">=</span> <span class="n">index</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">public:
-</span></span><span class="line"><span class="cl">    Cache() = default;
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Cache</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // Initializes mClient if needed, then returns mClient.
-</span></span><span class="line"><span class="cl">    // If the service is unavailable but listed in the manifest, this function
-</span></span><span class="line"><span class="cl">    // will block indefinitely.
-</span></span><span class="line"><span class="cl">    std::shared_ptr&lt;Codec2Client&gt; getClient() {
-</span></span><span class="line"><span class="cl">        std::scoped_lock lock{mClientMutex};
-</span></span><span class="line"><span class="cl">        if (!mClient) {
-</span></span><span class="line"><span class="cl">            mClient = Codec2Client::_CreateFromIndex(mIndex);
-</span></span><span class="line"><span class="cl">        }
-</span></span><span class="line"><span class="cl">        return mClient;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="c1">// Initializes mClient if needed, then returns mClient.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// If the service is unavailable but listed in the manifest, this function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// will block indefinitely.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Codec2Client</span><span class="o">&gt;</span> <span class="n">getClient</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">scoped_lock</span> <span class="n">lock</span><span class="p">{</span><span class="n">mClientMutex</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">mClient</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">mClient</span> <span class="o">=</span> <span class="n">Codec2Client</span><span class="o">::</span><span class="n">_CreateFromIndex</span><span class="p">(</span><span class="n">mIndex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">mClient</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // Causes a subsequent call to getClient() to create a new client. This
-</span></span><span class="line"><span class="cl">    // function should be called after the service dies.
-</span></span><span class="line"><span class="cl">    //
-</span></span><span class="line"><span class="cl">    // Note: This function is called only by ForAllServices().
-</span></span><span class="line"><span class="cl">    void invalidate() {
-</span></span><span class="line"><span class="cl">        std::scoped_lock lock{mClientMutex};
-</span></span><span class="line"><span class="cl">        mClient = nullptr;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="c1">// Causes a subsequent call to getClient() to create a new client. This
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// function should be called after the service dies.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Note: This function is called only by ForAllServices().
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">invalidate</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">scoped_lock</span> <span class="n">lock</span><span class="p">{</span><span class="n">mClientMutex</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mClient</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // Returns a list of traits for components supported by the service. This
-</span></span><span class="line"><span class="cl">    // list is cached.
-</span></span><span class="line"><span class="cl">    std::vector&lt;C2Component::Traits&gt; const&amp; getTraits() {
-</span></span><span class="line"><span class="cl">        std::call_once(mTraitsInitializationFlag, [this]() {
-</span></span><span class="line"><span class="cl">            bool success{false};
-</span></span><span class="line"><span class="cl">            // Spin until _listComponents() is successful.
-</span></span><span class="line"><span class="cl">            while (true) {
-</span></span><span class="line"><span class="cl">                std::shared_ptr&lt;Codec2Client&gt; client = getClient();
-</span></span><span class="line"><span class="cl">                mTraits = client-&gt;_listComponents(&amp;success);
-</span></span><span class="line"><span class="cl">                if (success) {
-</span></span><span class="line"><span class="cl">                    break;
-</span></span><span class="line"><span class="cl">                }
-</span></span><span class="line"><span class="cl">                using namespace std::chrono_literals;
-</span></span><span class="line"><span class="cl">                static constexpr auto kServiceRetryPeriod = 5s;
-</span></span><span class="line"><span class="cl">                LOG(INFO) &lt;&lt; &#34;Failed to retrieve component traits from service &#34;
-</span></span><span class="line"><span class="cl">                             &#34;\&#34;&#34; &lt;&lt; GetServiceNames()[mIndex] &lt;&lt; &#34;\&#34;. &#34;
-</span></span><span class="line"><span class="cl">                             &#34;Retrying...&#34;;
-</span></span><span class="line"><span class="cl">                std::this_thread::sleep_for(kServiceRetryPeriod);
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">        });
-</span></span><span class="line"><span class="cl">        return mTraits;
-</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    <span class="c1">// Returns a list of traits for components supported by the service. This
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// list is cached.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">C2Component</span><span class="o">::</span><span class="n">Traits</span><span class="o">&gt;</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">getTraits</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">call_once</span><span class="p">(</span><span class="n">mTraitsInitializationFlag</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">bool</span> <span class="n">success</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Spin until _listComponents() is successful.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Codec2Client</span><span class="o">&gt;</span> <span class="n">client</span> <span class="o">=</span> <span class="n">getClient</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">mTraits</span> <span class="o">=</span> <span class="n">client</span><span class="o">-&gt;</span><span class="n">_listComponents</span><span class="p">(</span><span class="o">&amp;</span><span class="n">success</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono_literals</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">kServiceRetryPeriod</span> <span class="o">=</span> <span class="mi">5</span><span class="n">s</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">LOG</span><span class="p">(</span><span class="n">INFO</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Failed to retrieve component traits from service &#34;</span>
+</span></span><span class="line"><span class="cl">                             <span class="s">&#34;</span><span class="se">\&#34;</span><span class="s">&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">GetServiceNames</span><span class="p">()[</span><span class="n">mIndex</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\&#34;</span><span class="s">. &#34;</span>
+</span></span><span class="line"><span class="cl">                             <span class="s">&#34;Retrying...&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">kServiceRetryPeriod</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">mTraits</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // List() returns the list of all caches.
-</span></span><span class="line"><span class="cl">    static std::vector&lt;Cache&gt;&amp; List() {
-</span></span><span class="line"><span class="cl">        static std::vector&lt;Cache&gt; sCaches{[]() {
-</span></span><span class="line"><span class="cl">            size_t numServices = GetServiceNames().size();
-</span></span><span class="line"><span class="cl">            std::vector&lt;Cache&gt; caches(numServices);
-</span></span><span class="line"><span class="cl">            for (size_t i = 0; i &lt; numServices; ++i) {
-</span></span><span class="line"><span class="cl">                caches[i].init(i);
-</span></span><span class="line"><span class="cl">            }
-</span></span><span class="line"><span class="cl">            return caches;
-</span></span><span class="line"><span class="cl">        }()};
-</span></span><span class="line"><span class="cl">        return sCaches;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">};
-</span></span><span class="line"><span class="cl">1011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677
+</span></span><span class="line"><span class="cl">    <span class="c1">// List() returns the list of all caches.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Cache</span><span class="o">&gt;&amp;</span> <span class="n">List</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Cache</span><span class="o">&gt;</span> <span class="n">sCaches</span><span class="p">{[]()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">size_t</span> <span class="n">numServices</span> <span class="o">=</span> <span class="n">GetServiceNames</span><span class="p">().</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Cache</span><span class="o">&gt;</span> <span class="n">caches</span><span class="p">(</span><span class="n">numServices</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numServices</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">caches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">init</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">caches</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}()};</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">sCaches</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>以上提交的几个函数需要再次分析下，首先来分析 Codec2Client::GetServiceNames()。</p>

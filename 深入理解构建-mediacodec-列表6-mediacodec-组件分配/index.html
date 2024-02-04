@@ -323,56 +323,56 @@
 </span><span class="lnt">50
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#ifndef A_HIERARCHICAL_STATE_MACHINE_H_
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#ifndef A_HIERARCHICAL_STATE_MACHINE_H_
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#define A_HIERARCHICAL_STATE_MACHINE_H_
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;media/stagefright/foundation/AHandler.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="n">namespace</span> <span class="n">android</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#define A_HIERARCHICAL_STATE_MACHINE_H_
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nl">AState</span> <span class="p">:</span> <span class="n">public</span> <span class="n">RefBase</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">AState</span><span class="p">(</span><span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">AState</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">parentState</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#include &lt;media/stagefright/foundation/AHandler.h&gt;
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">AState</span><span class="o">&gt;</span> <span class="nf">parentState</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">namespace android {
+</span></span><span class="line"><span class="cl"><span class="nl">protected</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="o">~</span><span class="nf">AState</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">struct AState : public RefBase {
-</span></span><span class="line"><span class="cl">    AState(const sp&lt;AState&gt; &amp;parentState = NULL);
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="kt">void</span> <span class="nf">stateEntered</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="kt">void</span> <span class="nf">stateExited</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    sp&lt;AState&gt; parentState();
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="kt">bool</span> <span class="nf">onMessageReceived</span><span class="p">(</span><span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">AMessage</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">protected:
-</span></span><span class="line"><span class="cl">    virtual ~AState();
+</span></span><span class="line"><span class="cl"><span class="nl">private</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">friend</span> <span class="k">struct</span> <span class="n">AHierarchicalStateMachine</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    virtual void stateEntered();
-</span></span><span class="line"><span class="cl">    virtual void stateExited();
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">AState</span><span class="o">&gt;</span> <span class="n">mParentState</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    virtual bool onMessageReceived(const sp&lt;AMessage&gt; &amp;msg) = 0;
+</span></span><span class="line"><span class="cl">    <span class="nf">DISALLOW_EVIL_CONSTRUCTORS</span><span class="p">(</span><span class="n">AState</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">private:
-</span></span><span class="line"><span class="cl">    friend struct AHierarchicalStateMachine;
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">AHierarchicalStateMachine</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">AHierarchicalStateMachine</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    sp&lt;AState&gt; mParentState;
+</span></span><span class="line"><span class="cl"><span class="nl">protected</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="o">~</span><span class="nf">AHierarchicalStateMachine</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    DISALLOW_EVIL_CONSTRUCTORS(AState);
-</span></span><span class="line"><span class="cl">};
+</span></span><span class="line"><span class="cl">    <span class="n">virtual</span> <span class="kt">void</span> <span class="nf">handleMessage</span><span class="p">(</span><span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">AMessage</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">struct AHierarchicalStateMachine {
-</span></span><span class="line"><span class="cl">    AHierarchicalStateMachine();
+</span></span><span class="line"><span class="cl">    <span class="c1">// Only to be called in response to a message.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">changeState</span><span class="p">(</span><span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">AState</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">protected:
-</span></span><span class="line"><span class="cl">    virtual ~AHierarchicalStateMachine();
+</span></span><span class="line"><span class="cl"><span class="nl">private</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">AState</span><span class="o">&gt;</span> <span class="n">mState</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    virtual void handleMessage(const sp&lt;AMessage&gt; &amp;msg);
+</span></span><span class="line"><span class="cl">    <span class="nf">DISALLOW_EVIL_CONSTRUCTORS</span><span class="p">(</span><span class="n">AHierarchicalStateMachine</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    // Only to be called in response to a message.
-</span></span><span class="line"><span class="cl">    void changeState(const sp&lt;AState&gt; &amp;state);
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">private:
-</span></span><span class="line"><span class="cl">    sp&lt;AState&gt; mState;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    DISALLOW_EVIL_CONSTRUCTORS(AHierarchicalStateMachine);
-</span></span><span class="line"><span class="cl">};
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">}  // namespace android
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#endif  // A_HIERARCHICAL_STATE_MACHINE_H_
-</span></span><span class="line"><span class="cl">12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849
+</span></span><span class="line"><span class="cl"><span class="p">}</span>  <span class="c1">// namespace android
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif  </span><span class="c1">// A_HIERARCHICAL_STATE_MACHINE_H_
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="mi">12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在来摸清楚 changeState(…) 改变状态都干了什么？</p>
@@ -901,44 +901,44 @@
 </span><span class="lnt">38
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">namespace android {
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">android</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">OMXClient::OMXClient() {
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="n">OMXClient</span><span class="o">::</span><span class="n">OMXClient</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">status_t OMXClient::connect() {
-</span></span><span class="line"><span class="cl">    return connect(&#34;default&#34;);
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="n">status_t</span> <span class="n">OMXClient</span><span class="o">::</span><span class="n">connect</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">connect</span><span class="p">(</span><span class="s">&#34;default&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">status_t OMXClient::connect(const char* name) {
-</span></span><span class="line"><span class="cl">    using namespace ::android::hardware::media::omx::V1_0;
-</span></span><span class="line"><span class="cl">    if (name == nullptr) {
-</span></span><span class="line"><span class="cl">        name = &#34;default&#34;;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    sp&lt;IOmx&gt; tOmx = IOmx::getService(name);
-</span></span><span class="line"><span class="cl">    if (tOmx.get() == nullptr) {
-</span></span><span class="line"><span class="cl">        ALOGE(&#34;Cannot obtain IOmx service.&#34;);
-</span></span><span class="line"><span class="cl">        return NO_INIT;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    if (!tOmx-&gt;isRemote()) {
-</span></span><span class="line"><span class="cl">        ALOGE(&#34;IOmx service running in passthrough mode.&#34;);
-</span></span><span class="line"><span class="cl">        return NO_INIT;
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">    mOMX = new utils::LWOmx(tOmx);
-</span></span><span class="line"><span class="cl">    ALOGI(&#34;IOmx service obtained&#34;);
-</span></span><span class="line"><span class="cl">    return OK;
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="n">status_t</span> <span class="n">OMXClient</span><span class="o">::</span><span class="n">connect</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="k">namespace</span> <span class="o">::</span><span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">media</span><span class="o">::</span><span class="n">omx</span><span class="o">::</span><span class="n">V1_0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;default&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IOmx</span><span class="o">&gt;</span> <span class="n">tOmx</span> <span class="o">=</span> <span class="n">IOmx</span><span class="o">::</span><span class="n">getService</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">tOmx</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ALOGE</span><span class="p">(</span><span class="s">&#34;Cannot obtain IOmx service.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">NO_INIT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tOmx</span><span class="o">-&gt;</span><span class="n">isRemote</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ALOGE</span><span class="p">(</span><span class="s">&#34;IOmx service running in passthrough mode.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">NO_INIT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mOMX</span> <span class="o">=</span> <span class="k">new</span> <span class="n">utils</span><span class="o">::</span><span class="n">LWOmx</span><span class="p">(</span><span class="n">tOmx</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ALOGI</span><span class="p">(</span><span class="s">&#34;IOmx service obtained&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">OK</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">void OMXClient::disconnect() {
-</span></span><span class="line"><span class="cl">    mOMX.clear();
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">OMXClient</span><span class="o">::</span><span class="n">disconnect</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mOMX</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">sp&lt;IOMX&gt; OMXClient::interface() {
-</span></span><span class="line"><span class="cl">    return mOMX;
-</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl"><span class="n">sp</span><span class="o">&lt;</span><span class="n">IOMX</span><span class="o">&gt;</span> <span class="n">OMXClient</span><span class="o">::</span><span class="n">interface</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">mOMX</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">}  // namespace android
-</span></span><span class="line"><span class="cl">123456789101112131415161718192021222324252627282930313233343536
+</span></span><span class="line"><span class="cl"><span class="p">}</span>  <span class="c1">// namespace android
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="mi">123456789101112131415161718192021222324252627282930313233343536</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>用于转换的包装器类。LW = Legacy Wrapper， 它将 Treble 对象包装在 Legacy 对象中。</p>

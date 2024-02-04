@@ -258,10 +258,10 @@
 </span></span><span class="line"><span class="cl">        <span class="c1">// 向 SM 查询对应服务的信息，返回 binder
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">binder</span> <span class="o">=</span> <span class="n">sm</span><span class="o">-&gt;</span><span class="n">getService</span><span class="o">(</span><span class="n">String16</span><span class="o">(</span><span class="s">&#34;media.player&#34;</span><span class="o">));</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">binder</span> <span class="o">!=</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">binder</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
 </span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="o">;</span>
 </span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="n">usleep</span><span class="o">(</span><span class="n">500000</span><span class="o">);</span> <span class="c1">// 0.5 s
+</span></span><span class="line"><span class="cl">        <span class="n">usleep</span><span class="o">(</span><span class="mi">500000</span><span class="o">);</span> <span class="c1">// 0.5 s
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">// 通过 interface_cast，将这个 binder 转化成 BpMediaPlayerService

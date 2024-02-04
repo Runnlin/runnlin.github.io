@@ -35,7 +35,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/runnlin.github.io\/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97\/"
-        },"genre": "posts","keywords": "Android, Framework, Media","wordcount":  411 ,
+        },"genre": "posts","keywords": "Android, Framework, Media","wordcount":  483 ,
         "url": "https:\/\/runnlin.github.io\/mediaplayer%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86%E5%8F%8A%E6%8C%87%E5%8C%97\/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2022-07-18T20:38:30+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -120,7 +120,7 @@
             <div class="post-meta-line">
                 <span class="post-author"><span class="author fas fa-user-circle fa-fw"></span><a href="runnlin.github.io" title="Author" rel=" author" class="author">Runnlin</a>
                 </span>&nbsp;<span class="post-category">included in </span>&nbsp;<span class="post-category">category <a href="/categories/development/"><i class="far fa-folder fa-fw"></i>development</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-07-18">2022-07-18</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2022-07-18">2022-07-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;411 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;One minute&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-07-18">2022-07-18</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2022-07-18">2022-07-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;483 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;One minute&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
@@ -166,6 +166,14 @@
 </ol>
 <p>分析原因：mediaPlayer放在了主线程，以及某些播放器使用了本地代理服务器来加速视频缓冲等事项，但同步进行接收代理服务器的回调时对方没有响应，导致ANR</p>
 <p>解决方案：mediaPlayer不要放在主线程，或是解决本地代理服务器回调超时问题</p>
+<p>Renasas解码器报错：
+出现报错前，通常会出现1001，然后</p>
+<ol>
+<li>100a ：MMP不足</li>
+<li>101a+1019：显存报错</li>
+<li>100b：输入数据异常</li>
+<li>100d：服务挂死</li>
+</ol>
 </div>
 
         <div class="post-footer" id="post-footer">
