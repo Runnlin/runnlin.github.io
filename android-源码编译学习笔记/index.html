@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0\/"
+            "@id": "https://runnlin.github.io/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"
         },"genre": "posts","keywords": "Android","wordcount":  3599 ,
-        "url": "https:\/\/runnlin.github.io\/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0\/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2022-07-18T20:38:30+08:00","publisher": {
+        "url": "https://runnlin.github.io/android-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2022-07-18T20:38:30+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -291,15 +290,13 @@
 <p>我们先看看，执行了source build/envsetup.sh后有什么效果：</p>
 </li>
 </ol>
-<p><figure><a class="lightgallery" href="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" title="envsetup" data-thumbnail="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-        <img
-            
-            loading="lazy"
-            src="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"
-            srcset="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70, https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 1.5x, https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 2x"
-            sizes="auto"
-            alt="envsetup">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"
+        srcset="https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70, https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 1.5x, https://img-blog.csdn.net/20180621111907813?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 2x"
+        alt="envsetup"
+        title="envsetup" ></figure></p>
 <p>我们很直观的看到，直接includ了很多shell脚本，光看这里看不出什么，我们不妨看看源码！</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -329,15 +326,13 @@
 </ol>
 <h2 id="四lunch-命令" class="headerLink">
     <a href="#%e5%9b%9blunch-%e5%91%bd%e4%bb%a4" class="header-mark"></a>四、lunch 命令</h2><p>1.首先看看lunch命令执行后出现了什么</p>
-<p><figure><a class="lightgallery" href="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" title="lunch" data-thumbnail="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-        <img
-            
-            loading="lazy"
-            src="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"
-            srcset="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70, https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 1.5x, https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 2x"
-            sizes="auto"
-            alt="lunch">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"
+        srcset="https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70, https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 1.5x, https://img-blog.csdn.net/20180622101109167?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 2x"
+        alt="lunch"
+        title="lunch" ></figure></p>
 <p>出现了上述信息，就是等待我们选择编译的平台，下表为不同版本的总结</p>
 <table>
 <thead>
@@ -766,15 +761,13 @@ export TARGET_BUILD_VARIANT=$variant
 export TARGET_BUILD_TYPE=release
 </code></pre>
 <p>其实这真个 lunch 的过程还设置了大量的环境变量，涉及到的函数有 <code>set_stuff_for_environment</code>、<code>printconfig</code> 等，这里就不细细展开，lunch 说白了就是一个设置环境变量的过程，最后你会发现他做了那么多事，只为了最后的那一段环境变量而已，如图：</p>
-<p><figure><a class="lightgallery" href="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" title="设置环境变量" data-thumbnail="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-        <img
-            
-            loading="lazy"
-            src="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"
-            srcset="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70, https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 1.5x, https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 2x"
-            sizes="auto"
-            alt="设置环境变量">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"
+        srcset="https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70, https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 1.5x, https://img-blog.csdn.net/20180622150608188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbmFMaXNhVGVhcnI=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70 2x"
+        alt="设置环境变量"
+        title="设置环境变量" ></figure></p>
 </div>
 
         <div class="post-footer" id="post-footer">

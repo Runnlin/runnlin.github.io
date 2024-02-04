@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/mediaprovider%E7%AE%80%E8%BF%B0\/"
+            "@id": "https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/"
         },"genre": "posts","keywords": "Android, Media","wordcount":  10680 ,
-        "url": "https:\/\/runnlin.github.io\/mediaprovider%E7%AE%80%E8%BF%B0\/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2022-07-18T20:38:30+08:00","publisher": {
+        "url": "https://runnlin.github.io/mediaprovider%E7%AE%80%E8%BF%B0/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2022-07-18T20:38:30+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -1038,15 +1037,13 @@
 </div><p>In the above code, the more complicated is the interaction between MediaScannerService and MediaProvider. MediaScannerService ususally uses some special Uri to handle database operations, and the MediaProvider would make some special handle for these Uri, such as open database file etc, we&rsquo;ll focus on this later in the MediaProvider, but let&rsquo;s go back to the logic of scanning.</p>
 <p>scanFile() or scan() is where the actual scanning is performed. MediaScanner is manily used in the scanning action, which is the key to get through the java layer and the C++ layer. The scanning action will finally call a native function of MediaScanner, so the program process starts to go to the C++ layer.</p>
 <p>Now, we can draw a schematic diagram:
-<figure><a class="lightgallery" href="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png" title="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png" data-thumbnail="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png">
-        <img
-            
-            loading="lazy"
-            src="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png"
-            srcset="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png, http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png 2x"
-            sizes="auto"
-            alt="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png">
-    </a></figure></p>
+<figure><img
+        
+        loading="lazy"
+        src="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png"
+        srcset="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png, http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png 2x"
+        alt="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png"
+        title="http://upload-images.jianshu.io/upload_images/7345261-8e663017c1e395ed.png" ></figure></p>
 <h3 id="3-how-mediascanner-works" class="headerLink">
     <a href="#3-how-mediascanner-works" class="header-mark"></a>3. How MediaScanner works?</h3><p>As the name suggests, the MediaScanner is just a &ldquo;Media Scanner&rdquo;. it must get through the java layer and the C++ layer. Please pay attention to its two native functions: <code>native_init()</code> and <code>native_setup()</code> , and two important member variables: <code>mClient</code> and <code>mNativeContext</code>, which will be explained in detail later.</p>
 <pre><code>/frameworks/base/media/java/android/media/MediaScanner.java
@@ -1176,15 +1173,13 @@
 </div><p>The last sentence <code>env-&gt;SetLongField()</code> is actually assigning a value to the <code>mNativeContext</code>  field of the java layer MediaScanner.</p>
 <p>Later, we will see that whenever the C++ layer performs a scanning action, it will create a <code>MyMediaScannerClient</code> object, which corresponds to the class of the same name in the java layer.</p>
 <p>Let&rsquo;s draw a picture to illustrate:</p>
-<p><figure><a class="lightgallery" href="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png" title="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png" data-thumbnail="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png">
-        <img
-            
-            loading="lazy"
-            src="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png"
-            srcset="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png, http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png 2x"
-            sizes="auto"
-            alt="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png"
+        srcset="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png, http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png 2x"
+        alt="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png"
+        title="http://upload-images.jianshu.io/upload_images/7345261-5d9d21e338a1c410.png" ></figure></p>
 <h4 id="31-scansinglefile-action" class="headerLink">
     <a href="#31-scansinglefile-action" class="header-mark"></a>3.1 scanSingleFile() action</h4><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1314,15 +1309,13 @@
 </div>
 </div><p>Due to <code>MyMediaScannerClient</code> is a internal class of MediaScanner, so it can directer call <code>processFile()</code> in MediaScanner.</p>
 <p>Now let&rsquo;s draw a call diagram of <code>MediaScannerService.scanFile()</code> :
-<figure><a class="lightgallery" href="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png" title="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png" data-thumbnail="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png">
-        <img
-            
-            loading="lazy"
-            src="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png"
-            srcset="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png, http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png 2x"
-            sizes="auto"
-            alt="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png">
-    </a></figure></p>
+<figure><img
+        
+        loading="lazy"
+        src="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png"
+        srcset="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png, http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png 2x"
+        alt="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png"
+        title="http://upload-images.jianshu.io/upload_images/7345261-a6dd0c8e8e595a74.png" ></figure></p>
 <h4 id="32-scandirectories-action" class="headerLink">
     <a href="#32-scandirectories-action" class="header-mark"></a>3.2 scanDirectories() action</h4><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1363,15 +1356,13 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Let&rsquo;s draw a call diagram of <code>MediaScannerService.scan()</code>:</p>
-<p><figure><a class="lightgallery" href="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png" title="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png" data-thumbnail="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png">
-        <img
-            
-            loading="lazy"
-            src="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png"
-            srcset="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png, http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png 2x"
-            sizes="auto"
-            alt="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png"
+        srcset="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png, http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png 1.5x, http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png 2x"
+        alt="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png"
+        title="http://upload-images.jianshu.io/upload_images/7345261-04e11669643e4550.png" ></figure></p>
 <h3 id="4-call-to-c-layer" class="headerLink">
     <a href="#4-call-to-c-layer" class="header-mark"></a>4. Call to C++ layer</h3><p>Watch this : [https://links.jianshu.com/go?to=https%3A%2F%2Fmy.oschina.net%2Fyouranhongcha%2Fblog%2F787223%23h3_17]</p>
 <h3 id="5-how-mediaprovider-works" class="headerLink">

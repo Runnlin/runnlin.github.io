@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/androidmediaplayer\/"
+            "@id": "https://runnlin.github.io/androidmediaplayer/"
         },"genre": "posts","keywords": "Android, Media, Framework","wordcount":  2115 ,
-        "url": "https:\/\/runnlin.github.io\/androidmediaplayer\/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2023-05-12T10:47:43+08:00","publisher": {
+        "url": "https://runnlin.github.io/androidmediaplayer/","datePublished": "2022-07-18T20:38:30+08:00","dateModified": "2023-05-12T10:47:43+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -135,15 +134,13 @@
     <a href="#android-%e6%92%ad%e6%94%be%e5%99%a8%e7%9b%b8%e5%85%b3%e7%9f%a5%e8%af%86" class="header-mark"></a>Android 播放器相关知识</h2><p>译自 MediaPlayer官方文档  <a href="https://developer.android.com/reference/android/media/MediaPlayer" target="_blank" rel="noopener noreferrer">https://developer.android.com/reference/android/media/MediaPlayer</a></p>
 <p>MediaPlayer 类可用于控制音视频文件和流的播放，其不是线程安全的，Player 实例的创建和访问都应该在同一个线程上，且线程必须有一个Looper以注册回调</p>
 <p>音视频文件和流的播放控制作为状态机进行管理，下图显示了受支持的播放控制操作驱动的 MediaPlayer 对象的生命周期和状态。蓝椭圆表示MediaPlayer 对象可能驻留的状态，线段代表驱动对象状态转换的播放控制操作，其中单箭头的线段为同步调用，双箭头的为异步调用</p>
-<p><figure><a class="lightgallery" href="https://developer.android.com/images/mediaplayer_state_diagram.gif" title="mediaplayer_state_diagram" data-thumbnail="https://developer.android.com/images/mediaplayer_state_diagram.gif">
-        <img
-            
-            loading="lazy"
-            src="https://developer.android.com/images/mediaplayer_state_diagram.gif"
-            srcset="https://developer.android.com/images/mediaplayer_state_diagram.gif, https://developer.android.com/images/mediaplayer_state_diagram.gif 1.5x, https://developer.android.com/images/mediaplayer_state_diagram.gif 2x"
-            sizes="auto"
-            alt="mediaplayer_state_diagram">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://developer.android.com/images/mediaplayer_state_diagram.gif"
+        srcset="https://developer.android.com/images/mediaplayer_state_diagram.gif, https://developer.android.com/images/mediaplayer_state_diagram.gif 1.5x, https://developer.android.com/images/mediaplayer_state_diagram.gif 2x"
+        alt="mediaplayer_state_diagram"
+        title="mediaplayer_state_diagram" ></figure></p>
 <p>从这个状态图中可以看出MediaPlayer 对象具有以下状态：</p>
 <p>当 MediaPlayer 对象刚使用 new 创建或调用 reset() 后，处于 Idle 状态；在调用 release() 之后，其处于 End 状态，这两种状态之间是 MediaPlayer 对象的生命周期</p>
 <ul>

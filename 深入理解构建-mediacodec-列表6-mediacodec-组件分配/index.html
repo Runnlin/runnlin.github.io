@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D\/"
+            "@id": "https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/"
         },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  7926 ,
-        "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
+        "url": "https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A86-mediacodec-%E7%BB%84%E4%BB%B6%E5%88%86%E9%85%8D/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -590,15 +589,13 @@
 </div>
 </div><p>BaseState 的确继承自 AState。</p>
 <p>frameworks/av/media/libstagefright/ACodec.cpp</p>
-<p><figure><a class="lightgallery" href="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg" title="content/assets/images/ACodec组件分配流程.jpg" data-thumbnail="content/assets/images/ACodec组件分配流程.jpg">
-        <img
-            
-            loading="lazy"
-            src="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg"
-            srcset="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg, content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 1.5x, content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 2x"
-            sizes="auto"
-            alt="content/assets/images/ACodec组件分配流程.jpg">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg"
+        srcset="content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg, content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 1.5x, content/assets/images/ACodec%e7%bb%84%e4%bb%b6%e5%88%86%e9%85%8d%e6%b5%81%e7%a8%8b.jpg 2x"
+        alt="content/assets/images/ACodec组件分配流程.jpg"
+        title="content/assets/images/ACodec组件分配流程.jpg" ></figure></p>
 <p>回到主线，kWhatAllocateComponent 这个标志的 message 必定是发给了 ACodec 去处理， ACodec 将 onMessageReceived(…) 定义为一个虚函数，其实现内部则调用了 handleMessage(…) ，如此消息处理就明确了，最终落在了 BaseState 的子类实现上，就是前面提到的九种状态之一。</p>
 <p>frameworks/av/media/libstagefright/include/media/stagefright/ACodec.h</p>
 <div class="highlight"><div class="chroma">

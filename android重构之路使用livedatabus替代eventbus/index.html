@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/"
+            "@id": "https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/"
         },"genre": "posts","keywords": "Android, repost","wordcount":  7348 ,
-        "url": "https:\/\/runnlin.github.io\/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus\/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-11T11:41:50+08:00","publisher": {
+        "url": "https://runnlin.github.io/android%E9%87%8D%E6%9E%84%E4%B9%8B%E8%B7%AF%E4%BD%BF%E7%94%A8livedatabus%E6%9B%BF%E4%BB%A3eventbus/","datePublished": "2023-05-01T16:32:50+08:00","dateModified": "2023-05-11T11:41:50+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -202,27 +201,23 @@
     <a href="#%e4%bb%8eeventbus%e8%af%b4%e8%b5%b7" class="header-mark"></a>从EventBus说起</h2><p>EventBus是一个Android事件发布/订阅框架，通过解耦发布者和订阅者简化Android事件传递。EventBus可以代替Android传统的intent、Handler、Broadcast或接口回调，在Fragment、Activity、Service线程之间传递数据、执行方法。</p>
 <p>EventBus最大的特点就是：简洁、解耦。在没有EventBus之前我们通常用广播来实现监听，或者自定义接口函数回调，有的场景我们也可以直接用Intent携带简单数据，或者在线程之间通过Handler处理消息传递。但无论是广播还是Handler机制远远不能满足我们高效的开发。EventBus简化了应用程序内各组件间、组件与后台线程间的通信。EventBus一经推出，便受到广大开发者的推崇。</p>
 <p>现在看来，EventBus给Android开发者世界带来了一种新的框架和思想，就是消息的发布和订阅。这种思想在其后很多框架中都得到了应用。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="eventbus" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="eventbus">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80a8abe03d8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="eventbus"
+        title="eventbus" ></figure></p>
 <p>图片摘自EventBus GitHub主页</p>
 <h2 id="发布订阅模式" class="headerLink">
     <a href="#%e5%8f%91%e5%b8%83%e8%ae%a2%e9%98%85%e6%a8%a1%e5%bc%8f" class="header-mark"></a>发布/订阅模式</h2><p>订阅发布模式定义了一种“一对多”的依赖关系，让多个订阅者对象同时监听某一个主题对象。这个主题对象在自身状态变化时，会通知所有订阅者对象，使它们能够自动更新自己的状态。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="发布/订阅模式" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="发布/订阅模式">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da80d861343e9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="发布/订阅模式"
+        title="发布/订阅模式" ></figure></p>
 <h1 id="rxbus的出现" class="headerLink">
     <a href="#rxbus%e7%9a%84%e5%87%ba%e7%8e%b0" class="header-mark"></a>RxBus的出现</h1><p>RxBus不是一个库，而是一个文件，实现只有短短30行代码。RxBus本身不需要过多分析，它的强大完全来自于它基于的RxJava技术。响应式编程（Reactive Programming）技术这几年特别火，RxJava是它在Java上的实作。RxJava天生就是发布/订阅模式，而且很容易处理线程切换。所以，RxBus凭借区区30行代码，就敢挑战EventBus江湖老大的地位。</p>
 <h2 id="rxbus原理" class="headerLink">
@@ -446,15 +441,13 @@
 <li><strong>发布</strong> 发布者通过getChannel获取消息通道，然后调用setValue或者postValue发布消息。</li>
 </ul>
 <h3 id="livedatabus原理图" class="headerLink">
-    <a href="#livedatabus%e5%8e%9f%e7%90%86%e5%9b%be" class="header-mark"></a>LiveDataBus原理图</h3><p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="LiveDataBus原理图" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="LiveDataBus原理图">
-    </a></figure></p>
+    <a href="#livedatabus%e5%8e%9f%e7%90%86%e5%9b%be" class="header-mark"></a>LiveDataBus原理图</h3><p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da818e05d88e1~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="LiveDataBus原理图"
+        title="LiveDataBus原理图" ></figure></p>
 <h2 id="livedatabus的实现" class="headerLink">
     <a href="#livedatabus%e7%9a%84%e5%ae%9e%e7%8e%b0" class="header-mark"></a>LiveDataBus的实现</h2><h4 id="第一个实现" class="headerLink">
     <a href="#%e7%ac%ac%e4%b8%80%e4%b8%aa%e5%ae%9e%e7%8e%b0" class="header-mark"></a>第一个实现：</h4><div class="highlight"><div class="chroma">
@@ -552,60 +545,50 @@
 <h4 id="问题分析" class="headerLink">
     <a href="#%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90" class="header-mark"></a>问题分析</h4><p>怎么解决这个问题呢？先分析下原因：</p>
 <p>当LifeCircleOwner的状态发生变化的时候，会调用LiveData.ObserverWrapper的activeStateChanged函数，如果这个时候ObserverWrapper的状态是active，就会调用LiveData的dispatchingValue。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="code">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da81e658d4ae8~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="code"
+        title="code" ></figure></p>
 <p>在LiveData的dispatchingValue中，又会调用LiveData的considerNotify方法。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="code">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da821ba1ff9ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="code"
+        title="code" ></figure></p>
 <p>在LiveData的considerNotify方法中，红框中的逻辑是关键，如果ObserverWrapper的mLastVersion小于LiveData的mVersion，就会去回调mObserver的onChanged方法。而每个新的订阅者，其version都是-1，LiveData一旦设置过其version是大于-1的（每次LiveData设置值都会使其version加1），这样就会导致LiveDataBus每注册一个新的订阅者，这个订阅者立刻会收到一个回调，即使这个设置的动作发生在订阅之前。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="code">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da825816a6d95~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="code"
+        title="code" ></figure></p>
 <h4 id="问题原因总结" class="headerLink">
     <a href="#%e9%97%ae%e9%a2%98%e5%8e%9f%e5%9b%a0%e6%80%bb%e7%bb%93" class="header-mark"></a>问题原因总结</h4><p>对于这个问题，总结一下发生的核心原因。对于LiveData，其初始的version是-1，当我们调用了其setValue或者postValue，其vesion会+1；对于每一个观察者的封装ObserverWrapper，其初始version也为-1，也就是说，每一个新注册的观察者，其version为-1；当LiveData设置这个ObserverWrapper的时候，如果LiveData的version大于ObserverWrapper的version，LiveData就会强制把当前value推送给Observer。</p>
 <h4 id="如何解决这个问题" class="headerLink">
     <a href="#%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%e8%bf%99%e4%b8%aa%e9%97%ae%e9%a2%98" class="header-mark"></a>如何解决这个问题</h4><p>明白了问题产生的原因之后，我们来看看怎么才能解决这个问题。很显然，根据之前的分析，只需要在注册一个新的订阅者的时候把Wrapper的version设置成跟LiveData的version一致即可。</p>
 <p>那么怎么实现呢，看看LiveData的observe方法，他会在步骤1创建一个LifecycleBoundObserver，LifecycleBoundObserver是ObserverWrapper的派生类。然后会在步骤2把这个LifecycleBoundObserver放入一个私有Map容器mObservers中。无论ObserverWrapper还是LifecycleBoundObserver都是私有的或者包可见的，所以无法通过继承的方式更改LifecycleBoundObserver的version。</p>
 <p>那么能不能从Map容器mObservers中取到LifecycleBoundObserver，然后再更改version呢？答案是肯定的，通过查看SafeIterableMap的源码我们发现有一个protected的get方法。因此，在调用observe的时候，我们可以通过反射拿到LifecycleBoundObserver，再把LifecycleBoundObserver的version设置成和LiveData一致即可。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="code">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da827d03c17d9~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="code"
+        title="code" ></figure></p>
 <p>对于非生命周期感知的observeForever方法来说，实现的思路是一致的，但是具体的实现略有不同。observeForever的时候，生成的wrapper不是LifecycleBoundObserver，而是AlwaysActiveObserver（步骤1），而且我们也没有机会在observeForever调用完成之后再去更改AlwaysActiveObserver的version，因为在observeForever方法体内，步骤3的语句，回调就发生了。</p>
-<p><figure><a class="lightgallery" href="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image" title="code" data-thumbnail="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image">
-        <img
-            
-            loading="lazy"
-            src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
-            srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
-            sizes="auto"
-            alt="code">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image"
+        srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 1.5x, https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/27/164da82ad2eb99ed~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.image 2x"
+        alt="code"
+        title="code" ></figure></p>
 <p>那么对于observeForever，如何解决这个问题呢？既然是在调用内回调的，那么我们可以写一个ObserverWrapper，把真正的回调给包装起来。把ObserverWrapper传给observeForever，那么在回调的时候我们去检查调用栈，如果回调是observeForever方法引起的，那么就不回调真正的订阅者。</p>
 <h3 id="livedatabus最终实现" class="headerLink">
     <a href="#livedatabus%e6%9c%80%e7%bb%88%e5%ae%9e%e7%8e%b0" class="header-mark"></a>LiveDataBus最终实现</h3><div class="highlight"><div class="chroma">

@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/android-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84\/"
+            "@id": "https://runnlin.github.io/android-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/"
         },"genre": "posts","keywords": "Android","wordcount":  5707 ,
-        "url": "https:\/\/runnlin.github.io\/android-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84\/","datePublished": "2022-04-18T19:54:19+08:00","dateModified": "2022-04-18T19:54:19+08:00","publisher": {
+        "url": "https://runnlin.github.io/android-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/","datePublished": "2022-04-18T19:54:19+08:00","dateModified": "2022-04-18T19:54:19+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -169,29 +168,25 @@
             </div><div class="content" id="content"><h3 id="一引言" class="headerLink">
     <a href="#%e4%b8%80%e5%bc%95%e8%a8%80" class="header-mark"></a>一、引言</h3><p>本文作为 Android 系统架构的开篇，起到提纲挈领的作用，从系统整体架构角度概要讲解 Android 系统的核心技术点，带领大家初探 Android 系统全貌以及内部运作机制。虽然 Android 系统非常庞大且错综复杂，需要具备全面的技术栈，但整体架构设计清晰。Android 底层内核空间以 Linux Kernel 作为基石，上层用户空间由 Native 系统库、虚拟机运行环境、框架层组成，通过系统调用 (Syscall) 连通系统的内核空间与用户空间。对于用户空间主要采用 C++ 和 Java 代码编写，通过 JNI 技术打通用户空间的 Java 层和 Native 层(C++/C)，从而连通整个系统。</p>
 <p>为了能让大家整体上大致了解 Android 系统涉及的知识层面，先来看一张 Google 官方提供的经典分层架构图，从下往上依次分为 Linux 内核、HAL、系统 Native 库和 Android 运行时环境、Java 框架层以及应用层这 5 层架构，其中每一层都包含大量的子模块或子系统。</p>
-<p><figure><a class="lightgallery" href="http://gityuan.com/images/android-arch/android-stack.png" title="http://gityuan.com/images/android-arch/android-stack.png" data-thumbnail="http://gityuan.com/images/android-arch/android-stack.png">
-        <img
-            
-            loading="lazy"
-            src="http://gityuan.com/images/android-arch/android-stack.png"
-            srcset="http://gityuan.com/images/android-arch/android-stack.png, http://gityuan.com/images/android-arch/android-stack.png 1.5x, http://gityuan.com/images/android-arch/android-stack.png 2x"
-            sizes="auto"
-            alt="http://gityuan.com/images/android-arch/android-stack.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://gityuan.com/images/android-arch/android-stack.png"
+        srcset="http://gityuan.com/images/android-arch/android-stack.png, http://gityuan.com/images/android-arch/android-stack.png 1.5x, http://gityuan.com/images/android-arch/android-stack.png 2x"
+        alt="http://gityuan.com/images/android-arch/android-stack.png"
+        title="http://gityuan.com/images/android-arch/android-stack.png" ></figure></p>
 <p>上图采用静态分层方式的架构划分，众所周知，程序代码是死的，系统运转是活的，各模块代码运行在不同的进程 (线程) 中，相互之间进行着各种错终复杂的信息传递与交互流，从这个角度来说此图并没能体现 Android 整个系统的内部架构、运行机理，以及各个模块之间是如何衔接与配合工作的。</p>
 <p><strong>为了更深入地掌握 Android 整个架构思想以及各个模块在 Android 系统所处的地位与价值，计划以 Android 系统启动过程为主线，以进程的视角来诠释 Android M 系统全貌</strong>，全方位的深度剖析各个模块功能，争取各个击破。这样才能犹如庖丁解牛，解决、分析问题则能游刃有余。</p>
 <h3 id="二android-架构" class="headerLink">
     <a href="#%e4%ba%8candroid-%e6%9e%b6%e6%9e%84" class="header-mark"></a>二、Android 架构</h3><p>Google 提供的 5 层架构图很经典，但为了更进一步透视 Android 系统架构，本文更多的是以进程的视角，以分层的架构来诠释 Android 系统的全貌，阐述 Android 内部的环环相扣的内在联系。</p>
 <p><strong>系统启动架构图</strong></p>
-<p><figure><a class="lightgallery" href="http://gityuan.com/images/android-arch/android-boot.jpg" title="大图" data-thumbnail="http://gityuan.com/images/android-arch/android-boot.jpg">
-        <img
-            
-            loading="lazy"
-            src="http://gityuan.com/images/android-arch/android-boot.jpg"
-            srcset="http://gityuan.com/images/android-arch/android-boot.jpg, http://gityuan.com/images/android-arch/android-boot.jpg 1.5x, http://gityuan.com/images/android-arch/android-boot.jpg 2x"
-            sizes="auto"
-            alt="大图">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://gityuan.com/images/android-arch/android-boot.jpg"
+        srcset="http://gityuan.com/images/android-arch/android-boot.jpg, http://gityuan.com/images/android-arch/android-boot.jpg 1.5x, http://gityuan.com/images/android-arch/android-boot.jpg 2x"
+        alt="大图"
+        title="大图" ></figure></p>
 <p><strong>图解：</strong> Android 系统启动过程由上图从下往上的一个过程是由 Boot Loader 引导开机，然后依次进入 -&gt; <code>Kernel</code> -&gt; <code>Native</code> -&gt; <code>Framework</code> -&gt; <code>App</code>，接来下简要说说每个过程：</p>
 <p>关于 Loader 层：</p>
 <ul>
@@ -245,15 +240,13 @@
     <a href="#31-binder" class="header-mark"></a>3.1 Binder</h4><p>Binder 作为 Android 系统提供的一种 IPC 机制，无论从系统开发还是应用开发，都是 Android 系统中最重要的组成，也是最难理解的一块知识点，想了解<a href="https://www.zhihu.com/question/39440766/answer/89210950" target="_blank" rel="noopener noreferrer">为什么 Android 要采用 Binder 作为 IPC 机制？</a> 可查看我在知乎上的回答。深入了解 Binder 机制，最好的方法便是阅读源码，借用 Linux 鼻祖 Linus Torvalds 曾说过的一句话：Read The Fucking Source Code。下面简要说说 Binder IPC 原理。</p>
 <p><strong>Binder IPC 原理</strong></p>
 <p>Binder 通信采用 c/s 架构，从组件视角来说，包含 Client、Server、ServiceManager 以及 binder 驱动，其中 ServiceManager 用于管理系统中的各种服务。</p>
-<p><figure><a class="lightgallery" href="http://gityuan.com/images/android-arch/IPC-Binder.jpg" title="http://gityuan.com/images/android-arch/IPC-Binder.jpg" data-thumbnail="http://gityuan.com/images/android-arch/IPC-Binder.jpg">
-        <img
-            
-            loading="lazy"
-            src="http://gityuan.com/images/android-arch/IPC-Binder.jpg"
-            srcset="http://gityuan.com/images/android-arch/IPC-Binder.jpg, http://gityuan.com/images/android-arch/IPC-Binder.jpg 1.5x, http://gityuan.com/images/android-arch/IPC-Binder.jpg 2x"
-            sizes="auto"
-            alt="http://gityuan.com/images/android-arch/IPC-Binder.jpg">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://gityuan.com/images/android-arch/IPC-Binder.jpg"
+        srcset="http://gityuan.com/images/android-arch/IPC-Binder.jpg, http://gityuan.com/images/android-arch/IPC-Binder.jpg 1.5x, http://gityuan.com/images/android-arch/IPC-Binder.jpg 2x"
+        alt="http://gityuan.com/images/android-arch/IPC-Binder.jpg"
+        title="http://gityuan.com/images/android-arch/IPC-Binder.jpg" ></figure></p>
 <ul>
 <li>想进一步了解 Binder，可查看 <a href="http://gityuan.com/2015/10/31/binder-prepare/" target="_blank" rel="noopener noreferrer">Binder 系列—开篇</a>，Binder 系列花费了 13 篇文章的篇幅，从源码角度出发来讲述 Driver、Native、Framework、App 四个层面的整个完整流程。根据有些读者反馈这个系列还是不好理解，这个 binder 涉及的层次跨度比较大，知识量比较广，建议大家先知道 binder 是用于进程间通信，有个大致概念就可以先去学习系统基本知识，等后面有一定功力再进一步深入研究 Binder 机制。</li>
 </ul>
@@ -288,15 +281,13 @@
 <h4 id="33-handler" class="headerLink">
     <a href="#33-handler" class="header-mark"></a>3.3 Handler</h4><p><strong>Binder/Socket 用于进程间通信，而 Handler 消息机制用于同进程的线程间通信</strong>，Handler 消息机制是由一组 MessageQueue、Message、Looper、Handler 共同组成的，为了方便且称之为 Handler 消息机制。</p>
 <p>有人可能会疑惑，为何 Binder/Socket 用于进程间通信，能否用于线程间通信呢？答案是肯定，对于两个具有独立地址空间的进程通信都可以，当然也能用于共享内存空间的两个线程间通信，这就好比杀鸡用牛刀。接着可能还有人会疑惑，那 handler 消息机制能否用于进程间通信？答案是不能，Handler 只能用于共享内存地址空间的两个线程间通信，即同进程的两个线程间通信。很多时候，Handler 是工作线程向 UI 主线程发送消息，即 App 应用中只有主线程能更新 UI，其他工作线程往往是完成相应工作后，通过 Handler 告知主线程需要做出相应地 UI 更新操作，Handler 分发相应的消息给 UI 主线程去完成，如下图：</p>
-<p><figure><a class="lightgallery" href="http://gityuan.com/images/android-arch/handler_thread_commun.jpg" title="http://gityuan.com/images/android-arch/handler_thread_commun.jpg" data-thumbnail="http://gityuan.com/images/android-arch/handler_thread_commun.jpg">
-        <img
-            
-            loading="lazy"
-            src="http://gityuan.com/images/android-arch/handler_thread_commun.jpg"
-            srcset="http://gityuan.com/images/android-arch/handler_thread_commun.jpg, http://gityuan.com/images/android-arch/handler_thread_commun.jpg 1.5x, http://gityuan.com/images/android-arch/handler_thread_commun.jpg 2x"
-            sizes="auto"
-            alt="http://gityuan.com/images/android-arch/handler_thread_commun.jpg">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://gityuan.com/images/android-arch/handler_thread_commun.jpg"
+        srcset="http://gityuan.com/images/android-arch/handler_thread_commun.jpg, http://gityuan.com/images/android-arch/handler_thread_commun.jpg 1.5x, http://gityuan.com/images/android-arch/handler_thread_commun.jpg 2x"
+        alt="http://gityuan.com/images/android-arch/handler_thread_commun.jpg"
+        title="http://gityuan.com/images/android-arch/handler_thread_commun.jpg" ></figure></p>
 <p>由于工作线程与主线程共享地址空间，即 Handler 实例对象 mHandler 位于线程间共享的内存堆上，工作线程与主线程都能直接使用该对象，只需要注意多线程的同步问题。工作线程通过 mHandler 向其成员变量 MessageQueue 中添加新 Message，主线程一直处于 loop() 方法内，当收到新的 Message 时按照一定规则分发给相应的 handleMessage() 方法来处理。所以说，Handler 消息机制用于同进程的线程间通信，其核心是线程间共享内存空间，而不同进程拥有不同的地址空间，也就不能用 handler 来实现进程间通信。</p>
 <p>上图只是 Handler 消息机制的一种处理流程，是不是只能工作线程向 UI 主线程发消息呢，其实不然，可以是 UI 线程向工作线程发送消息，也可以是多个工作线程之间通过 handler 发送消息。更多关于 Handler 消息机制文章：</p>
 <ul>
@@ -311,25 +302,21 @@
 <p><strong>建议阅读群体</strong>： 适合于正从事或者有兴趣研究 Android 系统的工程师或者技术爱好者，也适合 Android App 高级工程师；对于尚未入门或者刚入门的 App 工程师阅读可能会有点困难，建议先阅读更基础的资料，再来阅读本站博客。</p>
 <p>看到 Android 整个系统架构是如此庞大的, 该问如何学习 Android 系统, 以下是我自己的 Android 的学习和研究论，仅供参考<a href="http://gityuan.com/2016/04/24/how-to-study-android/" target="_blank" rel="noopener noreferrer">如何自学 Android</a>。</p>
 <p>从整理上来列举一下 Android 系统的核心知识点概览：</p>
-<p><figure><a class="lightgallery" href="http://gityuan.com/images/android-arch/android_os.png" title="http://gityuan.com/images/android-arch/android_os.png" data-thumbnail="http://gityuan.com/images/android-arch/android_os.png">
-        <img
-            
-            loading="lazy"
-            src="http://gityuan.com/images/android-arch/android_os.png"
-            srcset="http://gityuan.com/images/android-arch/android_os.png, http://gityuan.com/images/android-arch/android_os.png 1.5x, http://gityuan.com/images/android-arch/android_os.png 2x"
-            sizes="auto"
-            alt="http://gityuan.com/images/android-arch/android_os.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="http://gityuan.com/images/android-arch/android_os.png"
+        srcset="http://gityuan.com/images/android-arch/android_os.png, http://gityuan.com/images/android-arch/android_os.png 1.5x, http://gityuan.com/images/android-arch/android_os.png 2x"
+        alt="http://gityuan.com/images/android-arch/android_os.png"
+        title="http://gityuan.com/images/android-arch/android_os.png" ></figure></p>
 <h4 id="41-系统启动系列" class="headerLink">
-    <a href="#41-%e7%b3%bb%e7%bb%9f%e5%90%af%e5%8a%a8%e7%b3%bb%e5%88%97" class="header-mark"></a>4.1 系统启动系列</h4><p><figure><a class="lightgallery" href="http://gityuan.com/images/android-arch/android-booting.jpg" title="http://gityuan.com/images/android-arch/android-booting.jpg" data-thumbnail="http://gityuan.com/images/android-arch/android-booting.jpg">
-        <img
-            
-            loading="lazy"
-            src="http://gityuan.com/images/android-arch/android-booting.jpg"
-            srcset="http://gityuan.com/images/android-arch/android-booting.jpg, http://gityuan.com/images/android-arch/android-booting.jpg 1.5x, http://gityuan.com/images/android-arch/android-booting.jpg 2x"
-            sizes="auto"
-            alt="http://gityuan.com/images/android-arch/android-booting.jpg">
-    </a></figure></p>
+    <a href="#41-%e7%b3%bb%e7%bb%9f%e5%90%af%e5%8a%a8%e7%b3%bb%e5%88%97" class="header-mark"></a>4.1 系统启动系列</h4><p><figure><img
+        
+        loading="lazy"
+        src="http://gityuan.com/images/android-arch/android-booting.jpg"
+        srcset="http://gityuan.com/images/android-arch/android-booting.jpg, http://gityuan.com/images/android-arch/android-booting.jpg 1.5x, http://gityuan.com/images/android-arch/android-booting.jpg 2x"
+        alt="http://gityuan.com/images/android-arch/android-booting.jpg"
+        title="http://gityuan.com/images/android-arch/android-booting.jpg" ></figure></p>
 <p><a href="http://gityuan.com/2016/02/01/android-booting/" target="_blank" rel="noopener noreferrer">Android 系统启动 - 概述</a>: Android 系统中极其重要进程：init, zygote, system_server, servicemanager 进程:</p>
 <p>再来看看守护进程 (也就是进程名一般以 d 为后缀，比如 logd，此处 d 是指 daemon 的简称), 下面介绍部分守护进程：</p>
 <ul>

@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96\/"
+            "@id": "https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/"
         },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  8268 ,
-        "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
+        "url": "https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A82-omx-%E5%88%9D%E5%A7%8B%E5%8C%96/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -146,15 +145,13 @@
   </ul>
 </nav></div>
             </div><div class="content" id="content"><p>Omx 初始化分为四步，其中最为重要的一点在 Omx 初始化过程中会加载 libstagefrighthw.so。这个库是由供应商来实现的，实现多媒体编<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">解码</a>芯片级支持</p>
-<p><figure><a class="lightgallery" href="../assets/images/%e5%8a%a0%e8%bd%bdso.png" title="../assets/images/加载so.png" data-thumbnail="../assets/images/加载so.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/%e5%8a%a0%e8%bd%bdso.png"
-            srcset="../assets/images/%e5%8a%a0%e8%bd%bdso.png, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 1.5x, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 2x"
-            sizes="auto"
-            alt="../assets/images/加载so.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/%e5%8a%a0%e8%bd%bdso.png"
+        srcset="../assets/images/%e5%8a%a0%e8%bd%bdso.png, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 1.5x, ../assets/images/%e5%8a%a0%e8%bd%bdso.png 2x"
+        alt="../assets/images/加载so.png"
+        title="../assets/images/加载so.png" ></figure></p>
 <div class="details admonition tip open">
         <div class="details-summary admonition-title">
             <i class="icon fas fa-lightbulb fa-fw"></i>Tip<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -1531,15 +1528,13 @@
 </div>
 </div><p><code>OMXMaster()</code> 构造函数中最后一行调用了 <code>addPlatformPlugin()</code>，也就是添加软编码插件库。软编码插件库编译 bp 定义在 <code>frameworks/av/media/libstagefright/omx/Android.bp</code> 中，编译源文件只使用到了<code> SoftOMXPlugin.cpp</code>。
 <code>OMXMaster::addPlugin(const char *libname</code>) 方法中对 <code>createOMXPlugin</code> 函数指针的调用实际上会调用到<code>frameworks/av/media/libstagefright/omx/SoftOMXPlugin.cpp</code>类中的 <code>createOMXPlugin()</code> 函数。</p>
-<p><figure><a class="lightgallery" href="../assets/images/addPlatformPlugin.jpg" title="../assets/images/addPlatformPlugin.jpg" data-thumbnail="../assets/images/addPlatformPlugin.jpg">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/addPlatformPlugin.jpg"
-            srcset="../assets/images/addPlatformPlugin.jpg, ../assets/images/addPlatformPlugin.jpg 1.5x, ../assets/images/addPlatformPlugin.jpg 2x"
-            sizes="auto"
-            alt="../assets/images/addPlatformPlugin.jpg">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/addPlatformPlugin.jpg"
+        srcset="../assets/images/addPlatformPlugin.jpg, ../assets/images/addPlatformPlugin.jpg 1.5x, ../assets/images/addPlatformPlugin.jpg 2x"
+        alt="../assets/images/addPlatformPlugin.jpg"
+        title="../assets/images/addPlatformPlugin.jpg" ></figure></p>
 <blockquote>
 <p>frameworks/av/media/libstagefright/omx/Android.bp</p>
 </blockquote>

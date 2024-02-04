@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure\/"
+            "@id": "https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/"
         },"genre": "posts","keywords": "Codec, 深入理解构建 MediaCodec 列表","wordcount":  15791 ,
-        "url": "https:\/\/runnlin.github.io\/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure\/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
+        "url": "https://runnlin.github.io/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%9E%84%E5%BB%BA-mediacodec-%E5%88%97%E8%A1%A87-mediacodec-configure/","datePublished": "2023-02-09T00:00:00+00:00","dateModified": "2023-02-09T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -143,15 +142,13 @@
             </div><div class="content" id="content"><blockquote>
 <p>使用 MediaCodec 的关键一步是 configure，在 start 之前配置是必须的。以<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E7%A0%81&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreferrer">解码</a>为例，并且直接解码到外部提供的 surface 上，所以输入的 surface 不为空。</p>
 </blockquote>
-<p><figure><a class="lightgallery" href="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg" title="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg" data-thumbnail="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg">
-        <img
-            
-            loading="lazy"
-            src="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg"
-            srcset="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 1.5x, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 2x"
-            sizes="auto"
-            alt="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg"
+        srcset="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 1.5x, /content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg 2x"
+        alt="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg"
+        title="/content/assets/images/configure%E6%B5%81%E7%A8%8B.jpg" ></figure></p>
 <h4 id="configure-提供给外部调用的-public-方法内部调用了同名重载版本的方法" class="headerLink">
     <a href="#configure-%e6%8f%90%e4%be%9b%e7%bb%99%e5%a4%96%e9%83%a8%e8%b0%83%e7%94%a8%e7%9a%84-public-%e6%96%b9%e6%b3%95%e5%86%85%e9%83%a8%e8%b0%83%e7%94%a8%e4%ba%86%e5%90%8c%e5%90%8d%e9%87%8d%e8%bd%bd%e7%89%88%e6%9c%ac%e7%9a%84%e6%96%b9%e6%b3%95" class="header-mark"></a>configure(…) 提供给外部调用的 public 方法内部调用了同名重载版本的方法。</h4><ol>
 <li>遍历从 MediaFormat 返回的 map，构造为 key 和 value 数组；</li>

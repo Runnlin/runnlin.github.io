@@ -34,17 +34,16 @@
         "inLanguage": "zh-CN, en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/runnlin.github.io\/mediascannerservice-%E7%A0%94%E7%A9%B6\/"
+            "@id": "https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/"
         },"genre": "posts","keywords": "Android, Media","wordcount":  11246 ,
-        "url": "https:\/\/runnlin.github.io\/mediascannerservice-%E7%A0%94%E7%A9%B6\/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","publisher": {
+        "url": "https://runnlin.github.io/mediascannerservice-%E7%A0%94%E7%A9%B6/","datePublished": "2022-04-01T00:00:00+00:00","dateModified": "2022-04-01T00:00:00+00:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "Runnlin"
             },"description": ""
     }
-    </script><script src="//instant.page/5.2.0" defer type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-</head>
+    </script></head>
 
 <body header-desktop="normal" header-mobile="auto"><script type="text/javascript">
         function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
@@ -464,15 +463,13 @@
 </div>
 </div><p>此时调用的 <code>scanFile()</code> 或 <code>scan()</code> 函数才是实际进行扫描动作的地方。扫描动作中主要借助的是辅助类 MediaScanner，这个类非常重要，它是打通 Java 层和 C++ 层的关键，扫描动作最终会调用到 MediaScanner 的某个 native 函数，于是程序流程开始走到 C++ 层。</p>
 <p>现在，我们可以画一张示意图：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner1.png" title="../assets/images/scanner1.png" data-thumbnail="../assets/images/scanner1.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner1.png"
-            srcset="../assets/images/scanner1.png, ../assets/images/scanner1.png 1.5x, ../assets/images/scanner1.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner1.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner1.png"
+        srcset="../assets/images/scanner1.png, ../assets/images/scanner1.png 1.5x, ../assets/images/scanner1.png 2x"
+        alt="../assets/images/scanner1.png"
+        title="../assets/images/scanner1.png" ></figure></p>
 <h3 id="2-进行扫描" class="headerLink">
     <a href="#2-%e8%bf%9b%e8%a1%8c%e6%89%ab%e6%8f%8f" class="header-mark"></a>2 进行扫描</h3><h4 id="21-发起扫描动作" class="headerLink">
     <a href="#21-%e5%8f%91%e8%b5%b7%e6%89%ab%e6%8f%8f%e5%8a%a8%e4%bd%9c" class="header-mark"></a>2.1 发起扫描动作</h4><hr>
@@ -861,15 +858,13 @@
 </div><p>如果 bind 动作是成功的，而且用户在构造 MediaScannerConnection 对象时传入了 client 参数。那么此时就会回调 mClient 的 <code>onMediaScannerConnected()</code> 函数。</p>
 <p>请注意，静态的 <code>scanFile()</code> 方法最终并没有直接执行 <code>requestScanFile()</code>，它先建立了和 MediaScannerService 的绑定关系，然后在 <code>onServiceConnected()</code> 中感知到绑定已经成功之后，才会经由 ClientProxy 间接转过头调用到自己的 <code>scanFile()</code> 函数，从而执行到 <code>requestScanFile()</code>。</p>
 <p>ClientProxy、MediaScannerConnection、MediaScannerService 三者之间的关系如下图所示：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner2.png" title="../assets/images/scanner2.png" data-thumbnail="../assets/images/scanner2.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner2.png"
-            srcset="../assets/images/scanner2.png, ../assets/images/scanner2.png 1.5x, ../assets/images/scanner2.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner2.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner2.png"
+        srcset="../assets/images/scanner2.png, ../assets/images/scanner2.png 1.5x, ../assets/images/scanner2.png 2x"
+        alt="../assets/images/scanner2.png"
+        title="../assets/images/scanner2.png" ></figure></p>
 <p>以 MediaScannerConnection 对象为桥梁：<br>
 1）其 mService“指向”MediaScannerService 的 mBinder；<br>
 2）其 mClient 指向 ClientProxy 对象；</p>
@@ -926,15 +921,13 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>这么看来，MediaScannerConnection 还真是起连接作用的 “connection”，它将发起扫描请求的 client 和最终执行扫描动作的 MediaScannerService 连接起来了。我们把上面那张图简化一下，可以看到如下示意图：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner3.png" title="../assets/images/scanner3.png" data-thumbnail="../assets/images/scanner3.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner3.png"
-            srcset="../assets/images/scanner3.png, ../assets/images/scanner3.png 1.5x, ../assets/images/scanner3.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner3.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner3.png"
+        srcset="../assets/images/scanner3.png, ../assets/images/scanner3.png 1.5x, ../assets/images/scanner3.png 2x"
+        alt="../assets/images/scanner3.png"
+        title="../assets/images/scanner3.png" ></figure></p>
 <p>以上介绍的就是发起 scan 动作的方法，接下来我们来看看到底有哪些地方在使用这些方法。</p>
 <h4 id="22-谁会发起扫描动作" class="headerLink">
     <a href="#22-%e8%b0%81%e4%bc%9a%e5%8f%91%e8%b5%b7%e6%89%ab%e6%8f%8f%e5%8a%a8%e4%bd%9c" class="header-mark"></a>2.2 谁会发起扫描动作</h4><hr>
@@ -1162,15 +1155,13 @@
 </div>
 </div><p>因为 MyMediaScannerClient 是 MediaScanner 的内嵌类，所以它可以直接调用 MediaScanner 的 <code>processFile()</code>。</p>
 <p>现在我们画一张 <code>scanFile()</code> 的调用关系图：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner4.png" title="../assets/images/scanner4.png" data-thumbnail="../assets/images/scanner4.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner4.png"
-            srcset="../assets/images/scanner4.png, ../assets/images/scanner4.png 1.5x, ../assets/images/scanner4.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner4.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner4.png"
+        srcset="../assets/images/scanner4.png, ../assets/images/scanner4.png 1.5x, ../assets/images/scanner4.png 2x"
+        alt="../assets/images/scanner4.png"
+        title="../assets/images/scanner4.png" ></figure></p>
 <h5 id="232-scan-动作" class="headerLink">
     <a href="#232-scan-%e5%8a%a8%e4%bd%9c" class="header-mark"></a>2.3.2 scan() 动作</h5><p>与 scanFile() 动作类似，MediaScannerService 中扫描目录的动作是 <code>scan()</code>：</p>
 <blockquote>
@@ -1230,15 +1221,13 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们画一张 scan() 的调用关系图：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner-scan.png" title="../assets/images/scanner-scan.png" data-thumbnail="../assets/images/scanner-scan.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner-scan.png"
-            srcset="../assets/images/scanner-scan.png, ../assets/images/scanner-scan.png 1.5x, ../assets/images/scanner-scan.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner-scan.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner-scan.png"
+        srcset="../assets/images/scanner-scan.png, ../assets/images/scanner-scan.png 1.5x, ../assets/images/scanner-scan.png 2x"
+        alt="../assets/images/scanner-scan.png"
+        title="../assets/images/scanner-scan.png" ></figure></p>
 <h5 id="233-mediascanner" class="headerLink">
     <a href="#233-mediascanner" class="header-mark"></a>2.3.3 MediaScanner</h5><p>顾名思义，MediaScanner 就是个 “媒体文件扫描器”。它必须打通 java 层次和 C++ 层次。请大家注意它的两个 native 函数：<code>native_init()</code> 和 <code>native_setup()</code>，以及两个重要成员变量：一个是上文刚刚提到的 mClient 成员，另一个是 mNativeContext。</p>
 <p>MediaScanner 的相关代码截选如下：</p>
@@ -1322,15 +1311,13 @@
 </div>
 </div><p>最后一句 <code>env-&gt;SetLongField()</code> 其实就是在为 java 层 MediaScanner 的 mNativeContext 域赋值。</p>
 <p>后续我们会看到，每当 C++ 层执行扫描动作时，还会再创建一个 MyMediaScannerClient 对象，这个对象和 Java 层的同名类对应。我们画一张图来说明：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner5.png" title="../assets/images/scanner5.png" data-thumbnail="../assets/images/scanner5.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner5.png"
-            srcset="../assets/images/scanner5.png, ../assets/images/scanner5.png 1.5x, ../assets/images/scanner5.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner5.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner5.png"
+        srcset="../assets/images/scanner5.png, ../assets/images/scanner5.png 1.5x, ../assets/images/scanner5.png 2x"
+        alt="../assets/images/scanner5.png"
+        title="../assets/images/scanner5.png" ></figure></p>
 <h5 id="234-调用到-c-层次" class="headerLink">
     <a href="#234-%e8%b0%83%e7%94%a8%e5%88%b0-c-%e5%b1%82%e6%ac%a1" class="header-mark"></a>2.3.4 调用到 C++ 层次</h5><p>不管是扫描文件，还是扫描目录，总之 MediaScannerService 已经把工作委托给 MediaScanner 的 <code>scanSingleFile()</code> 和 <code>scanDirectories()</code> 了，而这两个函数到头来都是调用 MediaScanner 自己的 native 函数，即 <code>processFile()</code> 和 <code>processDirectory()</code>。其声明如下：</p>
 <blockquote>
@@ -1691,15 +1678,13 @@
 </div>
 </div><p>基本上只是通过 JNI 技术，调用到 Java 层的 setMimeType() 而已。</p>
 <p>现在我们画一张关于扫描文件的简单示意图，来整理一下思路。大家顺着箭头看图就可以了。</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner6.png" title="../assets/images/scanner6.png" data-thumbnail="../assets/images/scanner6.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner6.png"
-            srcset="../assets/images/scanner6.png, ../assets/images/scanner6.png 1.5x, ../assets/images/scanner6.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner6.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner6.png"
+        srcset="../assets/images/scanner6.png, ../assets/images/scanner6.png 1.5x, ../assets/images/scanner6.png 2x"
+        alt="../assets/images/scanner6.png"
+        title="../assets/images/scanner6.png" ></figure></p>
 <h6 id="2342-processdirectory" class="headerLink">
     <a href="#2342-processdirectory" class="header-mark"></a>2.3.4.2 processDirectory()</h6><p>按理说，和 <code>processFile()</code> 类似，<code>processDirectory()</code> 最终对应的代码也应该在 StagefrightMediaScanner 里，但是 StagefrightMediaScanner 并没有编写这个函数，又因为 StagefrightMediaScanner 继承于 MediaScanner（C++ 层次），所以实际上使用的是 MediaScanner 的 <code>ProcessDirectory()</code></p>
 <blockquote>
@@ -1986,15 +1971,13 @@
 </div>
 </div><p>调用到 <code>doScanFile()</code> 函数。</p>
 <p>现在我们再画一张关于扫描目录的简单示意图：</p>
-<p><figure><a class="lightgallery" href="../assets/images/scanner7.png" title="../assets/images/scanner7.png" data-thumbnail="../assets/images/scanner7.png">
-        <img
-            
-            loading="lazy"
-            src="../assets/images/scanner7.png"
-            srcset="../assets/images/scanner7.png, ../assets/images/scanner7.png 1.5x, ../assets/images/scanner7.png 2x"
-            sizes="auto"
-            alt="../assets/images/scanner7.png">
-    </a></figure></p>
+<p><figure><img
+        
+        loading="lazy"
+        src="../assets/images/scanner7.png"
+        srcset="../assets/images/scanner7.png, ../assets/images/scanner7.png 1.5x, ../assets/images/scanner7.png 2x"
+        alt="../assets/images/scanner7.png"
+        title="../assets/images/scanner7.png" ></figure></p>
 <h6 id="2343-doscanfile-和-mediaprovider" class="headerLink">
     <a href="#2343-doscanfile-%e5%92%8c-mediaprovider" class="header-mark"></a>2.3.4.3 doScanFile() 和 MediaProvider</h6><p>站在 Java 层次来看，不管是扫描具体的文件，还是扫描一个目录，最终都会走到 Java 层 MyMediaScannerClient 的 <code>doScanFile()</code>。在前文我们已经列出过这个函数的代码，为了说明问题，这里再列一下其中的重要句子：</p>
 <blockquote>
