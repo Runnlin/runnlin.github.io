@@ -6,6 +6,14 @@
   <title>笔记 — Runnlin</title>
   <link rel="icon" href="https://github.com/Runnlin.png" type="image/png">
   <meta name="description" content="Runnlin 的开发笔记 — QNX、Android、系统编程等">
+  <script>
+    (function() {
+      var saved = localStorage.getItem('runnlin_theme');
+      var theme = (saved === 'light' || saved === 'dark') ? saved
+        : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
   <style>
     /* ── Reset & Variables ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,6 +35,32 @@
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
                    "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
       --transition: 0.2s ease;
+      --nav-bg:     rgba(13, 12, 11, 0.88);
+      --overlay-bg: rgba(13, 12, 11, 0.82);
+    }
+
+    [data-theme="light"] {
+      --bg:         #faf9f7;
+      --bg2:        #f0ede8;
+      --bg3:        #e5e1db;
+      --border:     #d0ccc5;
+      --text:       #1a1917;
+      --muted:      #7a7265;
+      --nav-bg:     rgba(250, 249, 247, 0.88);
+      --overlay-bg: rgba(200, 195, 188, 0.85);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg:         #faf9f7;
+        --bg2:        #f0ede8;
+        --bg3:        #e5e1db;
+        --border:     #d0ccc5;
+        --text:       #1a1917;
+        --muted:      #7a7265;
+        --nav-bg:     rgba(250, 249, 247, 0.88);
+        --overlay-bg: rgba(200, 195, 188, 0.85);
+      }
     }
 
     html { scroll-behavior: smooth; }
@@ -46,7 +80,7 @@
 
     /* ── Layout ── */
     .container {
-      max-width: 760px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 0 24px;
     }
@@ -56,7 +90,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(13, 12, 11, 0.88);
+      background: var(--nav-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
@@ -67,7 +101,7 @@
       align-items: center;
       justify-content: space-between;
       height: 56px;
-      max-width: 760px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 0 24px;
     }
@@ -307,7 +341,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 480px;
+      max-width: 640px;
     }
 
     .note-badge {
@@ -369,7 +403,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(13, 12, 11, 0.82);
+      background: var(--overlay-bg);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       z-index: 200;
@@ -384,7 +418,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       width: 100%;
-      max-width: 720px;
+      max-width: 900px;
       min-height: 200px;
       padding: 32px 36px;
       position: relative;
@@ -667,6 +701,25 @@
     /* ── Modal tags ── */
     #modal-tags { margin-top: 6px; }
 
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 15px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+      flex-shrink: 0;
+    }
+
+    .theme-toggle:hover { border-color: var(--amber); color: var(--amber); }
+
     /* ── Responsive ── */
     @media (max-width: 600px) {
       nav ul { gap: 16px; }
@@ -691,6 +744,7 @@
         <li><a href="notes.html" class="active">笔记</a></li>
         <li><a href="index.html#contact">联系</a></li>
       </ul>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切换深色/浅色模式" title="切换深色/浅色模式">🌙</button>
     </div>
   </nav>
 
@@ -770,6 +824,42 @@
   <div id="toast" role="status" aria-live="polite"></div>
 
   <script>
+    /* ────────────────────────────────────────────
+       Theme management
+    ──────────────────────────────────────────── */
+    const THEME_KEY = 'runnlin_theme';
+
+    function getEffectiveTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === 'light' || saved === 'dark') return saved;
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const btn = document.getElementById('theme-toggle');
+      if (btn) {
+        btn.textContent = theme === 'light' ? '🌙' : '☀️';
+        btn.setAttribute('aria-label', theme === 'light' ? '切换到深色模式' : '切换到浅色模式');
+        btn.setAttribute('title', theme === 'light' ? '切换到深色模式' : '切换到浅色模式');
+      }
+    }
+
+    applyTheme(getEffectiveTheme());
+
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+      if (!localStorage.getItem(THEME_KEY)) {
+        applyTheme(e.matches ? 'light' : 'dark');
+      }
+    });
+
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+
     /* ────────────────────────────────────────────
        Storage helpers
     ──────────────────────────────────────────── */
