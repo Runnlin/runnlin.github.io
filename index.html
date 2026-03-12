@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runnlin — Developer</title>
+  <meta name="description" content="Runnlin 的个人主页 — 开发者、技术爱好者">
+  <style>
+    /* ── Reset & Variables ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0c0b;
+      --bg2:       #161412;
+      --bg3:       #1e1c19;
+      --border:    #2a2723;
+      --text:      #ede9e3;
+      --muted:     #7a7265;
+      --orange:    #d4623a;
+      --amber:     #e8a045;
+      --green:     #5aac75;
+      --blue:      #5b9bd5;
+      --radius:    8px;
+      --font-mono: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --transition: 0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--amber); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--orange); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(13, 12, 11, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--orange);
+      letter-spacing: 0.02em;
+    }
+
+    .logo span { color: var(--muted); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 28px;
+    }
+
+    nav ul a {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      transition: color var(--transition);
+    }
+
+    nav ul a:hover { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 96px 0 80px;
+    }
+
+    .hero-prompt {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-prompt::before {
+      content: "›";
+      color: var(--orange);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 .name-accent {
+      background: linear-gradient(135deg, var(--orange) 0%, var(--amber) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--amber);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--muted);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    /* ── Section ── */
+    section {
+      padding: 72px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--orange);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+
+    /* ── About ── */
+    .about-text {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 600px;
+    }
+
+    .about-text p + p { margin-top: 14px; }
+
+    .about-text strong { color: var(--text); }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .skill-card:hover {
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .skill-icon {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .skill-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .skill-tags {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── Projects ── */
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      transition: border-color var(--transition);
+    }
+
+    .project-card:hover { border-color: var(--orange); }
+
+    .project-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .project-content { flex: 1; }
+
+    .project-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .project-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .project-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .project-desc {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 18px;
+      font-size: 14px;
+      color: var(--muted);
+      transition: all var(--transition);
+    }
+
+    .contact-link:hover {
+      border-color: var(--orange);
+      color: var(--text);
+    }
+
+    .contact-link svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer p {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer p span { color: var(--orange); }
+
+    /* ── Cursor blink ── */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--orange);
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      nav ul { gap: 16px; }
+      .hero { padding: 72px 0 60px; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .project-card { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="inner">
+      <span class="logo">runnlin<span>.dev</span></span>
+      <ul>
+        <li><a href="#about">关于</a></li>
+        <li><a href="#skills">技能</a></li>
+        <li><a href="#projects">项目</a></li>
+        <li><a href="#contact">联系</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="container">
+    <section class="hero" style="border-top: none; padding-top: 96px;">
+      <p class="hero-prompt">whoami</p>
+      <h1>Hi, I'm <span class="name-accent">Runnlin</span><span class="cursor"></span></h1>
+      <p class="tagline">Software developer. Building things that matter — fast, reliable, and readable code.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#projects">查看项目</a>
+        <a class="btn btn-ghost" href="#contact">联系我</a>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <p class="section-label">// about</p>
+      <h2>关于我</h2>
+      <div class="about-text">
+        <p>我是 <strong>Runnlin</strong>，一名热爱构建的软件开发者。对底层系统、性能优化和简洁的软件设计有浓厚兴趣。</p>
+        <p>喜欢探索新技术，追求代码的可读性与工程的优雅。业余时间热衷于开源贡献与技术写作。</p>
+        <p>相信 <strong>做少而精</strong> — 专注于真正重要的事情，用最少的复杂度解决实际问题。</p>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+      <p class="section-label">// skills</p>
+      <h2>技术栈</h2>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon">⚙️</div>
+          <div class="skill-name">系统编程</div>
+          <div class="skill-tags">Rust · C · C++</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🐍</div>
+          <div class="skill-name">脚本 & 自动化</div>
+          <div class="skill-tags">Python · Shell · Go</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🌐</div>
+          <div class="skill-name">Web 开发</div>
+          <div class="skill-tags">HTML · CSS · JS</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🐧</div>
+          <div class="skill-name">Linux & DevOps</div>
+          <div class="skill-tags">Docker · Git · CI/CD</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🗄️</div>
+          <div class="skill-name">数据库</div>
+          <div class="skill-tags">PostgreSQL · SQLite · Redis</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🤖</div>
+          <div class="skill-name">AI & ML</div>
+          <div class="skill-tags">PyTorch · LLM · RAG</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+      <p class="section-label">// projects</p>
+      <h2>近期项目</h2>
+      <div class="project-list">
+        <div class="project-card">
+          <div class="project-dot"></div>
+          <div class="project-content">
+            <div class="project-header">
+              <span class="project-name">runnlin.github.io</span>
+              <span class="project-badge">HTML / CSS</span>
+            </div>
+            <p class="project-desc">这个个人主页 — 极简、快速、零依赖的静态网站。</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-dot"></div>
+          <div class="project-content">
+            <div class="project-header">
+              <span class="project-name">更多项目</span>
+              <span class="project-badge">GitHub</span>
+            </div>
+            <p class="project-desc">持续构建中 — 欢迎访问 <a href="https://github.com/Runnlin" target="_blank" rel="noopener">GitHub</a> 查看最新动态。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <p class="section-label">// contact</p>
+      <h2>联系我</h2>
+      <div class="contact-grid">
+        <a class="contact-link" href="https://github.com/Runnlin" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          GitHub
+        </a>
+        <a class="contact-link" href="mailto:hi@runnlin.dev">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/>
+          </svg>
+          Email
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>built with <span>♥</span> by runnlin — no frameworks, just html &amp; css</p>
+    </div>
+  </footer>
+
+</body>
+</html>
