@@ -587,6 +587,86 @@
       opacity: 1;
     }
 
+    /* ── Tags ── */
+    .note-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .tag-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 1px 8px;
+      border-radius: 99px;
+      background: rgba(212, 98, 58, 0.10);
+      color: var(--orange);
+      border: 1px solid rgba(212, 98, 58, 0.25);
+      white-space: nowrap;
+      line-height: 1.8;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .tag-pill:hover {
+      background: rgba(212, 98, 58, 0.20);
+      border-color: var(--orange);
+    }
+
+    /* ── Tag filter bar ── */
+    .tag-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .tag-filter-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 12px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .tag-filter-btn:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    .tag-filter-btn.active {
+      border-color: var(--orange);
+      color: var(--orange);
+      background: rgba(212, 98, 58, 0.10);
+    }
+
+    /* ── Tags input ── */
+    .tags-input {
+      flex: 1;
+      min-width: 160px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      transition: border-color var(--transition);
+      outline: none;
+    }
+
+    .tags-input::placeholder { color: var(--muted); }
+    .tags-input:focus { border-color: var(--orange); }
+
+    /* ── Modal tags ── */
+    #modal-tags { margin-top: 6px; }
+
     /* ── Responsive ── */
     @media (max-width: 600px) {
       nav ul { gap: 16px; }
@@ -620,7 +700,7 @@
     <div class="page-header">
       <p class="section-label">// notes</p>
       <h1>开发笔记 📝</h1>
-      <p>上传并浏览开发日志与技术笔记，支持 Markdown 与纯文本格式。</p>
+      <p>上传并浏览开发日志与技术笔记，支持 Markdown 与纯文本格式。笔记文件保存在<a href="https://github.com/Runnlin/runnlin.github.io/tree/main/notes" target="_blank" rel="noopener">仓库 notes/ 目录</a>中。</p>
     </div>
 
     <!-- Toolbar -->
@@ -630,8 +710,9 @@
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
-        <input id="search-input" type="search" placeholder="搜索标题或内容…" autocomplete="off" spellcheck="false">
+        <input id="search-input" type="search" placeholder="搜索标题、内容或标签…" autocomplete="off" spellcheck="false">
       </div>
+      <input type="text" id="tags-input" class="tags-input" placeholder="标签（逗号分隔，上传时可选填）" autocomplete="off">
       <button class="btn btn-primary" id="upload-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -652,6 +733,7 @@
     </div>
 
     <!-- Notes count line -->
+    <div id="tag-filter-bar" class="tag-filter-bar"></div>
     <p class="notes-meta" id="notes-meta"></p>
 
     <!-- Notes list -->
@@ -673,6 +755,7 @@
         <div class="modal-title-wrap">
           <div class="modal-title" id="modal-title-text"></div>
           <div class="modal-meta" id="modal-meta-text"></div>
+          <div id="modal-tags" class="note-tags"></div>
         </div>
         <div class="modal-actions">
           <button class="btn btn-danger" id="modal-delete-btn" title="删除此笔记">🗑 删除</button>
@@ -702,6 +785,67 @@
 
     function saveNotes(notes) {
       localStorage.setItem(STORE_KEY, JSON.stringify(notes));
+    }
+
+    /* ────────────────────────────────────────────
+       YAML frontmatter parser (tags, title, date)
+    ──────────────────────────────────────────── */
+    function parseFrontmatter(content) {
+      const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+      if (!match) return { meta: {}, body: content };
+      const raw = match[1];
+      const meta = {};
+      // tags: [tag1, tag2]
+      const inlineTags = raw.match(/^tags:\s*\[([^\]]*)\]/m);
+      if (inlineTags) {
+        meta.tags = inlineTags[1].split(',')
+          .map(t => t.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+      } else {
+        // tags:\n  - tag1
+        const listBlock = raw.match(/^tags:\s*\n((?:[ \t]+-[ \t]+.+\n?)+)/m);
+        if (listBlock) {
+          meta.tags = (listBlock[1].match(/[ \t]+-[ \t]+(.+)/g) || [])
+            .map(t => t.replace(/^[ \t]+-[ \t]+/, '').trim());
+        }
+      }
+      const titleLine = raw.match(/^title:\s*(.+)$/m);
+      if (titleLine) meta.title = titleLine[1].trim().replace(/^['"]|['"]$/g, '');
+      const dateLine = raw.match(/^date:\s*(.+)$/m);
+      if (dateLine) meta.date = dateLine[1].trim();
+      return { meta, body: content.slice(match[0].length) };
+    }
+
+    /* ────────────────────────────────────────────
+       Repo notes (loaded from notes/manifest.json)
+    ──────────────────────────────────────────── */
+    let repoNotes = [];
+
+    async function loadRepoNotes() {
+      try {
+        const res = await fetch('notes/manifest.json');
+        if (!res.ok) return;
+        const manifest = await res.json();
+        repoNotes = manifest.map(item => ({
+          id: `repo_${item.filename}`,
+          filename: item.filename,
+          title: item.title,
+          ext: item.filename.split('.').pop().toLowerCase(),
+          content: null,   // lazy-loaded when note is opened
+          preview: item.preview || '',
+          size: item.size || '',
+          createdAt: item.createdAt || new Date().toISOString(),
+          tags: item.tags || [],
+          source: 'repo'
+        }));
+      } catch (_) {
+        repoNotes = [];
+      }
+    }
+
+    function getAllNotes() {
+      const local = loadNotes().map(n => ({ tags: [], source: 'local', ...n }));
+      return [...repoNotes, ...local]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
     /* ────────────────────────────────────────────
@@ -908,6 +1052,28 @@
     }
 
     /* ────────────────────────────────────────────
+       Tag filter
+    ──────────────────────────────────────────── */
+    let activeTag = null;
+
+    function renderTagFilter(notes) {
+      const bar = document.getElementById('tag-filter-bar');
+      const allTags = [...new Set(notes.flatMap(n => n.tags || []))].sort();
+      if (!allTags.length) { bar.innerHTML = ''; return; }
+      bar.innerHTML = [
+        `<button class="tag-filter-btn${activeTag === null ? ' active' : ''}" data-tag="">全部</button>`,
+        ...allTags.map(t =>
+          `<button class="tag-filter-btn${activeTag === t ? ' active' : ''}" data-tag="${escHtml(t)}">${escHtml(t)}</button>`)
+      ].join('');
+      bar.querySelectorAll('.tag-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeTag = btn.dataset.tag || null;
+          renderFiltered();
+        });
+      });
+    }
+
+    /* ────────────────────────────────────────────
        Render notes list
     ──────────────────────────────────────────── */
     function renderList(notes) {
@@ -927,26 +1093,36 @@
 
       meta.textContent = `共 ${notes.length} 篇笔记`;
 
-      list.innerHTML = notes.map((note, idx) => `
-        <div class="note-card" data-idx="${idx}" tabindex="0" role="button"
-             aria-label="查看笔记：${note.title}">
+      list.innerHTML = notes.map(note => `
+        <div class="note-card" data-id="${escHtml(note.id)}" tabindex="0" role="button"
+             aria-label="查看笔记：${escHtml(note.title)}">
           <div class="note-card-left">
             <div class="note-card-header">
               <span class="note-title">${escHtml(note.title)}</span>
               <span class="note-badge ${note.ext}">.${note.ext}</span>
             </div>
             <div class="note-preview">${escHtml(note.preview)}</div>
+            ${note.tags && note.tags.length ? `<div class="note-tags">${note.tags.map(t => `<span class="tag-pill" data-tag="${escHtml(t)}">${escHtml(t)}</span>`).join('')}</div>` : ''}
             <div class="note-date">📅 ${formatDate(note.createdAt)}</div>
           </div>
         </div>`).join('');
 
       list.querySelectorAll('.note-card').forEach(card => {
-        card.addEventListener('click', () => openNote(+card.dataset.idx));
+        card.addEventListener('click', () => openNote(card.dataset.id));
         card.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            openNote(+card.dataset.idx);
+            openNote(card.dataset.id);
           }
+        });
+      });
+
+      // Clicking a tag pill filters by that tag
+      list.querySelectorAll('.tag-pill').forEach(pill => {
+        pill.addEventListener('click', e => {
+          e.stopPropagation();
+          activeTag = pill.dataset.tag || null;
+          renderFiltered();
         });
       });
     }
@@ -962,26 +1138,60 @@
     /* ────────────────────────────────────────────
        Open note modal
     ──────────────────────────────────────────── */
-    let currentNoteIdx = null;
+    let currentNoteId = null;
 
-    function openNote(idx) {
-      const notes = loadNotes();
-      const note = notes[idx];
+    async function openNote(id) {
+      const notes = getAllNotes();
+      const note = notes.find(n => n.id === id);
       if (!note) return;
-      currentNoteIdx = idx;
+      currentNoteId = id;
+
+      // Lazy-load repo note content
+      if (note.source === 'repo' && note.content === null) {
+        try {
+          const res = await fetch(`notes/${note.filename}`);
+          if (!res.ok) throw new Error('fetch failed');
+          const raw = await res.text();
+          const { body } = parseFrontmatter(raw);
+          note.content = body;
+          const rn = repoNotes.find(n => n.id === id);
+          if (rn) rn.content = body;
+        } catch (_) {
+          note.content = '加载笔记内容失败。';
+        }
+      }
 
       document.getElementById('modal-title-text').textContent = note.title;
       document.getElementById('modal-meta-text').textContent =
-        `.${note.ext} · ${formatDate(note.createdAt)} · ${note.size}`;
+        `.${note.ext} · ${formatDate(note.createdAt)}${note.size ? ' · ' + note.size : ''}`;
+
+      const tagsEl = document.getElementById('modal-tags');
+      if (note.tags && note.tags.length) {
+        tagsEl.innerHTML = note.tags.map(t =>
+          `<span class="tag-pill" data-tag="${escHtml(t)}">${escHtml(t)}</span>`).join('');
+        tagsEl.querySelectorAll('.tag-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            activeTag = pill.dataset.tag || null;
+            closeModal();
+            renderFiltered();
+          });
+        });
+      } else {
+        tagsEl.innerHTML = '';
+      }
 
       const body = document.getElementById('modal-body');
       if (note.ext === 'md') {
         body.classList.remove('plain');
-        body.innerHTML = renderMarkdown(note.content);
+        body.innerHTML = renderMarkdown(note.content || '');
       } else {
         body.classList.add('plain');
-        body.textContent = note.content;
+        body.textContent = note.content || '';
       }
+
+      // Hide delete button for repo notes (they live in the repository)
+      document.getElementById('modal-delete-btn').style.display =
+        note.source === 'repo' ? 'none' : '';
 
       const overlay = document.getElementById('modal-overlay');
       overlay.classList.add('open');
@@ -993,7 +1203,7 @@
     function closeModal() {
       document.getElementById('modal-overlay').classList.remove('open');
       document.body.style.overflow = '';
-      currentNoteIdx = null;
+      currentNoteId = null;
     }
 
     document.getElementById('modal-close-btn').addEventListener('click', closeModal);
@@ -1010,10 +1220,12 @@
        Delete note
     ──────────────────────────────────────────── */
     document.getElementById('modal-delete-btn').addEventListener('click', () => {
-      if (currentNoteIdx === null) return;
+      if (currentNoteId === null) return;
       const notes = loadNotes();
-      const title = notes[currentNoteIdx].title;
-      notes.splice(currentNoteIdx, 1);
+      const idx = notes.findIndex(n => n.id === currentNoteId);
+      if (idx === -1) return;
+      const title = notes[idx].title;
+      notes.splice(idx, 1);
       saveNotes(notes);
       closeModal();
       showToast(`已删除「${title}」`);
@@ -1021,21 +1233,28 @@
     });
 
     /* ────────────────────────────────────────────
-       Search
+       Search & tag filter
     ──────────────────────────────────────────── */
     function renderFiltered() {
       const q = document.getElementById('search-input').value.trim().toLowerCase();
-      const notes = loadNotes();
+      const allNotes = getAllNotes();
+
+      renderTagFilter(allNotes);
+
+      let notes = allNotes;
+      if (activeTag) {
+        notes = allNotes.filter(n => (n.tags || []).includes(activeTag));
+      }
+
       if (!q) { renderList(notes); return; }
-      // Single-pass: collect filtered notes with their original indices
-      const matched = notes.reduce((acc, n, i) => {
-        if (n.title.toLowerCase().includes(q) ||
-            n.preview.toLowerCase().includes(q) ||
-            n.content.toLowerCase().includes(q)) {
-          acc.push({ note: n, origIdx: i });
-        }
-        return acc;
-      }, []);
+
+      const matched = notes.filter(n =>
+        n.title.toLowerCase().includes(q) ||
+        n.preview.toLowerCase().includes(q) ||
+        (n.content || '').toLowerCase().includes(q) ||
+        (n.tags || []).some(t => t.toLowerCase().includes(q))
+      );
+
       const list = document.getElementById('notes-list');
       const meta = document.getElementById('notes-meta');
       if (!matched.length) {
@@ -1048,12 +1267,7 @@
         return;
       }
       meta.textContent = `搜索「${q}」：${matched.length} 篇`;
-      renderList(matched.map(m => m.note));
-      // Re-map card indices to original positions so delete works correctly
-      document.querySelectorAll('.note-card').forEach((card, pos) => {
-        card.dataset.idx = matched[pos].origIdx;
-        card.onclick = () => openNote(matched[pos].origIdx);
-      });
+      renderList(matched);
     }
 
     document.getElementById('search-input').addEventListener('input', renderFiltered);
@@ -1072,6 +1286,9 @@
       let added = 0;
       let skipped = 0;
       const notes = loadNotes();
+      // Read optional manual tags from the toolbar input
+      const manualTags = document.getElementById('tags-input').value
+        .split(',').map(t => t.trim()).filter(Boolean);
 
       const readers = Array.from(files).map((file, fileIndex) => {
         return new Promise(resolve => {
@@ -1080,9 +1297,17 @@
 
           const reader = new FileReader();
           reader.onload = e => {
-            const content = e.target.result;
-            const title = extractTitle(file.name, content, ext);
+            const raw = e.target.result;
+            const { meta, body } = ext === 'md' ? parseFrontmatter(raw) : { meta: {}, body: raw };
+            const content = body;
+            const title = meta.title || extractTitle(file.name, content, ext);
             const preview = extractPreview(content);
+            // Prefer frontmatter tags; fall back to manual tags from toolbar
+            const tags = (meta.tags && meta.tags.length) ? meta.tags : manualTags;
+            let createdAt = new Date().toISOString();
+            if (meta.date) {
+              try { createdAt = new Date(meta.date).toISOString(); } catch (_) {}
+            }
             notes.unshift({
               id: `${Date.now()}_${fileIndex}_${Math.random().toString(36).slice(2)}`,
               title,
@@ -1090,7 +1315,9 @@
               content,
               preview,
               size: humanSize(file.size),
-              createdAt: new Date().toISOString()
+              createdAt,
+              tags,
+              source: 'local'
             });
             added++;
             resolve();
@@ -1103,6 +1330,7 @@
 
       Promise.all(readers).then(() => {
         saveNotes(notes);
+        document.getElementById('tags-input').value = ''; // clear after upload
         renderFiltered();
         if (added > 0) showToast(`✅ 已添加 ${added} 篇笔记${skipped ? `，跳过 ${skipped} 个不支持的文件` : ''}`);
         else if (skipped > 0) showToast(`⚠️ 不支持的文件格式，仅支持 .md 和 .txt`);
@@ -1162,7 +1390,7 @@
     /* ────────────────────────────────────────────
        Init
     ──────────────────────────────────────────── */
-    renderFiltered();
+    loadRepoNotes().then(() => renderFiltered());
   </script>
 
 </body>

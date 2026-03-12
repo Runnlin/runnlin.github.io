@@ -1,0 +1,26 @@
+[
+  {
+    "filename": "qnx-ipc.md",
+    "title": "QNX IPC 进程间通信",
+    "tags": ["QNX", "IPC", "系统编程"],
+    "createdAt": "2024-03-01T00:00:00.000Z",
+    "size": "1.5 KB",
+    "preview": "QNX Neutrino RTOS 使用消息传递（Message Passing）作为主要的 IPC 机制。所有进程通过内核进行同步消息传递，这是 QNX 微内核设计的核心。"
+  },
+  {
+    "filename": "android-binder.md",
+    "title": "Android Binder IPC 机制",
+    "tags": ["Android", "Binder", "IPC", "驱动"],
+    "createdAt": "2024-02-15T00:00:00.000Z",
+    "size": "1.4 KB",
+    "preview": "Binder 是 Android 系统的核心 IPC 机制，通过共享内存和驱动层实现高效的进程间通信，避免了传统 Unix IPC 的多次数据拷贝。"
+  },
+  {
+    "filename": "linux-memory.md",
+    "title": "Linux 内存管理基础",
+    "tags": ["Linux", "内存管理", "内核"],
+    "createdAt": "2024-01-20T00:00:00.000Z",
+    "size": "1.5 KB",
+    "preview": "Linux 内核的内存管理系统负责虚拟内存、物理内存分配、页面置换等核心功能，是系统编程的重要基础知识。"
+  }
+]
