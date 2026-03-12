@@ -1,9 +1,3 @@
----
-title: Android Binder IPC 机制
-tags: [Android, Binder, IPC, 驱动]
-date: 2024-02-15
----
-
 # Android Binder IPC 机制
 
 Binder 是 Android 系统的核心 IPC 机制，通过共享内存和驱动层实现高效的进程间通信，避免了传统 Unix IPC（如 Socket、管道）的多次数据拷贝。
