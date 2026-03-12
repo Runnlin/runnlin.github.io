@@ -1,9 +1,3 @@
----
-title: QNX IPC 进程间通信
-tags: [QNX, IPC, 系统编程]
-date: 2024-03-01
----
-
 # QNX IPC 进程间通信
 
 QNX Neutrino RTOS 使用**消息传递**（Message Passing）作为主要的 IPC 机制。所有进程通过内核进行同步消息传递，这是 QNX 微内核设计的核心。
