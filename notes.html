@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>笔记 — Runnlin</title>
+  <meta name="description" content="Runnlin 的开发笔记 — QNX、Android、系统编程等">
+  <style>
+    /* ── Reset & Variables ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0c0b;
+      --bg2:       #161412;
+      --bg3:       #1e1c19;
+      --border:    #2a2723;
+      --text:      #ede9e3;
+      --muted:     #7a7265;
+      --orange:    #d4623a;
+      --amber:     #e8a045;
+      --green:     #5aac75;
+      --blue:      #5b9bd5;
+      --red:       #c0535a;
+      --radius:    8px;
+      --font-mono: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+                   "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --transition: 0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--amber); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--orange); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 12, 11, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--orange);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--muted); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 28px;
+    }
+
+    nav ul a {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      transition: color var(--transition);
+    }
+
+    nav ul a:hover,
+    nav ul a.active { color: var(--text); }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 72px 0 48px;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--orange);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 180px;
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    #search-input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 12px 9px 36px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: var(--font-sans);
+      transition: border-color var(--transition);
+      outline: none;
+    }
+
+    #search-input::placeholder { color: var(--muted); }
+
+    #search-input:focus { border-color: var(--orange); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--amber);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--muted);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .btn-danger:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* ── Drop zone ── */
+    #drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      margin-bottom: 28px;
+      transition: border-color var(--transition), background var(--transition);
+      cursor: pointer;
+    }
+
+    #drop-zone.drag-over {
+      border-color: var(--orange);
+      background: rgba(212, 98, 58, 0.06);
+    }
+
+    #drop-zone p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    #drop-zone .drop-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    #drop-zone .drop-hint {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--border);
+      margin-top: 6px;
+    }
+
+    #file-input { display: none; }
+
+    /* ── Notes count ── */
+    .notes-meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── Notes list ── */
+    #notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .note-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: border-color var(--transition), transform var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .note-card:hover {
+      border-color: var(--orange);
+      transform: translateY(-1px);
+    }
+
+    .note-card-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .note-card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+
+    .note-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 480px;
+    }
+
+    .note-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .note-badge.md  { border-color: var(--blue);   color: var(--blue); }
+    .note-badge.txt { border-color: var(--green);  color: var(--green); }
+
+    .note-preview {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .note-date {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--muted);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    .empty-state .empty-hint {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--border);
+      margin-top: 8px;
+    }
+
+    /* ── Modal overlay ── */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 12, 11, 0.82);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    #modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+    .modal-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 720px;
+      min-height: 200px;
+      padding: 32px 36px;
+      position: relative;
+      margin: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title-wrap { flex: 1; }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      word-break: break-word;
+    }
+
+    .modal-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 20px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover { border-color: var(--text); color: var(--text); }
+
+    /* ── Rendered note content ── */
+    .note-body {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.8;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .note-body h1, .note-body h2, .note-body h3,
+    .note-body h4, .note-body h5, .note-body h6 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-top: 1.6em;
+      margin-bottom: 0.5em;
+      color: var(--text);
+    }
+
+    .note-body h1 { font-size: 1.5em; }
+    .note-body h2 { font-size: 1.3em; }
+    .note-body h3 { font-size: 1.1em; }
+
+    .note-body p { margin-bottom: 0.9em; }
+
+    .note-body strong { color: var(--text); font-weight: 700; }
+
+    .note-body em { font-style: italic; color: var(--amber); }
+
+    .note-body code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--green);
+    }
+
+    .note-body pre {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 1em 0;
+    }
+
+    .note-body pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .note-body ul, .note-body ol {
+      padding-left: 1.5em;
+      margin-bottom: 0.9em;
+    }
+
+    .note-body li { margin-bottom: 0.3em; }
+
+    .note-body blockquote {
+      border-left: 3px solid var(--orange);
+      padding-left: 14px;
+      color: var(--muted);
+      margin: 1em 0;
+      font-style: italic;
+    }
+
+    .note-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.6em 0;
+    }
+
+    .note-body a { color: var(--amber); }
+    .note-body a:hover { color: var(--orange); }
+
+    .note-body table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1em 0;
+      font-size: 14px;
+    }
+
+    .note-body th, .note-body td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .note-body th {
+      background: var(--bg3);
+      font-weight: 600;
+    }
+
+    /* Plain text mode */
+    .note-body.plain {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      white-space: pre-wrap;
+      color: var(--muted);
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      margin-top: 72px;
+    }
+
+    footer p {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer p span { color: var(--orange); }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 20px;
+      font-size: 13px;
+      color: var(--text);
+      z-index: 300;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      nav ul { gap: 16px; }
+      .page-header { padding: 56px 0 36px; }
+      .modal-box { padding: 24px 20px; }
+      .note-title { max-width: 220px; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="inner">
+      <a class="logo" href="index.html">runnlin<span>.dev</span></a>
+      <ul>
+        <li><a href="index.html#about">关于</a></li>
+        <li><a href="index.html#skills">技能</a></li>
+        <li><a href="index.html#projects">项目</a></li>
+        <li><a href="notes.html" class="active">笔记</a></li>
+        <li><a href="index.html#contact">联系</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <p class="section-label">// notes</p>
+      <h1>开发笔记 📝</h1>
+      <p>上传并浏览开发日志与技术笔记，支持 Markdown 与纯文本格式。</p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input id="search-input" type="search" placeholder="搜索标题或内容…" autocomplete="off" spellcheck="false">
+      </div>
+      <button class="btn btn-primary" id="upload-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        上传笔记
+      </button>
+      <input type="file" id="file-input" accept=".md,.txt,text/markdown,text/plain" multiple>
+    </div>
+
+    <!-- Drop zone -->
+    <div id="drop-zone" role="button" tabindex="0" aria-label="拖拽上传文件区域">
+      <div class="drop-icon">📂</div>
+      <p>拖拽 <strong>.md</strong> 或 <strong>.txt</strong> 文件到此处，或点击"上传笔记"按钮</p>
+      <p class="drop-hint">支持一次上传多个文件 · 仅限文本格式</p>
+    </div>
+
+    <!-- Notes count line -->
+    <p class="notes-meta" id="notes-meta"></p>
+
+    <!-- Notes list -->
+    <div id="notes-list"></div>
+
+  </div><!-- /.container -->
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>built with <span>♥</span> by runnlin — no frameworks, just html &amp; css</p>
+    </div>
+  </footer>
+
+  <!-- Note detail modal -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-title" id="modal-title-text"></div>
+          <div class="modal-meta" id="modal-meta-text"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-danger" id="modal-delete-btn" title="删除此笔记">🗑 删除</button>
+          <button class="modal-close" id="modal-close-btn" aria-label="关闭">✕</button>
+        </div>
+      </div>
+      <div class="note-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* ────────────────────────────────────────────
+       Storage helpers
+    ──────────────────────────────────────────── */
+    const STORE_KEY = 'runnlin_notes_v1';
+
+    function loadNotes() {
+      try {
+        return JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(notes));
+    }
+
+    /* ────────────────────────────────────────────
+       Markdown renderer (no external deps)
+       Handles: fenced code blocks, inline code,
+       headings, bold, italic, strikethrough,
+       blockquotes, ul/ol lists, hr, links,
+       images, tables, line breaks, paragraphs.
+       Full UTF-8 / emoji support via browser.
+    ──────────────────────────────────────────── */
+    function renderMarkdown(raw) {
+      // Escape helper
+      function esc(s) {
+        return s.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+      }
+
+      // 1. Protect fenced code blocks
+      const codeBlocks = [];
+      let text = raw.replace(/```([^\n]*)\n([\s\S]*?)```/g, (_, lang, code) => {
+        const i = codeBlocks.length;
+        codeBlocks.push(`<pre><code>${esc(code)}</code></pre>`);
+        return `\x00CODE${i}\x00`;
+      });
+
+      // 2. Process line by line for block elements
+      const lines = text.split('\n');
+      const out = [];
+      let i = 0;
+
+      while (i < lines.length) {
+        const line = lines[i];
+
+        // Restore code blocks
+        const codeMatch = line.match(/^\x00CODE(\d+)\x00$/);
+        if (codeMatch) { out.push(codeBlocks[+codeMatch[1]]); i++; continue; }
+
+        // HR
+        if (/^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) { out.push('<hr>'); i++; continue; }
+
+        // Heading
+        const hMatch = line.match(/^(#{1,6})\s+(.*)$/);
+        if (hMatch) {
+          const level = hMatch[1].length;
+          out.push(`<h${level}>${inlineRender(hMatch[2])}</h${level}>`);
+          i++; continue;
+        }
+
+        // Blockquote
+        if (/^>\s?/.test(line)) {
+          const bqLines = [];
+          while (i < lines.length && /^>\s?/.test(lines[i])) {
+            bqLines.push(lines[i].replace(/^>\s?/, ''));
+            i++;
+          }
+          out.push(`<blockquote><p>${bqLines.map(inlineRender).join('<br>')}</p></blockquote>`);
+          continue;
+        }
+
+        // Unordered list
+        if (/^[-*+]\s/.test(line)) {
+          const items = [];
+          while (i < lines.length && /^[-*+]\s/.test(lines[i])) {
+            items.push(`<li>${inlineRender(lines[i].replace(/^[-*+]\s/, ''))}</li>`);
+            i++;
+          }
+          out.push(`<ul>${items.join('')}</ul>`);
+          continue;
+        }
+
+        // Ordered list
+        if (/^\d+\.\s/.test(line)) {
+          const items = [];
+          while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
+            items.push(`<li>${inlineRender(lines[i].replace(/^\d+\.\s/, ''))}</li>`);
+            i++;
+          }
+          out.push(`<ol>${items.join('')}</ol>`);
+          continue;
+        }
+
+        // Table (simple: | col | col |)
+        if (/^\|.+\|$/.test(line) && i + 1 < lines.length && /^\|[-:| ]+\|$/.test(lines[i + 1])) {
+          const headers = line.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1)
+                              .map(h => `<th>${inlineRender(h.trim())}</th>`).join('');
+          i += 2; // skip separator
+          const rows = [];
+          while (i < lines.length && /^\|.+\|$/.test(lines[i])) {
+            const cells = lines[i].split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1)
+                                  .map(c => `<td>${inlineRender(c.trim())}</td>`).join('');
+            rows.push(`<tr>${cells}</tr>`);
+            i++;
+          }
+          out.push(`<table><thead><tr>${headers}</tr></thead><tbody>${rows.join('')}</tbody></table>`);
+          continue;
+        }
+
+        // Blank line → paragraph break
+        if (line.trim() === '') { out.push(''); i++; continue; }
+
+        // Paragraph
+        const paraLines = [];
+        while (i < lines.length && lines[i].trim() !== '' && !/^\x00CODE/.test(lines[i]) &&
+               !/^(#{1,6}\s|[-*+]\s|\d+\.\s|>\s?|(-{3,}|\*{3,}|_{3,})\s*$|\|)/.test(lines[i])) {
+          paraLines.push(inlineRender(lines[i]));
+          i++;
+        }
+        if (paraLines.length) out.push(`<p>${paraLines.join('<br>')}</p>`);
+      }
+
+      return out.join('\n');
+    }
+
+    function inlineRender(s) {
+      // Restore any embedded code block markers (shouldn't occur in inline, but safety)
+      s = s.replace(/\x00CODE(\d+)\x00/g, '');
+
+      // Inline code (must come before bold/italic)
+      s = s.replace(/`([^`]+)`/g, (_, c) =>
+        `<code>${c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code>`);
+
+      // Images ![alt](src)
+      s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) =>
+        `<img src="${src}" alt="${alt}" style="max-width:100%;border-radius:4px">`);
+
+      // Links [text](url)
+      s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) =>
+        `<a href="${u}" target="_blank" rel="noopener">${t}</a>`);
+
+      // Bold+italic ***text***
+      s = s.replace(/\*{3}([^*]+)\*{3}/g, '<strong><em>$1</em></strong>');
+
+      // Bold **text** or __text__
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+
+      // Italic *text* or _text_
+      s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+      // Strikethrough ~~text~~
+      s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+
+      return s;
+    }
+
+    /* ────────────────────────────────────────────
+       Extract title from content
+    ──────────────────────────────────────────── */
+    function extractTitle(filename, content, ext) {
+      // Try first heading for markdown
+      if (ext === 'md') {
+        const match = content.match(/^#\s+(.+)/m);
+        if (match) return match[1].trim();
+      }
+      // Try first non-empty line
+      const firstLine = content.split('\n').find(l => l.trim().length > 0);
+      if (firstLine && firstLine.trim().length <= 80) return firstLine.trim();
+      // Fallback: filename without extension
+      return filename.replace(/\.(md|txt)$/i, '');
+    }
+
+    /* ────────────────────────────────────────────
+       Extract preview text (strip markdown syntax)
+    ──────────────────────────────────────────── */
+    function extractPreview(content) {
+      return content
+        .replace(/```[\s\S]*?```/g, '')
+        .replace(/`[^`]+`/g, '')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
+        .replace(/__?([^_]+)__?/g, '$1')
+        .replace(/~~([^~]+)~~/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/^[-*+>\d.]\s+/gm, '')
+        .replace(/\n+/g, ' ')
+        .trim()
+        .slice(0, 160);
+    }
+
+    /* ────────────────────────────────────────────
+       Date formatting
+    ──────────────────────────────────────────── */
+    function formatDate(isoStr) {
+      const d = new Date(isoStr);
+      return d.toLocaleDateString('zh-CN', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    /* ────────────────────────────────────────────
+       Toast
+    ──────────────────────────────────────────── */
+    let toastTimer = null;
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+    }
+
+    /* ────────────────────────────────────────────
+       Render notes list
+    ──────────────────────────────────────────── */
+    function renderList(notes) {
+      const list = document.getElementById('notes-list');
+      const meta = document.getElementById('notes-meta');
+
+      if (!notes.length) {
+        meta.textContent = '';
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <p>还没有笔记 — 上传你的第一篇吧！</p>
+            <p class="empty-hint">支持 .md (Markdown) 和 .txt (纯文本)</p>
+          </div>`;
+        return;
+      }
+
+      meta.textContent = `共 ${notes.length} 篇笔记`;
+
+      list.innerHTML = notes.map((note, idx) => `
+        <div class="note-card" data-idx="${idx}" tabindex="0" role="button"
+             aria-label="查看笔记：${note.title}">
+          <div class="note-card-left">
+            <div class="note-card-header">
+              <span class="note-title">${escHtml(note.title)}</span>
+              <span class="note-badge ${note.ext}">.${note.ext}</span>
+            </div>
+            <div class="note-preview">${escHtml(note.preview)}</div>
+            <div class="note-date">📅 ${formatDate(note.createdAt)}</div>
+          </div>
+        </div>`).join('');
+
+      list.querySelectorAll('.note-card').forEach(card => {
+        card.addEventListener('click', () => openNote(+card.dataset.idx));
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openNote(+card.dataset.idx);
+          }
+        });
+      });
+    }
+
+    function escHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /* ────────────────────────────────────────────
+       Open note modal
+    ──────────────────────────────────────────── */
+    let currentNoteIdx = null;
+
+    function openNote(idx) {
+      const notes = loadNotes();
+      const note = notes[idx];
+      if (!note) return;
+      currentNoteIdx = idx;
+
+      document.getElementById('modal-title-text').textContent = note.title;
+      document.getElementById('modal-meta-text').textContent =
+        `.${note.ext} · ${formatDate(note.createdAt)} · ${note.size}`;
+
+      const body = document.getElementById('modal-body');
+      if (note.ext === 'md') {
+        body.classList.remove('plain');
+        body.innerHTML = renderMarkdown(note.content);
+      } else {
+        body.classList.add('plain');
+        body.textContent = note.content;
+      }
+
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.add('open');
+      overlay.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+      document.getElementById('modal-close-btn').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      currentNoteIdx = null;
+    }
+
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+
+    document.getElementById('modal-overlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    /* ────────────────────────────────────────────
+       Delete note
+    ──────────────────────────────────────────── */
+    document.getElementById('modal-delete-btn').addEventListener('click', () => {
+      if (currentNoteIdx === null) return;
+      const notes = loadNotes();
+      const title = notes[currentNoteIdx].title;
+      notes.splice(currentNoteIdx, 1);
+      saveNotes(notes);
+      closeModal();
+      showToast(`已删除「${title}」`);
+      renderFiltered();
+    });
+
+    /* ────────────────────────────────────────────
+       Search
+    ──────────────────────────────────────────── */
+    function renderFiltered() {
+      const q = document.getElementById('search-input').value.trim().toLowerCase();
+      const notes = loadNotes();
+      if (!q) { renderList(notes); return; }
+      // Single-pass: collect filtered notes with their original indices
+      const matched = notes.reduce((acc, n, i) => {
+        if (n.title.toLowerCase().includes(q) ||
+            n.preview.toLowerCase().includes(q) ||
+            n.content.toLowerCase().includes(q)) {
+          acc.push({ note: n, origIdx: i });
+        }
+        return acc;
+      }, []);
+      const list = document.getElementById('notes-list');
+      const meta = document.getElementById('notes-meta');
+      if (!matched.length) {
+        meta.textContent = `搜索「${q}」：无结果`;
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <p>没有找到匹配「${escHtml(q)}」的笔记。</p>
+          </div>`;
+        return;
+      }
+      meta.textContent = `搜索「${q}」：${matched.length} 篇`;
+      renderList(matched.map(m => m.note));
+      // Re-map card indices to original positions so delete works correctly
+      document.querySelectorAll('.note-card').forEach((card, pos) => {
+        card.dataset.idx = matched[pos].origIdx;
+        card.onclick = () => openNote(matched[pos].origIdx);
+      });
+    }
+
+    document.getElementById('search-input').addEventListener('input', renderFiltered);
+
+    /* ────────────────────────────────────────────
+       File processing
+    ──────────────────────────────────────────── */
+    function humanSize(bytes) {
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function processFiles(files) {
+      const validExts = ['md', 'txt'];
+      let added = 0;
+      let skipped = 0;
+      const notes = loadNotes();
+
+      const readers = Array.from(files).map((file, fileIndex) => {
+        return new Promise(resolve => {
+          const ext = file.name.split('.').pop().toLowerCase();
+          if (!validExts.includes(ext)) { skipped++; resolve(); return; }
+
+          const reader = new FileReader();
+          reader.onload = e => {
+            const content = e.target.result;
+            const title = extractTitle(file.name, content, ext);
+            const preview = extractPreview(content);
+            notes.unshift({
+              id: `${Date.now()}_${fileIndex}_${Math.random().toString(36).slice(2)}`,
+              title,
+              ext,
+              content,
+              preview,
+              size: humanSize(file.size),
+              createdAt: new Date().toISOString()
+            });
+            added++;
+            resolve();
+          };
+          reader.onerror = () => { skipped++; resolve(); };
+          // Read as UTF-8 text
+          reader.readAsText(file, 'UTF-8');
+        });
+      });
+
+      Promise.all(readers).then(() => {
+        saveNotes(notes);
+        renderFiltered();
+        if (added > 0) showToast(`✅ 已添加 ${added} 篇笔记${skipped ? `，跳过 ${skipped} 个不支持的文件` : ''}`);
+        else if (skipped > 0) showToast(`⚠️ 不支持的文件格式，仅支持 .md 和 .txt`);
+      });
+    }
+
+    /* ────────────────────────────────────────────
+       Upload button
+    ──────────────────────────────────────────── */
+    const fileInput = document.getElementById('file-input');
+    document.getElementById('upload-btn').addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => {
+      if (e.target.files.length) processFiles(e.target.files);
+      fileInput.value = ''; // reset so same file can be re-uploaded
+    });
+
+    /* ────────────────────────────────────────────
+       Drag & drop on drop-zone
+    ──────────────────────────────────────────── */
+    const dropZone = document.getElementById('drop-zone');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') fileInput.click();
+    });
+
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropZone.addEventListener(evt, e => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+      });
+    });
+
+    ['dragleave', 'dragend', 'drop'].forEach(evt => {
+      dropZone.addEventListener(evt, e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+      });
+    });
+
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files.length) processFiles(files);
+    });
+
+    // Also allow drop on whole page (but skip if already handled by drop-zone)
+    document.addEventListener('dragover', e => e.preventDefault());
+    document.addEventListener('drop', e => {
+      e.preventDefault();
+      if (!e.target.closest('#drop-zone')) {
+        const files = e.dataTransfer.files;
+        if (files.length) processFiles(files);
+      }
+    });
+
+    /* ────────────────────────────────────────────
+       Init
+    ──────────────────────────────────────────── */
+    renderFiltered();
+  </script>
+
+</body>
+</html>
